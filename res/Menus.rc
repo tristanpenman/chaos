@@ -1,0 +1,81 @@
+#include "Menus.h"
+
+/******************************************************************************
+ *
+ * Default menu
+ *
+ *****************************************************************************/
+
+ID_MENU_CHAOS MENU 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&Open ROM...",                ID_FILE_OPEN
+		MENUITEM SEPARATOR
+        MENUITEM "&Save",                       ID_FILE_SAVE, GRAYED
+        MENUITEM "Save &As...",                 ID_FILE_SAVE_AS, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       ID_FILE_EXIT
+    END
+	POPUP "&Tools"
+	BEGIN
+		MENUITEM "Edit Level..."                ID_TOOLS_EDIT_LEVEL, GRAYED
+		MENUITEM "Edit Palettes"                ID_TOOLS_EDIT_PALETTES, GRAYED
+		MENUITEM "Edit Sprites"                 ID_TOOLS_EDIT_SPRITES, GRAYED
+		MENUITEM SEPARATOR
+		MENUITEM "ROM Inspector"                ID_TOOLS_ROM_INSPECTOR, GRAYED
+		MENUITEM SEPARATOR
+		MENUITEM "Decompress ROM Data..."       ID_TOOLS_DECOMPRESSOR, GRAYED
+	END
+	POPUP "&Window"
+	BEGIN
+		MENUITEM "&Cascade",                    ID_WINDOW_CASCADE, GRAYED
+		MENUITEM "&Tile",                       ID_WINDOW_TILE, GRAYED
+		MENUITEM "Close &All",                  ID_WINDOW_CLOSEALL, GRAYED
+	END
+END
+
+
+/******************************************************************************
+ *
+ * Level editor menu
+ *
+ *****************************************************************************/
+
+ID_MENU_LEVEL MENU 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&Open ROM...",                ID_FILE_OPEN
+		MENUITEM SEPARATOR
+        MENUITEM "&Save",                       ID_FILE_SAVE, GRAYED
+        MENUITEM "Save &As...",                 ID_FILE_SAVE_AS, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       ID_FILE_EXIT
+    END
+	POPUP "&Tools"
+	BEGIN
+		MENUITEM "Edit Level..."                ID_TOOLS_EDIT_LEVEL
+		MENUITEM "Edit Palettes"                ID_TOOLS_EDIT_PALETTES, GRAYED
+		MENUITEM "Edit Sprites"                 ID_TOOLS_EDIT_SPRITES, GRAYED
+		MENUITEM SEPARATOR
+		MENUITEM "ROM Inspector"                ID_TOOLS_ROM_INSPECTOR, GRAYED
+		MENUITEM SEPARATOR
+		MENUITEM "Decompress ROM Data..."       ID_TOOLS_DECOMPRESSOR, GRAYED
+	END
+    POPUP "&Level"
+    BEGIN
+		MENUITEM "Show &Palettes",              ID_LEVEL_PALETTES, GRAYED
+		MENUITEM "Show Pa&tterns",              ID_LEVEL_PATTERNS, GRAYED
+		MENUITEM "Show &Chunks",                ID_LEVEL_CHUNKS, GRAYED
+        MENUITEM "Show &Blocks",                ID_LEVEL_BLOCKS, GRAYED
+		MENUITEM SEPARATOR
+        MENUITEM "&Export...",                  ID_LEVEL_EXPORT, GRAYED
+    END
+	POPUP "&Window"
+	BEGIN
+		MENUITEM "&Cascade",                    ID_WINDOW_CASCADE
+		MENUITEM "&Tile",                       ID_WINDOW_TILE
+		MENUITEM "Close &All",                  ID_WINDOW_CLOSEALL
+	END
+END

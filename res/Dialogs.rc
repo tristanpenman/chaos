@@ -1,0 +1,88 @@
+#include <windows.h>
+#include <commctrl.h>
+#include <richedit.h>
+
+#include "Resource.h"
+
+
+/******************************************************************************
+ *
+ * Instances dialog
+ *
+ *****************************************************************************/
+
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_AUS
+ID_DIALOG_INSTANCES DIALOG 0, 0, 182, 200
+STYLE DS_3DLOOK | DS_CENTER | DS_SHELLFONT | WS_VISIBLE | WS_BORDER | WS_CAPTION | WS_DLGFRAME | WS_POPUP | WS_SYSMENU
+EXSTYLE WS_EX_TOOLWINDOW | WS_EX_TOPMOST
+CAPTION "Instances"
+FONT 8, "Ms Shell Dlg 2"
+BEGIN
+
+	//
+	// Rom details static components
+	//
+    GROUPBOX        "ROM Details", IDC_STATIC, 7, 7, 168, 78
+    LTEXT           "Name:", IDC_STATIC, 16, 20, 22, 8, SS_LEFT
+    LTEXT           "Size:", IDC_STATIC, 16, 32, 16, 8, SS_LEFT
+    LTEXT           "Expanded:", IDC_STATIC, 16, 44, 36, 8, SS_LEFT
+	PUSHBUTTON      "Unload ROM", ID_DIALOG_INSTANCES_UNLOAD, 15, 61, 61, 16
+
+	//
+	// Rom details dynamic text
+	//
+    LTEXT           "NAME", ID_DIALOG_INSTANCES_TXT_NAME, 60, 20, 97, 8, SS_LEFT
+	LTEXT           "SIZE", ID_DIALOG_INSTANCES_TXT_SIZE, 60, 32, 78, 8, SS_LEFT
+    LTEXT           "EXPANDED", ID_DIALOG_INSTANCES_TXT_EXPANDED, 60, 44, 96, 8, SS_LEFT
+
+	//
+	// Rom details static components
+	//
+    GROUPBOX        "Instances", IDC_STATIC, 7, 89, 168, 104
+    LISTBOX         ID_DIALOG_INSTANCES_LIST, 15, 103, 152, 59, WS_TABSTOP | WS_VSCROLL | LBS_NOINTEGRALHEIGHT | LBS_MULTICOLUMN | LBS_SORT | LBS_NOTIFY
+    PUSHBUTTON      "Kill Selected Instance", ID_DIALOG_INSTANCES_KILL, 15, 169, 91, 16
+
+END
+
+
+/******************************************************************************
+ *
+ * Load level dialog
+ *
+ *****************************************************************************/
+
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_AUS
+ID_DIALOG_LOAD_LEVEL DIALOG 0, 0, 182, 218
+STYLE DS_CENTER | DS_SHELLFONT | WS_VISIBLE | WS_BORDER | WS_CAPTION | WS_DLGFRAME | WS_POPUP | WS_SYSMENU
+CAPTION "Load Level"
+FONT 8, "Ms Shell Dlg 2"
+BEGIN
+
+	//
+	// Rom details static components
+	//
+    GROUPBOX        "ROM Details", IDC_STATIC, 7, 7, 168, 56
+    LTEXT           "Name:", IDC_STATIC, 16, 20, 22, 8, SS_LEFT
+    LTEXT           "Size:", IDC_STATIC, 16, 32, 16, 8, SS_LEFT
+    LTEXT           "Expanded:", IDC_STATIC, 16, 44, 36, 8, SS_LEFT
+
+	//
+	// Rom details dynamic text
+	//
+	LTEXT           "NAME", ID_DIALOG_LOAD_LEVEL_TXT_NAME, 60, 20, 97, 8, SS_LEFT
+	LTEXT           "SIZE", ID_DIALOG_LOAD_LEVEL_TXT_SIZE, 60, 32, 78, 8, SS_LEFT
+    LTEXT           "EXPANDED", ID_DIALOG_LOAD_LEVEL_TXT_EXPANDED, 60, 44, 96, 8, SS_LEFT
+    
+	//
+	// Level list
+	//
+	GROUPBOX        "Select Level", IDC_STATIC, 7, 67, 168, 122
+	LISTBOX         ID_DIALOG_LOAD_LEVEL_LIST, 15, 81, 152, 100, WS_TABSTOP | WS_VSCROLL | LBS_NOINTEGRALHEIGHT | LBS_NOTIFY
+
+	//
+	// Dialog buttons
+	//
+	DEFPUSHBUTTON   "Load", IDOK, 70, 195, 50, 16
+    PUSHBUTTON      "Cancel", IDCANCEL, 125, 195, 50, 16
+
+END

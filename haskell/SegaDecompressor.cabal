@@ -1,0 +1,68 @@
+name:                SegaDecompressor
+version:             0.1.0.0
+description:         A command line utility for decompressing game data from Sega Megadrive ROM files.
+license-file:        LICENSE
+author:              Tristan Penman
+maintainer:          tristan@tristanpenman.com
+build-type:          Simple
+cabal-version:       >=1.8
+
+library
+  hs-source-dirs:      src
+  exposed-modules:     RLE
+  build-depends:       base ==4.9.*,
+                       bytestring ==0.10.*
+
+executable SegaDecompressor
+  main-is:             SegaDecompressor.hs
+  hs-source-dirs:      src
+  build-depends:       base ==4.9.*,
+                       bytestring ==0.10.*,
+                       containers ==0.5.*,
+                       regex-compat ==0.95.*,
+                       SegaDecompressor
+  other-modules:       NiceOpt
+                       RLE
+  ghc-options:         -main-is SegaDecompressor
+
+executable S2PaletteExtractor
+  main-is:             S2PaletteExtractor.hs
+  hs-source-dirs:      src
+  build-depends:       base ==4.9.*,
+                       bytestring ==0.10.*,
+                       containers ==0.5.*,
+                       regex-compat ==0.95.*,
+                       split ==0.2.*,
+                       SegaDecompressor
+  other-modules:       NiceOpt
+                       RLE
+                       S2Data
+  ghc-options:         -main-is S2PaletteExtractor
+
+executable S2TileExtractor
+  main-is:             S2TileExtractor.hs
+  hs-source-dirs:      src
+  build-depends:       base ==4.9.*,
+                       bytestring ==0.10.*,
+                       containers ==0.5.*,
+                       regex-compat ==0.95.*,
+                       split ==0.2.*,
+                       SegaDecompressor
+  other-modules:       NiceOpt
+                       RLE
+                       S2Data
+  ghc-options:         -main-is S2TileExtractor
+
+Test-Suite SegaDecompressor-test
+  type:                exitcode-stdio-1.0
+  main-is:             TestSuite.hs
+  hs-source-dirs:      src test
+  build-depends:       base ==4.9.*,
+                       bytestring ==0.10.*,
+                       containers ==0.5.*,
+                       HUnit,
+                       SegaDecompressor,
+                       test-framework,
+                       test-framework-hunit
+  other-modules:       RLE
+                       RLE.Tests
