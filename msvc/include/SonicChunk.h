@@ -23,9 +23,7 @@
 class SonicChunk
 {
 public:
-
     SonicChunk();
-
     virtual ~SonicChunk();
 
     void loadFromBuffer(unsigned char buffer[CHUNK_SIZE_IN_ROM]);

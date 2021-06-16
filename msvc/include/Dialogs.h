@@ -12,11 +12,10 @@
  *****************************************************************************/
 
 #define ID_DIALOG_LOAD_LEVEL               20100
-#define ID_DIALOG_LOAD_LEVEL_LIST          20101   
+#define ID_DIALOG_LOAD_LEVEL_LIST          20101
 #define ID_DIALOG_LOAD_LEVEL_TXT_NAME      20102
 #define ID_DIALOG_LOAD_LEVEL_TXT_SIZE      20103
 #define ID_DIALOG_LOAD_LEVEL_TXT_EXPANDED  20104
-
 
 /******************************************************************************
  *

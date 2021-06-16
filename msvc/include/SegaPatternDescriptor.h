@@ -23,11 +23,10 @@ class SegaPatternDescriptor
 {
 public:
     SegaPatternDescriptor();
+    virtual ~SegaPatternDescriptor();
 
     explicit SegaPatternDescriptor(const SegaPatternDescriptor& desc);
     explicit SegaPatternDescriptor(unsigned short patternIndex, unsigned short paletteIndex);
-
-    virtual ~SegaPatternDescriptor();
 
     SegaPatternDescriptor& operator=(const SegaPatternDescriptor&);
 
@@ -36,13 +35,13 @@ public:
     unsigned short getPaletteIndex() const;
     unsigned short getPatternIndex() const;
 
-    bool           getFlag_Priority() const;
-    bool           getFlag_HFlip() const;
-    bool           getFlag_VFlip() const;
+    bool getFlag_Priority() const;
+    bool getFlag_HFlip() const;
+    bool getFlag_VFlip() const;
 
-    static size_t  getIndexSize();
+    static size_t getIndexSize();
 
-    void           set(unsigned short); // naive (assumes correct bit layout)
+    void set(unsigned short); // naive (assumes correct bit layout)
 
 private:
     unsigned short m_index;

@@ -8,7 +8,6 @@
 #include "CommonDialogFactory.h"
 
 #include "DialogLoadLevel.h"
-#include "DialogRomInspector.h"
 
 #include "WndFrame.h"
 #include "WndMap.h"

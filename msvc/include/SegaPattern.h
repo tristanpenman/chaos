@@ -28,23 +28,20 @@
 class SegaPattern
 {
 public:
-
     SegaPattern();
+    virtual ~SegaPattern();
 
-    virtual             ~SegaPattern();
+    void loadFromBuffer(unsigned char[PATTERN_SIZE_IN_ROM]);
 
-    void                 loadFromBuffer(unsigned char[PATTERN_SIZE_IN_ROM]);
+    unsigned char getPixel(unsigned char x, unsigned char y) const;
 
-    unsigned char        getPixel(unsigned char x, unsigned char y) const;
-
-    static unsigned int  getPatternSize();
+    static unsigned int getPatternSize();
     static unsigned char getPatternHeight();
     static unsigned char getPatternWidth();
 
-    void                 setPixel(unsigned char x, unsigned char y, unsigned char value);
+    void setPixel(unsigned char x, unsigned char y, unsigned char value);
 
 private:
-
     SegaPattern(const SegaPattern&);
     SegaPattern& operator=(const SegaPattern&);
 

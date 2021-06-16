@@ -3,76 +3,72 @@
 
 class InstanceValueException {};
 
-#ifdef WIN32
-	typedef HWND InstanceValueLookup_t;
-#else
-	typedef unsigned int InstanceValueLookup_t;
-#endif
+typedef HWND InstanceValueLookup_t;
 
 template<typename T>
-class InstanceValue_t : public std::map<InstanceValueLookup_t, typename T> 
+class InstanceValue_t : public std::map<InstanceValueLookup_t, typename T>
 {
 public:
-	const T  get   (InstanceValueLookup_t i) const;
-	T        get   (InstanceValueLookup_t i);
-	void     set   (InstanceValueLookup_t i, T val);
-	T        unset (InstanceValueLookup_t i);
+    const T  get   (InstanceValueLookup_t i) const;
+    T        get   (InstanceValueLookup_t i);
+    void     set   (InstanceValueLookup_t i, T val);
+    T        unset (InstanceValueLookup_t i);
 };
 
 template<typename T>
-inline T InstanceValue_t<T>::get(InstanceValueLookup_t i)	
+inline T InstanceValue_t<T>::get(InstanceValueLookup_t i)
 {
-	iterator itr = find(i);
+    iterator itr = find(i);
 
-	if (itr == end())
-	{
-		throw InstanceValueException();
-	}
+    if (itr == end())
+    {
+        throw InstanceValueException();
+    }
 
-	return itr->second;
+    return itr->second;
 }
 
 template<typename T>
 inline const T InstanceValue_t<T>::get(InstanceValueLookup_t i)	const
 {
-	const_iterator itr = find(i);
+    const_iterator itr = find(i);
 
-	if (itr == end())
-	{
-		throw InstanceValueException();
-	}
+    if (itr == end())
+    {
+        throw InstanceValueException();
+    }
 
-	return itr->second;
+    return itr->second;
 }
 
 template<typename T>
-inline void InstanceValue_t<T>::set(InstanceValueLookup_t i, T val)	
+inline void InstanceValue_t<T>::set(InstanceValueLookup_t i, T val)
 {
-	iterator itr = find(i);
+    iterator itr = find(i);
 
-	if (itr != end())
-	{
-		throw InstanceValueException();
-	}
-	
-	insert(value_type(i, val));
+    if (itr != end())
+    {
+        throw InstanceValueException();
+    }
+
+    insert(value_type(i, val));
 }
 
 template<typename T>
 inline T InstanceValue_t<T>::unset(InstanceValueLookup_t i)
 {
-	iterator itr = find(i);
+    iterator itr = find(i);
 
-	if (itr == end())
-	{
-		throw InstanceValueException();
-	}
+    if (itr == end())
+    {
+        throw InstanceValueException();
+    }
 
-	T t = itr->second;
+    T t = itr->second;
 
-	erase(itr);
+    erase(itr);
 
-	return t;
+    return t;
 }
 
 #endif

@@ -1,8 +1,6 @@
 #ifndef __BUFFER_BLOCKS_H
 #define __BUFFER_BLOCKS_H
 
-#ifdef WIN32
-
 class Buffer_Patterns;
 class Instance_Level;
 class SonicChunk;
@@ -21,10 +19,10 @@ class SonicBlock;
 class Buffer_Blocks : public Buffer
 {
 public:
-	explicit Buffer_Blocks(const Instance_Level* level, 
-		const SonicBlock** blocks, unsigned int blockCount, 
-		const SonicChunk* chunks, unsigned int chunkCount, 
-		const Buffer_Patterns*, HDC hdc);
+    explicit Buffer_Blocks(const Instance_Level* level,
+        const SonicBlock** blocks, unsigned int blockCount,
+        const SonicChunk* chunks, unsigned int chunkCount,
+        const Buffer_Patterns*, HDC hdc);
 
 /******************************************************************************
  *
@@ -32,25 +30,23 @@ public:
  *
  *****************************************************************************/
 
-	void drawBlock(unsigned int blockIndex, HDC dest, int x, int y) const;
+    void drawBlock(unsigned int blockIndex, HDC dest, int x, int y) const;
 
-	void refresh(const Instance_Level* level, 
-		const SonicBlock** blocks, unsigned int blockCount, 
-		const SonicChunk* chunks, unsigned int chunkCount, const Buffer_Patterns*, HDC hdc);
+    void refresh(const Instance_Level* level,
+        const SonicBlock** blocks, unsigned int blockCount,
+        const SonicChunk* chunks, unsigned int chunkCount, const Buffer_Patterns*, HDC hdc);
 
 private:
 
-	void renderChunkIntoBuffer(HDC hdc, int x, int y, const SonicChunk& chunk, 
-		bool h_flip, bool v_flip, 
-		const Buffer_Patterns* pPatternBuffer) const;
+    void renderChunkIntoBuffer(HDC hdc, int x, int y, const SonicChunk& chunk,
+        bool h_flip, bool v_flip,
+        const Buffer_Patterns* pPatternBuffer) const;
 
-	void renderBlockIntoBuffer(const SonicBlock& block, HDC hdc, int x, int y, 
-		const SonicChunk* chunks, unsigned int chunkCount, 
-		const Buffer_Patterns* pPatternBuffer) const;
+    void renderBlockIntoBuffer(const SonicBlock& block, HDC hdc, int x, int y,
+        const SonicChunk* chunks, unsigned int chunkCount,
+        const Buffer_Patterns* pPatternBuffer) const;
 
-	unsigned int m_blockWidth;
+    unsigned int m_blockWidth;
 };
 
-#endif	// WIN32
-
-#endif	// __BUFFER_BLOCKS_H
+#endif  // __BUFFER_BLOCKS_H

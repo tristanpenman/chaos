@@ -9,21 +9,13 @@
 
 #define BYTES_PER_CHUNK 2
 
-///////////////////////////////////////////////////////////////////////////////
-//
-// SonicBlock class Definition
-//
-///////////////////////////////////////////////////////////////////////////////
-
 class SonicChunk;
 class SonicChunkDescriptor;
 
 class SonicBlock
 {
 public:
-
     SonicBlock(unsigned int w, unsigned int h);
-
     virtual ~SonicBlock();
 
     bool loadFromBuffer(unsigned char* buffer);
@@ -41,16 +33,10 @@ private:
 
     SonicChunkDescriptor* m_chunkDescriptors;
 
-    unsigned int          m_chunksAcross;
-    unsigned int          m_chunksDown;
-    unsigned int          m_chunkCount;
+    unsigned int m_chunksAcross;
+    unsigned int m_chunksDown;
+    unsigned int m_chunkCount;
 };
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// SonicBlock inline functions
-//
-///////////////////////////////////////////////////////////////////////////////
 
 inline unsigned int SonicBlock::getChunksAcross() const
 {

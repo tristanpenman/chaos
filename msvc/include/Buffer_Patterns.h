@@ -1,9 +1,6 @@
 #ifndef __PATTERN_BUFFER_H
 #define __PATTERN_BUFFER_H
 
-#ifdef WIN32
-
-// Encapsulated dependencies
 class SegaPalette;
 class SegaPattern;
 class SegaPatternDescriptor;
@@ -21,7 +18,9 @@ class SegaPatternDescriptor;
 class Buffer_Patterns : public Buffer
 {
 public:
-	explicit Buffer_Patterns(const SegaPalette* palettes, unsigned int palette_count, const SegaPattern* patterns, unsigned int pattern_count, HDC hdc);
+    explicit Buffer_Patterns(
+        const SegaPalette* palettes, unsigned int palette_count,
+        const SegaPattern* patterns, unsigned int pattern_count, HDC hdc);
 
 /******************************************************************************
  *
@@ -29,12 +28,17 @@ public:
  *
  *****************************************************************************/
 
-	void drawPattern(unsigned int pattern_index, unsigned int palette_index, HDC dest, int x, int y, bool h_flip, bool v_flip) const;
-	void drawPattern(const SegaPatternDescriptor& pattern_desc, HDC dest, int x, int y, bool h_flip_again, bool v_flip_again) const;
-	
-	void refresh(const SegaPalette* palettes, unsigned int palette_count, const SegaPattern* patterns, unsigned int pattern_count, HDC hdc);
-};
+    void drawPattern(
+        unsigned int pattern_index, unsigned int palette_index,
+        HDC dest, int x, int y, bool h_flip, bool v_flip) const;
 
-#endif	// WIN32
+    void drawPattern(
+        const SegaPatternDescriptor& pattern_desc,
+        HDC dest, int x, int y, bool h_flip_again, bool v_flip_again) const;
+
+    void refresh(
+        const SegaPalette* palettes, unsigned int palette_count,
+        const SegaPattern* patterns, unsigned int pattern_count, HDC hdc);
+};
 
 #endif	// __PATTERN_BUFFER_H

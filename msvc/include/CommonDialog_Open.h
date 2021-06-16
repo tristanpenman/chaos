@@ -4,9 +4,13 @@
 class CommonDialog_Open : public CommonDialog
 {
 public:
-	explicit CommonDialog_Open(HWND hOwner) : CommonDialog(hOwner) {}
+    explicit CommonDialog_Open(HWND hOwner)
+      : CommonDialog(hOwner)
+    {
 
-	virtual bool execute();
+    }
+
+    virtual bool execute();
 };
 
 #endif

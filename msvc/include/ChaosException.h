@@ -4,12 +4,16 @@
 class ChaosException
 {
 public:
-	explicit ChaosException(const std::string& msg) : m_msg(msg) {}
+    explicit ChaosException(const std::string& msg)
+      : m_msg(msg)
+    {
 
-	std::string getMessage() const;
+    }
+
+    std::string getMessage() const;
 
 private:
-	std::string m_msg;
+    std::string m_msg;
 };
 
 #endif

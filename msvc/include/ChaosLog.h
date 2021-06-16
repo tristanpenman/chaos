@@ -1,9 +1,3 @@
-///////////////////////////////////////////////////////////////////////////////
-//
-// ChaosLog.h
-//
-///////////////////////////////////////////////////////////////////////////////
-
 #ifndef __CHAOS_LOG_H
 #define __CHAOS_LOG_H
 
@@ -14,18 +8,7 @@
 #include <sstream>
 #include <string>
 
-#ifdef WIN32
-# include <windows.h>
-#else
-# include <pthread.h>
-#endif
-
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// ChaosLog class definition
-//
-///////////////////////////////////////////////////////////////////////////////
+#include <windows.h>
 
 class ChaosLog
 {
@@ -39,11 +22,9 @@ public:
     static void cleanup() throw(ChaosException);
 
     template <typename T>
-    std::ostringstream& operator<<(T const& value)    // Stream semantics
+    std::ostringstream& operator<<(T const& value)
     {
-        // Inline function
-        
-        m_os << value;    
+        m_os << value;
         return m_os;
     }
 
@@ -62,14 +43,8 @@ private:
 
     std::ofstream* m_pFile;
 
-#ifdef WIN32
     static HANDLE ms_fileMutex;
-#else
-    static pthread_mutex_t ms_fileMutex;
-#endif
-
     static std::ofstream ms_file;
 };
 
 #endif  //__CHAOS_LOG_H
-

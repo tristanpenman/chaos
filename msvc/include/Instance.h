@@ -13,42 +13,23 @@
 class Instance
 {
 public:
+    explicit Instance();
 
-	explicit Instance();
+    // abstract
+    virtual bool hasUnsavedChanges() const = 0;
+    virtual bool saveChanges() = 0;
 
-/******************************************************************************
- *
- * Public abstract interface
- *
- *****************************************************************************/
-
-	virtual bool hasUnsavedChanges() const = 0;
-	virtual bool saveChanges() = 0;
-
-/******************************************************************************
- *
- * Win32 specific code
- *
- *****************************************************************************/
-
-#ifdef WIN32
-
-	void setWindow(HWND hwnd);
-
-	HWND getWindow() const;
+    void setWindow(HWND hwnd);
+    HWND getWindow() const;
 
 protected:
-
-	HWND m_hWnd;
-
-#endif
-
+    HWND m_hWnd;
 };
 
 enum InstanceKind
 {
-	INSTANCE_KIND_LEVEL,
-	INSTANCE_KIND_SPRITES
+    INSTANCE_KIND_LEVEL,
+    INSTANCE_KIND_SPRITES
 };
 
 #endif

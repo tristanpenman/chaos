@@ -9,8 +9,6 @@
 #include <map>
 #include <exception>
 
-#ifdef WIN32
-
 #include <assert.h>
 #include <windows.h>
 #include <windowsx.h>
@@ -21,18 +19,4 @@
 void REPORT_ERROR(const std::string& message, const std::string& title);
 void REPORT_INFO(const std::string& message, const std::string& title);
 
-#else
-
-inline void REPORT_ERROR(const std:string& message, const std::string& title)
-{
-	std::cerr << title << ": " << message << std::endl;
-}
-
-inline void REPORT_INFO(const std:string& message, const std::string& title)
-{
-	std::cerr << title << ": " << message << std::endl;
-}
-
-#endif	// WIN32
-
-#endif	// __PRECOMPILED_H
+#endif  // __PRECOMPILED_H

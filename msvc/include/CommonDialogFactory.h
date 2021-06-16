@@ -8,12 +8,12 @@ class CommonDialog_Save;
 class CommonDialogFactory
 {
 public:
-	static CommonDialog& openDialog();
-	static CommonDialog& saveDialog();
+    static CommonDialog& openDialog();
+    static CommonDialog& saveDialog();
 
 private:
-	static CommonDialog_Open& ms_dialogOpen;
-	static CommonDialog_Save& ms_dialogSave;
+    static CommonDialog_Open& ms_dialogOpen;
+    static CommonDialog_Save& ms_dialogSave;
 };
 
 #endif

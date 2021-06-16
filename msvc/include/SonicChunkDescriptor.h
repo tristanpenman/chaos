@@ -20,9 +20,7 @@
 class SonicChunkDescriptor
 {
 public:
-
     SonicChunkDescriptor();
-
     virtual ~SonicChunkDescriptor();
 
     unsigned short get() const;
