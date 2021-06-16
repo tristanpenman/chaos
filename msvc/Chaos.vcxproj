@@ -170,6 +170,7 @@
     <ClInclude Include="include\Instance_Level_S2G.h" />
     <ClInclude Include="include\Instance_Level_S3G.h" />
     <ClInclude Include="include\Menus.h" />
+    <ClInclude Include="include\NativeColor.h" />
     <ClInclude Include="include\Precompiled.h" />
     <ClInclude Include="include\Resource.h" />
     <ClInclude Include="include\SegaPalette.h" />

@@ -10,7 +10,7 @@ using namespace std;
 
 SegaPalette::SegaPalette()
 {
-    memset(m_colors, 0, sizeof(RGB_t) * PALETTE_SIZE);
+    memset(m_colors, 0, sizeof(NativeColor) * PALETTE_SIZE);
 }
 
 bool SegaPalette::readFromFile(fstream& file)
@@ -30,7 +30,7 @@ bool SegaPalette::readFromFile(fstream& file)
 
         while (color_index < PALETTE_SIZE)
         {
-            convertSegaToRGB(&buffer[bufferPos], m_colors[color_index]);
+            convertSegaToNativeColor(&buffer[bufferPos], m_colors[color_index]);
 
             color_index++;
             bufferPos += 2;

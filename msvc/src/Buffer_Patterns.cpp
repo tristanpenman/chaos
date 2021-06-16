@@ -84,7 +84,7 @@ void Buffer_Patterns::refresh(const SegaPalette* palettes, unsigned int palCount
                 for (unsigned int x = 0; x < SegaPattern::getPatternWidth(); x++)
                 {
                     unsigned char pixel = patterns[patternIndex].getPixel(x, y);
-                    memcpy(&c, &palette.getRGB(pixel), sizeof(DWORD));
+                    memcpy(&c, &palette.getNativeColor(pixel), sizeof(DWORD));
                     SetPixel(m_hDC,
                         x + patternIndex * patternWidth,
                         y + palIndex * patternHeight,
