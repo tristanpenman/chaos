@@ -122,7 +122,6 @@
     <ClCompile Include="src\ChaosRomFactory.cpp" />
     <ClCompile Include="src\ChaosRom_Sonic2.cpp" />
     <ClCompile Include="src\ChaosRom_Sonic3.cpp" />
-    <ClCompile Include="src\ChaosRom_Sonic3k.cpp" />
     <ClCompile Include="src\CommonDialog.cpp" />
     <ClCompile Include="src\CommonDialogFactory.cpp" />
     <ClCompile Include="src\CommonDialog_Open.cpp" />
@@ -161,7 +160,6 @@
     <ClInclude Include="include\ChaosRomFactory.h" />
     <ClInclude Include="include\ChaosRom_Sonic2.h" />
     <ClInclude Include="include\ChaosRom_Sonic3.h" />
-    <ClInclude Include="include\ChaosRom_Sonic3k.h" />
     <ClInclude Include="include\CommonDialog.h" />
     <ClInclude Include="include\CommonDialogFactory.h" />
     <ClInclude Include="include\CommonDialog_Open.h" />
@@ -181,9 +179,11 @@
     <ClInclude Include="include\Resource.h" />
     <ClInclude Include="include\SegaPalette.h" />
     <ClInclude Include="include\SegaPattern.h" />
+    <ClInclude Include="include\SegaPatternDescriptor.h" />
     <ClInclude Include="include\SegaRom.h" />
     <ClInclude Include="include\SonicBlock.h" />
     <ClInclude Include="include\SonicChunk.h" />
+    <ClInclude Include="include\SonicChunkDescriptor.h" />
     <ClInclude Include="include\SonicMap.h" />
     <ClInclude Include="include\SonicReader.h" />
     <ClInclude Include="include\SonicWriter.h" />

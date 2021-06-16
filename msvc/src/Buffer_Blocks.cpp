@@ -1,11 +1,10 @@
 #include "Precompiled.h"
 
-#ifdef WIN32
-
 #include "ChaosException.h"
 #include "SegaPalette.h"
 #include "SegaPattern.h"
 #include "SonicChunk.h"
+#include "SonicChunkDescriptor.h"
 #include "SonicBlock.h"
 #include "Buffer.h"
 #include "Buffer_Patterns.h"
@@ -20,12 +19,12 @@
  *****************************************************************************/
 
 Buffer_Blocks::Buffer_Blocks(
-	const Instance_Level* level,
-	const SonicBlock** blocksArray, unsigned int blockCount, 
-	const SonicChunk* chunksArray, unsigned int chunkCount,
-	const Buffer_Patterns* pPatternBuffer, HDC hdc)
+    const Instance_Level* level,
+    const SonicBlock** blocksArray, unsigned int blockCount,
+    const SonicChunk* chunksArray, unsigned int chunkCount,
+    const Buffer_Patterns* pPatternBuffer, HDC hdc)
 {
-	refresh(level, blocksArray, blockCount, chunksArray, chunkCount, pPatternBuffer, hdc);
+    refresh(level, blocksArray, blockCount, chunksArray, chunkCount, pPatternBuffer, hdc);
 }
 
 /******************************************************************************
@@ -36,7 +35,7 @@ Buffer_Blocks::Buffer_Blocks(
 
 void Buffer_Blocks::drawBlock(unsigned int blockIndex, HDC dest, int x, int y) const
 {
-	BitBlt(dest, x, y, m_blockWidth, m_blockWidth, m_hDC, blockIndex * m_blockWidth, 0, SRCCOPY);
+    BitBlt(dest, x, y, m_blockWidth, m_blockWidth, m_hDC, blockIndex * m_blockWidth, 0, SRCCOPY);
 }
 
 
@@ -46,8 +45,8 @@ void Buffer_Blocks::drawBlock(unsigned int blockIndex, HDC dest, int x, int y) c
  *
  *****************************************************************************/
 
-void Buffer_Blocks::renderChunkIntoBuffer(HDC hdc, int x, int y, const SonicChunk& chunk, bool h_flip, bool v_flip, 
-	const Buffer_Patterns* pPatternBuffer) const
+void Buffer_Blocks::renderChunkIntoBuffer(HDC hdc, int x, int y, const SonicChunk& chunk, bool h_flip, bool v_flip,
+    const Buffer_Patterns* pPatternBuffer) const
 {
     const unsigned int pattern_width = SegaPattern::getPatternWidth();
     const unsigned int pattern_height = SegaPattern::getPatternHeight();
@@ -62,12 +61,12 @@ void Buffer_Blocks::renderChunkIntoBuffer(HDC hdc, int x, int y, const SonicChun
         px = base_x;
 
         for (int pat_x = 0; pat_x < 2; pat_x++)
-        {                                       
+        {
             pPatternBuffer->drawPattern(
-                chunk.getPatternDescriptor(pat_x, pat_y), hdc, 
-                px, 
-                py, 
-                h_flip, 
+                chunk.getPatternDescriptor(pat_x, pat_y), hdc,
+                px,
+                py,
+                h_flip,
                 v_flip);
 
             px = h_flip ? px - pattern_width : px + pattern_width;
@@ -78,44 +77,43 @@ void Buffer_Blocks::renderChunkIntoBuffer(HDC hdc, int x, int y, const SonicChun
 }
 
 void Buffer_Blocks::renderBlockIntoBuffer(const SonicBlock& block, HDC hdc, int x, int y,
-	const SonicChunk* chunksArray, unsigned int chunkCount, 
-	const Buffer_Patterns* pPatternBuffer) const
+    const SonicChunk* chunksArray, unsigned int chunkCount,
+    const Buffer_Patterns* pPatternBuffer) const
 {
     const unsigned int chunkWidth = SonicChunk::getChunkWidth();
     const unsigned int chunkHeight = SonicChunk::getChunkHeight();
 
     for (unsigned int chunk_y = 0; chunk_y < 8; chunk_y++)
-	{
+    {
         for (unsigned int chunk_x = 0; chunk_x < 8; chunk_x++)
         {
-			const SonicChunkDescriptor& desc = block.getChunkDescriptor(chunk_x, chunk_y);
-			const SonicChunk& chunk = chunksArray[desc.getChunkIndex()];
+            const SonicChunkDescriptor& desc = block.getChunkDescriptor(chunk_x, chunk_y);
+            const SonicChunk& chunk = chunksArray[desc.getChunkIndex()];
 
             renderChunkIntoBuffer(hdc,
                     x + chunk_x * chunkWidth,
                     y + chunk_y * chunkHeight,
-					chunk,
-					desc.getFlag_HFlip(),
-					desc.getFlag_VFlip(),
+                    chunk,
+                    desc.getFlag_HFlip(),
+                    desc.getFlag_VFlip(),
                     pPatternBuffer);
         }
     }
 }
 
 void Buffer_Blocks::refresh(
-	const Instance_Level* level,
-	const SonicBlock** blocksArray, unsigned int blockCount, 
-	const SonicChunk* chunksArray, unsigned int chunkCount, const Buffer_Patterns* pPatternBuffer, HDC hdc)
+    const Instance_Level* level,
+    const SonicBlock** blocksArray, unsigned int blockCount,
+    const SonicChunk* chunksArray, unsigned int chunkCount, const Buffer_Patterns* pPatternBuffer, HDC hdc)
 {
-	m_blockWidth = level->getBlockWidth();
+    m_blockWidth = level->getBlockWidth();
 
-	reset(hdc, blockCount * m_blockWidth, m_blockWidth);
-	SelectObject (m_hDC, m_hBitmap);
-	for (unsigned int blockIndex = 0; blockIndex < blockCount; blockIndex++)
-	{
-		renderBlockIntoBuffer(*blocksArray[blockIndex], m_hDC, blockIndex * m_blockWidth, 0, 
-			chunksArray, chunkCount, pPatternBuffer);
-	}
+    reset(hdc, blockCount * m_blockWidth, m_blockWidth);
+    SelectObject(m_hDC, m_hBitmap);
+
+    for (unsigned int blockIndex = 0; blockIndex < blockCount; blockIndex++)
+    {
+        renderBlockIntoBuffer(*blocksArray[blockIndex], m_hDC, blockIndex * m_blockWidth, 0,
+            chunksArray, chunkCount, pPatternBuffer);
+    }
 }
-
-#endif  // WIN32

@@ -1,9 +1,3 @@
-///////////////////////////////////////////////////////////////////////////////
-//
-// SonicBlock.cpp
-//
-///////////////////////////////////////////////////////////////////////////////
-
 #include "Precompiled.h"
 
 #include "ChaosException.h"
@@ -12,14 +6,8 @@
 #include "SegaPattern.h"
 
 #include "SonicChunk.h"
+#include "SonicChunkDescriptor.h"
 #include "SonicBlock.h"
-
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// SonicBlock class implementation
-//
-///////////////////////////////////////////////////////////////////////////////
 
 SonicBlock::SonicBlock(unsigned int w, unsigned int h)
     : m_chunkDescriptors(NULL)
@@ -78,4 +66,3 @@ unsigned int SonicBlock::calculateBlockSize(unsigned int w, unsigned int h)
 
     return chunkCount * BYTES_PER_CHUNK;
 }
-

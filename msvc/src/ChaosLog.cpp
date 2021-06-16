@@ -1,33 +1,18 @@
-///////////////////////////////////////////////////////////////////////////////
-//
-// ChaosLog.cpp
-//
-///////////////////////////////////////////////////////////////////////////////
-
 #include "Precompiled.h"
 
+#include <windows.h>
+#include <time.h>
+
 #include "ChaosException.h"
-
-#ifdef WIN32
-# include <windows.h>
-# include <time.h>
-#else
-# include <sys/time.h>
-# include <pthread.h>
-#endif
-
 #include "ChaosLog.h"
 
 using namespace std;
-
 
 ///////////////////////////////////////////////////////////////////////////////
 //
 // Windows implementation of gettimeofday()
 //
 ///////////////////////////////////////////////////////////////////////////////
-
-#ifdef WIN32
 
 #if defined(_MSC_VER) || defined(_MSC_EXTENSIONS)
   #define DELTA_EPOCH_IN_MICROSECS  11644473600000000Ui64
@@ -89,8 +74,6 @@ int gettimeofday(struct timeval *tv, struct timezone *tz)
 
     return 0;
 }
-#endif
-
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -101,26 +84,18 @@ int gettimeofday(struct timeval *tv, struct timezone *tz)
 // Logging is thread safe. Only one ChaosLog instance can write to the
 // console or output file at a time.
 
-#ifdef WIN32
 HANDLE ChaosLog::ms_fileMutex = CreateMutex(NULL, FALSE, NULL);
-#else
-pthread_mutex_t ChaosLog::ms_fileMutex = PTHREAD_MUTEX_INITIALIZER;
-#endif
 
 ofstream ChaosLog::ms_file;
 
 void ChaosLog::lock() throw(ChaosException)
 {
-#ifdef WIN32
     if (ms_fileMutex == NULL)
     {
         throw ChaosException("Failed to create mutex for log output");
     }
 
     if (WaitForSingleObject(ms_fileMutex, INFINITE) != WAIT_OBJECT_0)
-#else
-    if (pthread_mutex_lock(&ms_fileMutex) != 0)
-#endif
     {
         throw ChaosException("Failed to lock mutex for log output");
     }
@@ -128,24 +103,20 @@ void ChaosLog::lock() throw(ChaosException)
 
 void ChaosLog::unlock() throw(ChaosException)
 {
-#ifdef WIN32
     if (ReleaseMutex(ms_fileMutex) != TRUE)
-#else
-    if (pthread_mutex_unlock(&ms_fileMutex) != 0)
-#endif
     {
         throw ChaosException("Failed unlock mutex for log output");
     }
 }
 
 ChaosLog::ChaosLog() throw(ChaosException)
-: m_pFile(NULL)
+  : m_pFile(NULL)
 {
     ChaosLog::lock();
 
     if (ms_file.is_open())
     {
-        m_pFile = &ms_file;    
+        m_pFile = &ms_file;
     }
 
     ChaosLog::unlock();
@@ -153,11 +124,7 @@ ChaosLog::ChaosLog() throw(ChaosException)
     timeval tv;
     gettimeofday(&tv, NULL);
 
-#ifdef WIN32
     m_os << tv.tv_sec << "." << tv.tv_usec << " (" << GetCurrentThreadId() << "): ";
-#else
-    m_os << tv.tv_sec << "." << tv.tv_usec << " (" << pthread_self() << "): ";
-#endif
 }
 
 ChaosLog::~ChaosLog() throw(ChaosException)
@@ -202,11 +169,11 @@ bool ChaosLog::init(const string& filename) throw(ChaosException)
 
     if (!ms_file.is_open())
     {
-        cerr << "Warning: Could not open file \"" 
-             << filename 
-             << "\" for logging." 
-             << endl;        
-             
+        cerr << "Warning: Could not open file \""
+             << filename
+             << "\" for logging."
+             << endl;
+
         ChaosLog::unlock();
         return false;
     }
@@ -222,9 +189,7 @@ void ChaosLog::cleanup() throw(ChaosException)
         ms_file.close();
     }
 
-#ifdef WIN32
     CloseHandle(ms_fileMutex);
     ms_fileMutex = NULL;
-#endif
 }
 

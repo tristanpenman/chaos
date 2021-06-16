@@ -10,10 +10,10 @@ CommonDialog_Save& CommonDialogFactory::ms_dialogSave = CommonDialog_Save(0);
 
 CommonDialog& CommonDialogFactory::openDialog()
 {
-	return ms_dialogOpen;
+    return ms_dialogOpen;
 }
 
 CommonDialog& CommonDialogFactory::saveDialog()
 {
-	return ms_dialogSave;
+    return ms_dialogSave;
 }

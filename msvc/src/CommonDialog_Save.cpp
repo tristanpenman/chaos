@@ -5,7 +5,6 @@
 
 bool CommonDialog_Save::execute()
 {
-	m_ofn.Flags = OFN_OVERWRITEPROMPT;
-
-	return (GetSaveFileName(&m_ofn) == TRUE);
+    m_ofn.Flags = OFN_OVERWRITEPROMPT;
+    return GetSaveFileName(&m_ofn) == TRUE;
 }

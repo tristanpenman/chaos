@@ -21,275 +21,242 @@
 #include "Instance_Level.h"
 #include "Instance_Level_S2G.h"
 
-
-/******************************************************************************
- *
- * Constants
- *
- *****************************************************************************/
-
 #define PALETTE_COUNT 4
 
 #define LEVEL_BUFFER_SIZE   0xFFFF
 #define BLOCK_BUFFER_SIZE   0xFFFF
 #define CHUNK_BUFFER_SIZE   0xFFFF
-#define PATTERN_BUFFER_SIZE 0xFFFF	// 64kB
+#define PATTERN_BUFFER_SIZE 0xFFFF  // 64kB
 
 #define BLOCK_WIDTH 128
 #define BLOCK_HEIGHT 128
 
-/******************************************************************************
- *
- * Instance_Level_S2G constructor and destructor methods
- *
- *****************************************************************************/
-
 using namespace std;
 
 Instance_Level_S2G::Instance_Level_S2G(ChaosRom_Sonic2& rom)
-: m_rom(rom)
-, m_level_index(0)
-, m_level_loaded(false)
-, m_palettes(NULL)
-, m_patterns(NULL)
-, m_chunks(NULL)
-, m_blockPtrs(NULL)
-, m_pMap(NULL)
-, m_palette_count(0)
-, m_pattern_count(0)
-, m_chunk_count(0)
-, m_blockCount(0)
+  : m_rom(rom)
+  , m_level_index(0)
+  , m_level_loaded(false)
+  , m_palettes(NULL)
+  , m_patterns(NULL)
+  , m_chunks(NULL)
+  , m_blockPtrs(NULL)
+  , m_pMap(NULL)
+  , m_palette_count(0)
+  , m_pattern_count(0)
+  , m_chunk_count(0)
+  , m_blockCount(0)
 {
 
 }
 
 Instance_Level_S2G::~Instance_Level_S2G()
 {
-	cleanup();
+    cleanup();
 }
-
-/******************************************************************************
- *
- * Loader methods
- *
- *****************************************************************************/
 
 bool Instance_Level_S2G::loadPalettes()
 {
-	fstream& file = m_rom.getFile();
-	streamoff paletteAddr = m_rom.getPalettesAddress(m_level_index);
-	file.seekg(paletteAddr);
+    fstream& file = m_rom.getFile();
+    streamoff paletteAddr = m_rom.getPalettesAddress(m_level_index);
+    file.seekg(paletteAddr);
 
-	m_palettes = new SegaPalette[PALETTE_COUNT];
+    m_palettes = new SegaPalette[PALETTE_COUNT];
 
-	for (unsigned int palRow = 1; palRow < PALETTE_COUNT; palRow++)
-	{
-		if (!m_palettes[palRow].readFromFile(file))
-		{
-			return false;
-		}
-	}
+    for (unsigned int palRow = 1; palRow < PALETTE_COUNT; palRow++)
+    {
+        if (!m_palettes[palRow].readFromFile(file))
+        {
+            return false;
+        }
+    }
 
-	m_palette_count = PALETTE_COUNT;
+    m_palette_count = PALETTE_COUNT;
 
-	return true;
+    return true;
 }
 
 bool Instance_Level_S2G::loadPatterns()
 {
-	fstream& file = m_rom.getFile();
+    fstream& file = m_rom.getFile();
 
-	unsigned char buffer[PATTERN_BUFFER_SIZE];
-	
-	streamoff patternsAddr = m_rom.getPatternsAddress(m_level_index);
+    unsigned char buffer[PATTERN_BUFFER_SIZE];
 
-	SonicReader sr(file);
-	SonicReader::result_t r = sr.decompress(buffer, PATTERN_BUFFER_SIZE, patternsAddr);
-	
-	if (r.first)
-	{
-		// Decompression successful
-		const unsigned int pattern_size = SegaPattern::getPatternSize();
-		const unsigned int pattern_count = r.second / pattern_size;
-		
-		if (r.second % pattern_size != 0)
-		{
-			REPORT_ERROR("Inconsistent pattern data", "Decompression error");
-		}
+    streamoff patternsAddr = m_rom.getPatternsAddress(m_level_index);
 
-		unsigned int pattern_idx = 0;
-		unsigned int bufferPos = 0;
+    SonicReader sr(file);
+    SonicReader::result_t r = sr.decompress(buffer, PATTERN_BUFFER_SIZE, patternsAddr);
 
-		m_patterns = new SegaPattern[pattern_count];
+    if (r.first)
+    {
+        const unsigned int pattern_size = SegaPattern::getPatternSize();
+        const unsigned int pattern_count = r.second / pattern_size;
 
-		while (pattern_idx < pattern_count)
-		{
-			m_patterns[pattern_idx].loadFromBuffer(&buffer[bufferPos]);
+        if (r.second % pattern_size != 0)
+        {
+            REPORT_ERROR("Inconsistent pattern data", "Decompression error");
+        }
 
-			pattern_idx++;
-			bufferPos += pattern_size;
-		}
+        unsigned int pattern_idx = 0;
+        unsigned int bufferPos = 0;
 
-		m_pattern_count = pattern_count;
+        m_patterns = new SegaPattern[pattern_count];
 
-		return true;
-	}
+        while (pattern_idx < pattern_count)
+        {
+            m_patterns[pattern_idx].loadFromBuffer(&buffer[bufferPos]);
 
-	return false;
+            pattern_idx++;
+            bufferPos += pattern_size;
+        }
+
+        m_pattern_count = pattern_count;
+
+        return true;
+    }
+
+    return false;
 }
 
 bool Instance_Level_S2G::loadChunks()
 {
-	fstream& file = m_rom.getFile();
+    fstream& file = m_rom.getFile();
 
-	unsigned char buffer[CHUNK_BUFFER_SIZE];
-	
-	streamoff chunks_addr = m_rom.getChunksAddress(m_level_index);
+    unsigned char buffer[CHUNK_BUFFER_SIZE];
 
-	SonicReader sr(file);
-	SonicReader::result_t r = sr.decompress(buffer, CHUNK_BUFFER_SIZE, chunks_addr);
-	
-	if (r.first)
-	{
-		// Decompression successful
-		const unsigned int chunk_size = SonicChunk::getChunkSize();
-		const unsigned int chunk_count = r.second / chunk_size;
-		
-		if (r.second % chunk_size != 0)
-		{
-			REPORT_ERROR("Inconsistent chunk data", "Decompression error");
-		}
+    streamoff chunks_addr = m_rom.getChunksAddress(m_level_index);
 
-		unsigned int chunk_idx = 0;
-		unsigned int bufferPos = 0;
+    SonicReader sr(file);
+    SonicReader::result_t r = sr.decompress(buffer, CHUNK_BUFFER_SIZE, chunks_addr);
 
-		m_chunks = new SonicChunk[chunk_count];
+    if (r.first)
+    {
+        const unsigned int chunk_size = SonicChunk::getChunkSize();
+        const unsigned int chunk_count = r.second / chunk_size;
 
-		while (chunk_idx < chunk_count)
-		{
-			m_chunks[chunk_idx].loadFromBuffer(&buffer[bufferPos]);
+        if (r.second % chunk_size != 0)
+        {
+            REPORT_ERROR("Inconsistent chunk data", "Decompression error");
+        }
 
-			chunk_idx++;
-			bufferPos += chunk_size;
-		}
+        unsigned int chunk_idx = 0;
+        unsigned int bufferPos = 0;
 
-		m_chunk_count = chunk_count;
+        m_chunks = new SonicChunk[chunk_count];
 
-		return true;
-	}
+        while (chunk_idx < chunk_count)
+        {
+            m_chunks[chunk_idx].loadFromBuffer(&buffer[bufferPos]);
 
-	return false;
+            chunk_idx++;
+            bufferPos += chunk_size;
+        }
+
+        m_chunk_count = chunk_count;
+
+        return true;
+    }
+
+    return false;
 }
 
 bool Instance_Level_S2G::loadBlocks()
 {
-	fstream& file = m_rom.getFile();
+    fstream& file = m_rom.getFile();
 
-	unsigned char buffer[BLOCK_BUFFER_SIZE];
-	
-	streamoff blocks_addr = m_rom.getBlocksAddress(m_level_index);
+    unsigned char buffer[BLOCK_BUFFER_SIZE];
 
-	SonicReader sr(file);
-	SonicReader::result_t r = sr.decompress(buffer, BLOCK_BUFFER_SIZE, blocks_addr);
+    streamoff blocks_addr = m_rom.getBlocksAddress(m_level_index);
 
-	if (r.first)
-	{
-		// Load blocks!
+    SonicReader sr(file);
+    SonicReader::result_t r = sr.decompress(buffer, BLOCK_BUFFER_SIZE, blocks_addr);
 
-		const unsigned int blockSize = getBlockWidth();
-		const unsigned int blockCount = r.second / blockSize;
+    if (r.first)
+    {
+        const unsigned int blockSize = getBlockWidth();
+        const unsigned int blockCount = r.second / blockSize;
 
-		unsigned int bufferPos = 0;
+        unsigned int bufferPos = 0;
 
-		if (r.second % blockSize != 0)
-		{
-			throw ChaosException("Invalid block data");
-		}
+        if (r.second % blockSize != 0)
+        {
+            throw ChaosException("Invalid block data");
+        }
 
-		m_blockPtrs = new SonicBlock*[blockCount];
+        m_blockPtrs = new SonicBlock*[blockCount];
 
-		for (unsigned int blockIndex = 0; blockIndex < blockCount; blockIndex++)
-		{
-			m_blockPtrs[blockIndex] = new SonicBlock(getBlockWidth(), getBlockHeight());
-			m_blockPtrs[blockIndex]->loadFromBuffer(&buffer[bufferPos]);
-			bufferPos += blockSize;
-		}
+        for (unsigned int blockIndex = 0; blockIndex < blockCount; blockIndex++)
+        {
+            m_blockPtrs[blockIndex] = new SonicBlock(getBlockWidth(), getBlockHeight());
+            m_blockPtrs[blockIndex]->loadFromBuffer(&buffer[bufferPos]);
+            bufferPos += blockSize;
+        }
 
-		m_blockCount = blockCount;
+        m_blockCount = blockCount;
 
-		return true;
-	}
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 bool Instance_Level_S2G::loadMap()
 {
-	fstream& file = m_rom.getFile();
+    fstream& file = m_rom.getFile();
 
-	unsigned char buffer[LEVEL_BUFFER_SIZE];
+    unsigned char buffer[LEVEL_BUFFER_SIZE];
 
-	SonicReader reader(file);
+    SonicReader reader(file);
 
-	SonicReader::result_t result = 
-		reader.decompress(
-			buffer, 
-			LEVEL_BUFFER_SIZE, 
-			m_rom.getMapAddress(m_level_index));
+    SonicReader::result_t result =
+        reader.decompress(
+            buffer,
+            LEVEL_BUFFER_SIZE,
+            m_rom.getMapAddress(m_level_index));
 
-	if (result.first)
-	{
-		m_pMap = new SonicMap(2, 128, 16, buffer);
+    if (result.first)
+    {
+        m_pMap = new SonicMap(2, 128, 16, buffer);
 
-		return true;
-	}
-	
-	return false;
+        return true;
+    }
+
+    return false;
 }
-
-/******************************************************************************
- *
- * Windows-specific buffer methods
- *
- *****************************************************************************/
-
-#ifdef WIN32
 
 bool Instance_Level_S2G::bufferPatterns()
 {
-	HWND hwnd = getWindow();
-	HDC hdc = GetDC(hwnd);
+    HWND hwnd = getWindow();
+    HDC hdc = GetDC(hwnd);
 
-	m_pBufferPatterns = new Buffer_Patterns(getPalettes(), getPaletteCount(), getPatterns(), getPatternCount(), hdc);
+    m_pBufferPatterns = new Buffer_Patterns(getPalettes(), getPaletteCount(), getPatterns(), getPatternCount(), hdc);
 
-	ReleaseDC(hwnd, hdc);
-	
-	return true;
+    ReleaseDC(hwnd, hdc);
+
+    return true;
 }
 
 bool Instance_Level_S2G::bufferBlocks()
 {
-	HWND hwnd = getWindow();
-	HDC hdc = GetDC(hwnd);
+    HWND hwnd = getWindow();
+    HDC hdc = GetDC(hwnd);
 
-	m_pBufferBlocks = new Buffer_Blocks(this, getBlocks(), getBlockCount(), getChunks(), getChunkCount(), &(getPatternBuffer()), hdc);
+    m_pBufferBlocks = new Buffer_Blocks(this, getBlocks(), getBlockCount(), getChunks(), getChunkCount(), &(getPatternBuffer()), hdc);
 
-	ReleaseDC(hwnd, hdc);
+    ReleaseDC(hwnd, hdc);
 
-	return true;
+    return true;
 }
 
 void Instance_Level_S2G::unloadPatternBuffer()
 {
-
+    // TODO
 }
 
 void Instance_Level_S2G::unloadBlockBuffer()
 {
-
+    // TODO
 }
-
-#endif
 
 /******************************************************************************
  *
@@ -299,72 +266,67 @@ void Instance_Level_S2G::unloadBlockBuffer()
 
 void Instance_Level_S2G::cleanup()
 {
-	m_level_loaded = false;
-	m_level_index = 0;
+    m_level_loaded = false;
+    m_level_index = 0;
 
-#ifdef WIN32
-
-	unloadPatternBuffer();
-	unloadBlockBuffer();
-
-#endif
-
-	unloadMap();
-	unloadBlocks();
-	unloadChunks();
-	unloadPatterns();
-	unloadPalettes();
+    unloadPatternBuffer();
+    unloadBlockBuffer();
+    unloadMap();
+    unloadBlocks();
+    unloadChunks();
+    unloadPatterns();
+    unloadPalettes();
 }
 
 void Instance_Level_S2G::unloadPalettes()
 {
-	if (m_palettes)
-	{
-		delete[] m_palettes; m_palettes = NULL;
-	}
+    if (m_palettes)
+    {
+        delete[] m_palettes; m_palettes = NULL;
+    }
 
-	m_palette_count = 0;
+    m_palette_count = 0;
 }
 
 void Instance_Level_S2G::unloadPatterns()
 {
-	if (m_patterns)
-	{
-		delete[] m_patterns; m_patterns = NULL;
-	}
+    if (m_patterns)
+    {
+        delete[] m_patterns; m_patterns = NULL;
+    }
 
-	m_pattern_count = 0;
+    m_pattern_count = 0;
 }
 
 void Instance_Level_S2G::unloadChunks()
 {
-	if (m_chunks)
-	{
-		delete[] m_chunks; m_chunks = NULL;
-	}
+    if (m_chunks)
+    {
+        delete[] m_chunks; m_chunks = NULL;
+    }
 
-	m_chunk_count = 0;
+    m_chunk_count = 0;
 }
 
 void Instance_Level_S2G::unloadBlocks()
 {
-	for (unsigned int i = 0; i < m_blockCount; i++) 
-	{
-		delete m_blockPtrs[i]; m_blockPtrs[i] = NULL;
-	}
+    for (unsigned int i = 0; i < m_blockCount; i++)
+    {
+        delete m_blockPtrs[i]; m_blockPtrs[i] = NULL;
+    }
 
-	delete[] m_blockPtrs; m_blockPtrs = NULL;
+    delete[] m_blockPtrs; m_blockPtrs = NULL;
 
-	m_blockCount = 0;
+    m_blockCount = 0;
 }
 
 void Instance_Level_S2G::unloadMap()
 {
-	if (m_pMap)
-	{
-		delete m_pMap; m_pMap = 0;
-	}
-}	
+    if (m_pMap)
+    {
+        delete m_pMap; m_pMap = 0;
+    }
+}
 
 /******************************************************************************
  *
@@ -374,25 +336,25 @@ void Instance_Level_S2G::unloadMap()
 
 bool Instance_Level_S2G::hasUnsavedChanges() const
 {
-	return true;
+    return true;
 }
 
 bool Instance_Level_S2G::saveChanges()
 {
-	int r = MessageBox(getWindow(), "Save changes made to this level?", "Save changes?", MB_YESNOCANCEL);
+    int r = MessageBox(getWindow(), "Save changes made to this level?", "Save changes?", MB_YESNOCANCEL);
 
-	if (r == IDYES)
-	{
-		// Save changes
+    if (r == IDYES)
+    {
+        // Save changes
 
-		return true;
-	}
-	else if (r == IDNO)
-	{
-		return true;
-	}
-	
-	return false;
+        return true;
+    }
+    else if (r == IDNO)
+    {
+        return true;
+    }
+
+    return false;
 }
 
 /******************************************************************************
@@ -403,115 +365,98 @@ bool Instance_Level_S2G::saveChanges()
 
 bool Instance_Level_S2G::loadLevel(unsigned int level_index)
 {
-	if (level_index > 19)
-	{
-		return false;
-	}
+    if (level_index > 19)
+    {
+        return false;
+    }
 
-	m_level_index = level_index;
+    m_level_index = level_index;
 
-	if (loadPalettes() &&
-		loadPatterns() &&
-		loadChunks()   &&
-		loadBlocks()   &&
-		loadMap())
-	{
+    if (loadPalettes()   &&
+        loadPatterns()   &&
+        loadChunks()     &&
+        loadBlocks()     &&
+        loadMap()        &&
+        bufferPatterns() &&
+        bufferBlocks())
+    {
+        return true;
+    }
 
-#ifdef WIN32
+    cleanup();
 
-		if (bufferPatterns() &&
-		    bufferBlocks())
-		{
-			return true;
-		}
-
-#else
-
-		return true;
-
-#endif
-
-	}
-
-	cleanup();
-
-	return false;
+    return false;
 }
 
 const SegaPalette& Instance_Level_S2G::getPalette(unsigned int index) const
 {
-	return m_palettes[index];
+    return m_palettes[index];
 }
 
 const SegaPalette* Instance_Level_S2G::getPalettes() const
 {
-	return m_palettes;
+    return m_palettes;
 }
 
 unsigned int Instance_Level_S2G::getPaletteCount() const
 {
-	return m_palette_count;
+    return m_palette_count;
 }
-	
+
 const SegaPattern& Instance_Level_S2G::getPattern(unsigned int index) const
 {
-	return m_patterns[index];
+    return m_patterns[index];
 }
 
 const SegaPattern* Instance_Level_S2G::getPatterns() const
 {
-	return m_patterns;
+    return m_patterns;
 }
 
 unsigned int Instance_Level_S2G::getPatternCount() const
 {
-	return m_pattern_count;
+    return m_pattern_count;
 }
 
 const SonicBlock& Instance_Level_S2G::getBlock(unsigned int index) const
 {
-	return *m_blockPtrs[index];
+    return *m_blockPtrs[index];
 }
 
 const SonicBlock** Instance_Level_S2G::getBlocks() const
 {
-	return const_cast<const SonicBlock**>(m_blockPtrs);
+    return const_cast<const SonicBlock**>(m_blockPtrs);
 }
 
 unsigned int Instance_Level_S2G::getBlockCount() const
 {
-	return m_blockCount;
+    return m_blockCount;
 }
 
 unsigned int Instance_Level_S2G::getBlockHeight() const
 {
-	return BLOCK_WIDTH;
+    return BLOCK_WIDTH;
 }
 
 unsigned int Instance_Level_S2G::getBlockWidth() const
 {
-	return BLOCK_HEIGHT;
+    return BLOCK_HEIGHT;
 }
 
 const SonicMap& Instance_Level_S2G::getMap() const
 {
-	return *m_pMap;
+    return *m_pMap;
 }
 
-#ifdef WIN32
+const Buffer_Blocks& Instance_Level_S2G::getBlockBuffer() const
+{
+    return *m_pBufferBlocks;
+}
 
-	const Buffer_Blocks& Instance_Level_S2G::getBlockBuffer() const
-	{
-		return *m_pBufferBlocks;
-	}
-
-	const Buffer_Patterns& Instance_Level_S2G::getPatternBuffer() const
-	{
-		return *m_pBufferPatterns;
-	}
-
-#endif
-
+const Buffer_Patterns& Instance_Level_S2G::getPatternBuffer() const
+{
+    return *m_pBufferPatterns;
+}
 
 /******************************************************************************
  *
@@ -521,15 +466,15 @@ const SonicMap& Instance_Level_S2G::getMap() const
 
 const SonicChunk& Instance_Level_S2G::getChunk(unsigned int index) const
 {
-	return m_chunks[index];
+    return m_chunks[index];
 }
 
 const SonicChunk* Instance_Level_S2G::getChunks() const
 {
-	return m_chunks;
+    return m_chunks;
 }
 
 unsigned int Instance_Level_S2G::getChunkCount() const
 {
-	return m_chunk_count;
+    return m_chunk_count;
 }

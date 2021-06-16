@@ -3,17 +3,17 @@
 #include "Instance.h"
 
 Instance::Instance()
-: m_hWnd(0)
+  : m_hWnd(0)
 {
 
 }
 
 void Instance::setWindow(HWND hWnd)
 {
-	m_hWnd = hWnd;
+    m_hWnd = hWnd;
 }
 
 HWND Instance::getWindow() const
 {
-	return m_hWnd;
+    return m_hWnd;
 }

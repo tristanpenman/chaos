@@ -3,5 +3,5 @@
 
 SonicWriter::SonicWriter()
 {
-	return;
+    return;
 }

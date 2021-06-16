@@ -6,5 +6,5 @@ using namespace std;
 
 string ChaosException::getMessage() const
 {
-	return m_msg;
+    return m_msg;
 }

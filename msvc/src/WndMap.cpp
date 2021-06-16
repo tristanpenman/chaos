@@ -1,7 +1,5 @@
 #include "Precompiled.h"
 
-#ifdef WIN32
-
 #include "SegaRom.h"
 #include "InstanceValue.h"
 #include "ChaosException.h"
@@ -40,8 +38,8 @@ ATOM WndMap::getClass(HINSTANCE hInstance)
 		wc.cbClsExtra    = 0 ;
 		wc.cbWndExtra    = 0 ;
 		wc.hInstance     = hInstance ;
-		wc.hIcon         = LoadIcon (NULL, IDI_APPLICATION) ;
-		wc.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
+		wc.hIcon         = LoadIcon(NULL, IDI_APPLICATION) ;
+		wc.hCursor       = LoadCursor(NULL, IDC_ARROW) ;
 		wc.hbrBackground = NULL ;
 		wc.lpszMenuName  = NULL;
 		wc.lpszClassName = TEXT("ChaosMap");
@@ -51,7 +49,7 @@ ATOM WndMap::getClass(HINSTANCE hInstance)
 
 		if (!ms_class)
 		{
-			MessageBox (NULL, TEXT ("Could not register the map window class."), NULL, MB_ICONERROR) ;
+			MessageBox(NULL, TEXT("Could not register the map window class."), NULL, MB_ICONERROR) ;
 		}
 	}
 
@@ -68,13 +66,13 @@ HWND WndMap::createWindow(HINSTANCE hInstance, HWND hParent)
 		(LPCTSTR)MAKELONG(getClass(hInstance), 0),
 		TEXT("Map"), 
 		WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_VSCROLL, 
-		0, 
 		0,
-		rect.right - rect.left, 
-		rect.bottom - rect.top, 
-		hParent, 
-		NULL, 
-		hInstance, 
+		0,
+		rect.right - rect.left,
+		rect.bottom - rect.top,
+		hParent,
+		NULL,
+		hInstance,
 		NULL);
 
 	return hWnd;
@@ -100,7 +98,7 @@ void WndMap::resetScrollBars(HWND hwnd)
 	const SonicMap& map = pInstance->getMap();
 
 	RECT rect;
-	if (GetClientRect (hwnd, &rect) == TRUE)
+	if (GetClientRect(hwnd, &rect) == TRUE)
 	{
 		SCROLLINFO si;
 		si.cbSize = sizeof(SCROLLINFO);
@@ -318,7 +316,7 @@ int WndMap::messagePaint(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	const unsigned int blockHeight = WndMap::blockHeight[hwnd];
 
 	PAINTSTRUCT ps;
-	HDC hdc = BeginPaint (hwnd, &ps);
+	HDC hdc = BeginPaint(hwnd, &ps);
 
 	int first_block_x = WndMap::x[hwnd] / blockWidth;
 	int first_block_y = WndMap::y[hwnd] / blockHeight;
@@ -331,7 +329,7 @@ int WndMap::messagePaint(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		try
 		{
 			RECT rect;
-			GetClientRect (hwnd, &rect) ;
+			GetClientRect(hwnd, &rect) ;
 
 			for (unsigned int y = first_block_y; y < map.getHeight(); y++)
 			{
@@ -468,5 +466,3 @@ void WndMap::destroyClass()
 		ms_class = 0;
 	}
 }
-
-#endif // WIN32

@@ -1,21 +1,8 @@
-///////////////////////////////////////////////////////////////////////////////
-//
-// SegaPattern.cpp
-//
-///////////////////////////////////////////////////////////////////////////////
-
 #include "Precompiled.h"
 
 #include "SegaPattern.h"
 
 using namespace std;
-
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// SegaPattern implementation
-//
-///////////////////////////////////////////////////////////////////////////////
 
 SegaPattern::SegaPattern()
 {
@@ -51,41 +38,4 @@ unsigned char SegaPattern::getPixel(unsigned char x, unsigned char y) const
 void SegaPattern::setPixel(unsigned char x, unsigned char y, unsigned char value)
 {
     m_pixels[y * PATTERN_WIDTH + x] = value;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// SegaPatternDescriptor implementation
-//
-///////////////////////////////////////////////////////////////////////////////
-
-SegaPatternDescriptor::SegaPatternDescriptor()
-: m_index(0)
-{
-
-}
-
-SegaPatternDescriptor::SegaPatternDescriptor(const SegaPatternDescriptor& desc)
-: m_index(desc.m_index)
-{
-
-}
-
-SegaPatternDescriptor::SegaPatternDescriptor(unsigned short patternIndex, unsigned short paletteIndex)
-: m_index(0)
-{
-    m_index |= (paletteIndex & 0x3) << 13;
-    m_index |= (patternIndex & 0x7FF);
-}
-
-SegaPatternDescriptor& SegaPatternDescriptor::operator=(const SegaPatternDescriptor& rhs)
-{
-    m_index = rhs.m_index;
-    return *this;
-}
-
-SegaPatternDescriptor::~SegaPatternDescriptor()
-{
-
 }
