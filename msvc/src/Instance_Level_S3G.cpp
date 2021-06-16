@@ -107,11 +107,11 @@ bool Instance_Level_S3G::loadPatterns()
 	streamoff patterns_address_ext  = m_rom.getPatternsAddress_extended(m_level_index);
 
 	// Get length of base and extended pattern data
-	streamoff data_length_base = m_rom.readAddress_16bit_at(patterns_address_base);
-	streamoff data_length_ext  = m_rom.readAddress_16bit_at(patterns_address_ext);
+	uint16_t data_length_base = m_rom.readAddress_16bit_at(patterns_address_base);
+	uint16_t data_length_ext  = m_rom.readAddress_16bit_at(patterns_address_ext);
 
-	const unsigned int pattern_size = SegaPattern::getPatternSize();
-	const unsigned int pattern_count = (data_length_base + data_length_ext) / pattern_size;
+	const size_t pattern_size = SegaPattern::getPatternSize();
+	const size_t pattern_count = (data_length_base + data_length_ext) / pattern_size;
 
 	m_patterns = new SegaPattern[pattern_count];
 
@@ -197,18 +197,18 @@ bool Instance_Level_S3G::loadChunks()
 	unsigned char buffer[CHUNK_BUFFER_SIZE];
 
 	// Get address of base and extended pattern data
-	streamoff chunks_address_base = m_rom.getChunksAddress(m_level_index);
-	streamoff chunks_address_ext  = m_rom.getChunksAddress_extended(m_level_index);
+	uint32_t chunks_address_base = m_rom.getChunksAddress(m_level_index);
+	uint32_t chunks_address_ext  = m_rom.getChunksAddress_extended(m_level_index);
 
 	SonicReader sr(file);
 	SonicReader::result_t r;
 	
-	streamoff data_length = 0;
+	uint32_t data_length = 0;
 	data_length += sr.decompress(buffer, CHUNK_BUFFER_SIZE, chunks_address_base).second;
 	data_length += sr.decompress(buffer, CHUNK_BUFFER_SIZE, chunks_address_ext).second;
 
-	const unsigned int chunk_size = SonicChunk::getChunkSize();
-	const unsigned int chunk_count = data_length / chunk_size;
+	const size_t chunk_size = SonicChunk::getChunkSize();
+	const size_t chunk_count = data_length / chunk_size;
 
 	m_chunks = new SonicChunk[chunk_count];
 
@@ -268,18 +268,18 @@ bool Instance_Level_S3G::loadBlocks()
 	unsigned char buffer[BLOCK_BUFFER_SIZE];
 
 	// Get address of base and extended pattern data
-	streamoff blocks_address_base = m_rom.getBlocksAddress(m_level_index);
-	streamoff blocks_address_ext  = m_rom.getBlocksAddress_extended(m_level_index);
+	uint32_t blocks_address_base = m_rom.getBlocksAddress(m_level_index);
+	uint32_t blocks_address_ext  = m_rom.getBlocksAddress_extended(m_level_index);
 
 	SonicReader sr(file);
 	SonicReader::result_t r;
 	
-	streamoff data_length = 0;
+	uint32_t data_length = 0;
 	data_length += sr.decompress(buffer, BLOCK_BUFFER_SIZE, blocks_address_base).second;
 	data_length += sr.decompress(buffer, BLOCK_BUFFER_SIZE, blocks_address_ext).second;
 
-	const unsigned int blockSize = SonicBlock::calculateBlockSize(getBlockWidth(), getBlockHeight());
-	const unsigned int blockCount = data_length / blockSize;
+	const size_t blockSize = SonicBlock::calculateBlockSize(getBlockWidth(), getBlockHeight());
+	const size_t blockCount = data_length / blockSize;
 
 	m_blockPtrs = new SonicBlock*[blockCount];
 
@@ -340,15 +340,15 @@ bool Instance_Level_S3G::loadMap()
 	bool result = false;
 
 	// Find map address
-	const streamoff map_address = m_rom.getMapAddress(m_level_index);
+	const uint32_t map_address = m_rom.getMapAddress(m_level_index);
 
 	// Read map header
-	const streamoff row_size_fg = m_rom.readAddress_16bit_at(map_address);
-	const streamoff row_size_bg = m_rom.readAddress_16bit_at(map_address+2);
-	const streamoff row_count_fg = m_rom.readAddress_16bit_at(map_address+4);
-	const streamoff row_count_bg = m_rom.readAddress_16bit_at(map_address+6);
+	const uint32_t row_size_fg = m_rom.readAddress_16bit_at(map_address);
+	const uint32_t row_size_bg = m_rom.readAddress_16bit_at(map_address+2);
+	const uint32_t row_count_fg = m_rom.readAddress_16bit_at(map_address+4);
+	const uint32_t row_count_bg = m_rom.readAddress_16bit_at(map_address+6);
 	
-	const streamoff ptr_table = map_address + 8;
+	const uint32_t ptr_table = map_address + 8;
 
 	size_t map_width = max(row_size_bg, row_size_fg);
 	size_t map_height = max(row_count_bg, row_count_fg);
@@ -356,20 +356,20 @@ bool Instance_Level_S3G::loadMap()
 	size_t buffer_size = sizeof(char) * map_width;
 
 	char* buffer = new char[buffer_size];
-	if (buffer)
+	if (buffer != nullptr)
 	{
 		try
 		{
 			m_pMap = new SonicMap(2, map_width, map_height);
 
-			for (int row_index = 0; row_index < row_count_fg; row_index++)
+			for (uint32_t row_index = 0; row_index < row_count_fg; row_index++)
 			{
 				streamoff row_ptr = m_rom.readAddress_16bit_at(ptr_table + row_index * 4) - 0x8000;
 
 				file.seekg(row_ptr + ptr_table);
 				file.read(buffer, buffer_size);
 
-				for (int col_index = 0; col_index < row_size_fg; col_index++)
+				for (uint32_t col_index = 0; col_index < row_size_fg; col_index++)
 				{
 					m_pMap->setValue(0, col_index, row_index, buffer[col_index]);
 				}
@@ -382,7 +382,8 @@ bool Instance_Level_S3G::loadMap()
 			REPORT_ERROR("An error occured while reading the level map", "Map reader");
 		}
 
-		delete[] buffer; buffer = NULL;
+		delete[] buffer;
+		buffer = NULL;
 	}
 
 	return result;

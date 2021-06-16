@@ -106,54 +106,54 @@ Instance* ChaosRom_Sonic3::instantiateSprites()
  *
  *****************************************************************************/
 
-streamoff ChaosRom_Sonic3::getPalettesAddress(unsigned int level_index)
+uint32_t ChaosRom_Sonic3::getPalettesAddress(unsigned int level_index)
 {
 	return readAddress_32bit_at(m_level_palette_dir + getPaletteIndex(level_index) * 8);
 }
 
-streamoff ChaosRom_Sonic3::getPaletteIndex(unsigned int level_index)
+uint32_t ChaosRom_Sonic3::getPaletteIndex(unsigned int level_index)
 {
 	return ((getDataAddress(level_index, 8) & 0xFF000000) >> 24);
 }
 
-streamoff ChaosRom_Sonic3::getPatternsAddress(unsigned int level_index)
+uint32_t ChaosRom_Sonic3::getPatternsAddress(unsigned int level_index)
 {
 	return (getDataAddress(level_index, 0) & 0xFFFFFF);
 }
 
-streamoff ChaosRom_Sonic3::getPatternsAddress_extended(unsigned int level_index)
+uint32_t ChaosRom_Sonic3::getPatternsAddress_extended(unsigned int level_index)
 {
 	return (getDataAddress(level_index, 4) & 0xFFFFFF);
 }
 
-streamoff ChaosRom_Sonic3::getChunksAddress(unsigned int level_index)
+uint32_t ChaosRom_Sonic3::getChunksAddress(unsigned int level_index)
 {
 	return (getDataAddress(level_index, 8) & 0xFFFFFF);
 }
 
-streamoff ChaosRom_Sonic3::getChunksAddress_extended(unsigned int level_index)
+uint32_t ChaosRom_Sonic3::getChunksAddress_extended(unsigned int level_index)
 {
 	return (getDataAddress(level_index, 12) & 0xFFFFFF);
 }
 
-streamoff ChaosRom_Sonic3::getBlocksAddress(unsigned int level_index)
+uint32_t ChaosRom_Sonic3::getBlocksAddress(unsigned int level_index)
 {
 	return (getDataAddress(level_index, 16) & 0xFFFFFF);
 }
 
-streamoff ChaosRom_Sonic3::getBlocksAddress_extended(unsigned int level_index)
+uint32_t ChaosRom_Sonic3::getBlocksAddress_extended(unsigned int level_index)
 {
 	return (getDataAddress(level_index, 20) & 0xFFFFFF);
 }
 
-streamoff ChaosRom_Sonic3::getMapAddress(unsigned int level_index)
+uint32_t ChaosRom_Sonic3::getMapAddress(unsigned int level_index)
 {
 	return readAddress_32bit_at(m_level_layout_dir_address + level_index * 4);
 }
 
-streamoff ChaosRom_Sonic3::getDataAddress(unsigned int level_index, streamoff entry_offset)
+uint32_t ChaosRom_Sonic3::getDataAddress(unsigned int level_index, streamoff entry_offset)
 {
-	streamoff addr = 0;
+	uint32_t addr = 0;
 	streamoff p = m_file.tellg();
 
 	// Find the directory index for the specified level

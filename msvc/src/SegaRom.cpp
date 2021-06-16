@@ -46,10 +46,10 @@ string SegaRom::getInternationalName()
 	return buffer;
 }
 
-void SegaRom::fixChecksum(streamoff length)
+void SegaRom::fixChecksum(uint32_t length)
 {
 	char buffer[CHECKSUM_BUFFER_SIZE];
-	streamoff count = 0;
+	uint16_t count = 0;
 
 	// Header is not included in the checksum
 	m_file.seekg(512);
@@ -58,7 +58,7 @@ void SegaRom::fixChecksum(streamoff length)
 	{
 		m_file.read(buffer, CHECKSUM_BUFFER_SIZE);
 		
-		int read_count = m_file.gcount();
+		streamsize read_count = m_file.gcount();
 		int num = 0;
 
 		for (int i = 0; i < read_count; i += 2)
@@ -96,12 +96,12 @@ void SegaRom::fixChecksum(streamoff length)
 	writeAddress_16bit_at(count, CHECKSUM_OFFSET);
 }
 
-void SegaRom::fixHeader(streamoff rom_length)
+void SegaRom::fixHeader(uint32_t rom_length)
 {
 	writeAddress_32bit_at(rom_length, ROM_LENGTH_OFFSET);
 }
 
-streamoff SegaRom::readAddress_16bit()
+uint16_t SegaRom::readAddress_16bit()
 {
 	streamoff o;
 	
@@ -113,7 +113,7 @@ streamoff SegaRom::readAddress_16bit()
 	return o & 0xFFFF;
 }
 
-streamoff SegaRom::readAddress_16bit_at(streamoff src_offset)
+uint16_t SegaRom::readAddress_16bit_at(streamoff src_offset)
 {
 	streamoff o;
 	streamoff p = m_file.tellg();
@@ -130,9 +130,9 @@ streamoff SegaRom::readAddress_16bit_at(streamoff src_offset)
 	return o & 0xFFFF;
 }
 
-streamoff SegaRom::readAddress_32bit()
+uint32_t SegaRom::readAddress_32bit()
 {
-	streamoff o;
+	uint32_t o;
 
 	// Read a 32-bit big-endian address
 	o  = m_file.get() << 24;
@@ -144,9 +144,9 @@ streamoff SegaRom::readAddress_32bit()
 	return o;
 }
 
-streamoff SegaRom::readAddress_32bit_at(streamoff src_offset)
+uint32_t SegaRom::readAddress_32bit_at(streamoff src_offset)
 {
-	streamoff o;
+	uint32_t o;
 	streamoff p = m_file.tellg();
 	
 	m_file.seekg(src_offset);
@@ -163,13 +163,13 @@ streamoff SegaRom::readAddress_32bit_at(streamoff src_offset)
 	return o;
 }
 
-void SegaRom::writeAddress_16bit(std::streamoff address)
+void SegaRom::writeAddress_16bit(uint16_t address)
 {
 	m_file.put((char)((address >> 8) & 0xFF));
 	m_file.put((char)((address)      & 0xFF));
 }
 
-void SegaRom::writeAddress_16bit_at(std::streamoff address, std::streamoff offset)
+void SegaRom::writeAddress_16bit_at(uint16_t address, std::streamoff offset)
 {
 	streamoff p = m_file.tellp();
 
@@ -182,7 +182,7 @@ void SegaRom::writeAddress_16bit_at(std::streamoff address, std::streamoff offse
 }
 
 
-void SegaRom::writeAddress_32bit(std::streamoff address)
+void SegaRom::writeAddress_32bit(uint32_t address)
 {
 	m_file.put((char)((address >> 24) & 0xFF));
 	m_file.put((char)((address >> 16) & 0xFF));
@@ -190,7 +190,7 @@ void SegaRom::writeAddress_32bit(std::streamoff address)
 	m_file.put((char)((address)       & 0xFF));
 }
 
-void SegaRom::writeAddress_32bit_at(std::streamoff address, std::streamoff offset)
+void SegaRom::writeAddress_32bit_at(uint32_t address, std::streamoff offset)
 {
 	streamoff p = m_file.tellp();
 

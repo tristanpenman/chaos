@@ -24,8 +24,8 @@ public:
 
 	/** HEADER MODIFIERS **/
 
-	void fixChecksum(std::streamoff length);
-	void fixHeader(std::streamoff length);
+	void fixChecksum(uint32_t length);
+	void fixHeader(uint32_t length);
 
 	std::string getDomesticName();
 	std::string getInternationalName();
@@ -33,18 +33,18 @@ public:
 
 	/** BIG-ENDIAN ADDRESS READERS **/
 
-	std::streamoff readAddress_16bit();					   // Read address at current offset
-	std::streamoff readAddress_16bit_at(std::streamoff o); // Read address at offset 'o' 
-	std::streamoff readAddress_32bit();
-	std::streamoff readAddress_32bit_at(std::streamoff o);
+	uint16_t readAddress_16bit();					   // Read address at current offset
+	uint16_t readAddress_16bit_at(std::streamoff o); // Read address at offset 'o' 
+	uint32_t readAddress_32bit();
+	uint32_t readAddress_32bit_at(std::streamoff o);
 
 	
 	/** BIG-ENDIAN ADDRESS WRITERS **/
 
-	void writeAddress_16bit(std::streamoff address);
-	void writeAddress_16bit_at(std::streamoff address, std::streamoff offset);
-	void writeAddress_32bit(std::streamoff address);
-	void writeAddress_32bit_at(std::streamoff address, std::streamoff offset);
+	void writeAddress_16bit(uint16_t address);
+	void writeAddress_16bit_at(uint16_t address, std::streamoff offset);
+	void writeAddress_32bit(uint32_t address);
+	void writeAddress_32bit_at(uint32_t address, std::streamoff offset);
 
 protected:
 	std::fstream& m_file;

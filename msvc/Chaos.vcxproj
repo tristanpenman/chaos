@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{0DAC7E77-447D-4CB0-B4EA-150F9C0DFC4A}</ProjectGuid>
+    <RootNamespace>Chaos</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>16.0.31201.295</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>Debug\</OutDir>
+    <IntDir>Debug\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>Release\</OutDir>
+    <IntDir>Release\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(ProjectDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS; _CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DisableSpecificWarnings>4290;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir)/Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)Chaos.exe</OutputFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)Chaos.pdb</ProgramDatabaseFile>
+      <GenerateMapFile>false</GenerateMapFile>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention />
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS; _CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4290;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)Chaos.exe</OutputFile>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention />
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Buffer.cpp" />
+    <ClCompile Include="src\Buffer_Blocks.cpp" />
+    <ClCompile Include="src\Buffer_Patterns.cpp" />
+    <ClCompile Include="src\ChaosApplication.cpp" />
+    <ClCompile Include="src\ChaosException.cpp" />
+    <ClCompile Include="src\ChaosLog.cpp">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> _CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> _CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="src\ChaosRom.cpp" />
+    <ClCompile Include="src\ChaosRomFactory.cpp" />
+    <ClCompile Include="src\ChaosRom_Sonic2.cpp" />
+    <ClCompile Include="src\ChaosRom_Sonic3.cpp" />
+    <ClCompile Include="src\ChaosRom_Sonic3k.cpp" />
+    <ClCompile Include="src\CommonDialog.cpp" />
+    <ClCompile Include="src\CommonDialogFactory.cpp" />
+    <ClCompile Include="src\CommonDialog_Open.cpp" />
+    <ClCompile Include="src\CommonDialog_Save.cpp" />
+    <ClCompile Include="src\DialogExportLevel.cpp" />
+    <ClCompile Include="src\DialogLoadLevel.cpp" />
+    <ClCompile Include="src\DialogRomInspector.cpp" />
+    <ClCompile Include="src\Instance.cpp" />
+    <ClCompile Include="src\Instance_Level_S2G.cpp" />
+    <ClCompile Include="src\Instance_Level_S3G.cpp" />
+    <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\Precompiled.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\SegaPalette.cpp" />
+    <ClCompile Include="src\SegaPattern.cpp" />
+    <ClCompile Include="src\SegaRom.cpp" />
+    <ClCompile Include="src\SonicBlock.cpp" />
+    <ClCompile Include="src\SonicChunk.cpp" />
+    <ClCompile Include="src\SonicMap.cpp" />
+    <ClCompile Include="src\SonicReader.cpp" />
+    <ClCompile Include="src\SonicWriter.cpp" />
+    <ClCompile Include="src\WndFrame.cpp" />
+    <ClCompile Include="src\WndLevel.cpp" />
+    <ClCompile Include="src\WndMap.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Buffer.h" />
+    <ClInclude Include="include\Buffer_Blocks.h" />
+    <ClInclude Include="include\Buffer_Patterns.h" />
+    <ClInclude Include="include\ChaosApplication.h" />
+    <ClInclude Include="include\ChaosException.h" />
+    <ClInclude Include="include\ChaosLog.h" />
+    <ClInclude Include="include\ChaosRom.h" />
+    <ClInclude Include="include\ChaosRomFactory.h" />
+    <ClInclude Include="include\ChaosRom_Sonic2.h" />
+    <ClInclude Include="include\ChaosRom_Sonic3.h" />
+    <ClInclude Include="include\ChaosRom_Sonic3k.h" />
+    <ClInclude Include="include\CommonDialog.h" />
+    <ClInclude Include="include\CommonDialogFactory.h" />
+    <ClInclude Include="include\CommonDialog_Open.h" />
+    <ClInclude Include="include\CommonDialog_Save.h" />
+    <ClInclude Include="include\DialogExportLevel.h" />
+    <ClInclude Include="include\DialogLoadLevel.h" />
+    <ClInclude Include="include\DialogRomInspector.h" />
+    <ClInclude Include="include\Dialogs.h" />
+    <ClInclude Include="include\Icons.h" />
+    <ClInclude Include="include\Instance.h" />
+    <ClInclude Include="include\InstanceValue.h" />
+    <ClInclude Include="include\Instance_Level.h" />
+    <ClInclude Include="include\Instance_Level_S2G.h" />
+    <ClInclude Include="include\Instance_Level_S3G.h" />
+    <ClInclude Include="include\Menus.h" />
+    <ClInclude Include="include\Precompiled.h" />
+    <ClInclude Include="include\Resource.h" />
+    <ClInclude Include="include\SegaPalette.h" />
+    <ClInclude Include="include\SegaPattern.h" />
+    <ClInclude Include="include\SegaRom.h" />
+    <ClInclude Include="include\SonicBlock.h" />
+    <ClInclude Include="include\SonicChunk.h" />
+    <ClInclude Include="include\SonicMap.h" />
+    <ClInclude Include="include\SonicReader.h" />
+    <ClInclude Include="include\SonicWriter.h" />
+    <ClInclude Include="include\WndFrame.h" />
+    <ClInclude Include="include\WndLevel.h" />
+    <ClInclude Include="include\WndMap.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="res\Dialogs.rc">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <ResourceCompile Include="res\Icons.rc">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <ResourceCompile Include="res\Menus.rc">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\Sonic.ico" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="Chaos.rc" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

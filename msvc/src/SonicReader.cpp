@@ -43,7 +43,7 @@ void SonicReader::loadBitfield()
 SonicReader::result_t SonicReader::decompress(unsigned char buffer[], size_t buffer_size, streamoff rom_offset)
 {
 	streamoff rom_pos = 0;
-	streamoff write_pos = 0;
+	uint32_t write_pos = 0;
 
 	bool overflow = false;
 	bool exception = false;
@@ -160,7 +160,7 @@ SonicReader::result_t SonicReader::decompress(unsigned char buffer[], size_t buf
 	{
 		// Decompression failed due to buffer overflow. 
 		// Return the buffer size required for successful decompression.
-		return result_t(false, (streamoff)(write_pos));	
+		return result_t(false, write_pos);	
 	}
 	else if (exception)
 	{
@@ -169,5 +169,5 @@ SonicReader::result_t SonicReader::decompress(unsigned char buffer[], size_t buf
 
 	// Decompression successful.
 	// Return the number of bytes written to the buffer.
-	return result_t(true, (streamoff)(write_pos));
+	return result_t(true, write_pos);
 }
