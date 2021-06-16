@@ -18,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="..\bin\Debug"
+			OutputDirectory="bin\Debug"
 			IntermediateDirectory="Debug"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(ProjectDir)..\include"
+				AdditionalIncludeDirectories="$(ProjectDir)\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS; _CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -100,7 +100,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="..\bin\Release"
+			OutputDirectory="bin\Release"
 			IntermediateDirectory="Release"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
@@ -125,7 +125,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				FavorSizeOrSpeed="0"
-				AdditionalIncludeDirectories="$(ProjectDir)..\include"
+				AdditionalIncludeDirectories="$(ProjectDir)include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS; _CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="2"
@@ -139,7 +139,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				AdditionalIncludeDirectories="$(ProjectDir)\..\include"
+				AdditionalIncludeDirectories="$(ProjectDir)\include"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -189,27 +189,27 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\src\Buffer.cpp"
+				RelativePath="src\Buffer.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\Buffer_Blocks.cpp"
+				RelativePath="src\Buffer_Blocks.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\Buffer_Patterns.cpp"
+				RelativePath="src\Buffer_Patterns.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\ChaosApplication.cpp"
+				RelativePath="src\ChaosApplication.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\ChaosException.cpp"
+				RelativePath="src\ChaosException.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\ChaosLog.cpp"
+				RelativePath="src\ChaosLog.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -229,71 +229,71 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\src\ChaosRom.cpp"
+				RelativePath="src\ChaosRom.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\ChaosRom_Sonic2.cpp"
+				RelativePath="src\ChaosRom_Sonic2.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\ChaosRom_Sonic3.cpp"
+				RelativePath="src\ChaosRom_Sonic3.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\ChaosRom_Sonic3k.cpp"
+				RelativePath="src\ChaosRom_Sonic3k.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\ChaosRomFactory.cpp"
+				RelativePath="src\ChaosRomFactory.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\CommonDialog.cpp"
+				RelativePath="src\CommonDialog.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\CommonDialog_Open.cpp"
+				RelativePath="src\CommonDialog_Open.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\CommonDialog_Save.cpp"
+				RelativePath="src\CommonDialog_Save.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\CommonDialogFactory.cpp"
+				RelativePath="src\CommonDialogFactory.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\DialogExportLevel.cpp"
+				RelativePath="src\DialogExportLevel.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\DialogLoadLevel.cpp"
+				RelativePath="src\DialogLoadLevel.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\DialogRomInspector.cpp"
+				RelativePath="src\DialogRomInspector.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\Instance.cpp"
+				RelativePath="src\Instance.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\Instance_Level_S2G.cpp"
+				RelativePath="src\Instance_Level_S2G.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\Instance_Level_S3G.cpp"
+				RelativePath="src\Instance_Level_S3G.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\Main.cpp"
+				RelativePath="src\Main.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\Precompiled.cpp"
+				RelativePath="src\Precompiled.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -313,47 +313,47 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\src\SegaPalette.cpp"
+				RelativePath="src\SegaPalette.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\SegaPattern.cpp"
+				RelativePath="src\SegaPattern.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\SegaRom.cpp"
+				RelativePath="src\SegaRom.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\SonicBlock.cpp"
+				RelativePath="src\SonicBlock.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\SonicChunk.cpp"
+				RelativePath="src\SonicChunk.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\SonicMap.cpp"
+				RelativePath="src\SonicMap.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\SonicReader.cpp"
+				RelativePath="src\SonicReader.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\SonicWriter.cpp"
+				RelativePath="src\SonicWriter.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\WndFrame.cpp"
+				RelativePath="src\WndFrame.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\WndLevel.cpp"
+				RelativePath="src\WndLevel.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\WndMap.cpp"
+				RelativePath="src\WndMap.cpp"
 				>
 			</File>
 		</Filter>
@@ -363,159 +363,159 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\include\Buffer.h"
+				RelativePath="include\Buffer.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\Buffer_Blocks.h"
+				RelativePath="include\Buffer_Blocks.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\Buffer_Patterns.h"
+				RelativePath="include\Buffer_Patterns.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\ChaosApplication.h"
+				RelativePath="include\ChaosApplication.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\ChaosException.h"
+				RelativePath="include\ChaosException.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\ChaosLog.h"
+				RelativePath="include\ChaosLog.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\ChaosRom.h"
+				RelativePath="include\ChaosRom.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\ChaosRom_Sonic2.h"
+				RelativePath="include\ChaosRom_Sonic2.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\ChaosRom_Sonic3.h"
+				RelativePath="include\ChaosRom_Sonic3.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\ChaosRom_Sonic3k.h"
+				RelativePath="include\ChaosRom_Sonic3k.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\ChaosRomFactory.h"
+				RelativePath="include\ChaosRomFactory.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\CommonDialog.h"
+				RelativePath="include\CommonDialog.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\CommonDialog_Open.h"
+				RelativePath="include\CommonDialog_Open.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\CommonDialog_Save.h"
+				RelativePath="include\CommonDialog_Save.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\CommonDialogFactory.h"
+				RelativePath="include\CommonDialogFactory.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\DialogExportLevel.h"
+				RelativePath="include\DialogExportLevel.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\DialogLoadLevel.h"
+				RelativePath="include\DialogLoadLevel.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\DialogRomInspector.h"
+				RelativePath="include\DialogRomInspector.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\Dialogs.h"
+				RelativePath="include\Dialogs.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\Icons.h"
+				RelativePath="include\Icons.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\Instance.h"
+				RelativePath="include\Instance.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\Instance_Level.h"
+				RelativePath="include\Instance_Level.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\Instance_Level_S2G.h"
+				RelativePath="include\Instance_Level_S2G.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\Instance_Level_S3G.h"
+				RelativePath="include\Instance_Level_S3G.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\InstanceValue.h"
+				RelativePath="include\InstanceValue.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\Menus.h"
+				RelativePath="include\Menus.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\Precompiled.h"
+				RelativePath="include\Precompiled.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\Resource.h"
+				RelativePath="include\Resource.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\SegaPalette.h"
+				RelativePath="include\SegaPalette.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\SegaPattern.h"
+				RelativePath="include\SegaPattern.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\SegaRom.h"
+				RelativePath="include\SegaRom.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\SonicBlock.h"
+				RelativePath="include\SonicBlock.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\SonicChunk.h"
+				RelativePath="include\SonicChunk.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\SonicMap.h"
+				RelativePath="include\SonicMap.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\SonicReader.h"
+				RelativePath="include\SonicReader.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\SonicWriter.h"
+				RelativePath="include\SonicWriter.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\WndFrame.h"
+				RelativePath="include\WndFrame.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\WndLevel.h"
+				RelativePath="include\WndLevel.h"
 				>
 			</File>
 			<File
-				RelativePath="..\include\WndMap.h"
+				RelativePath="include\WndMap.h"
 				>
 			</File>
 		</Filter>
@@ -525,14 +525,14 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath="..\res\Dialogs.rc"
+				RelativePath="res\Dialogs.rc"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
 					>
 					<Tool
 						Name="VCResourceCompilerTool"
-						AdditionalIncludeDirectories="$(ProjectDir)\..\include"
+						AdditionalIncludeDirectories="$(ProjectDir)\include"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -540,19 +540,19 @@
 					>
 					<Tool
 						Name="VCResourceCompilerTool"
-						AdditionalIncludeDirectories="$(ProjectDir)\..\include"
+						AdditionalIncludeDirectories="$(ProjectDir)\include"
 					/>
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\res\Icons.rc"
+				RelativePath="res\Icons.rc"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
 					>
 					<Tool
 						Name="VCResourceCompilerTool"
-						AdditionalIncludeDirectories="$(ProjectDir)\..\include"
+						AdditionalIncludeDirectories="$(ProjectDir)\include"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -560,19 +560,19 @@
 					>
 					<Tool
 						Name="VCResourceCompilerTool"
-						AdditionalIncludeDirectories="$(ProjectDir)\..\include"
+						AdditionalIncludeDirectories="$(ProjectDir)\include"
 					/>
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\res\Menus.rc"
+				RelativePath="res\Menus.rc"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
 					>
 					<Tool
 						Name="VCResourceCompilerTool"
-						AdditionalIncludeDirectories="$(ProjectDir)\..\include"
+						AdditionalIncludeDirectories="$(ProjectDir)\include"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -580,7 +580,7 @@
 					>
 					<Tool
 						Name="VCResourceCompilerTool"
-						AdditionalIncludeDirectories="$(ProjectDir)..\include"
+						AdditionalIncludeDirectories="$(ProjectDir)include"
 					/>
 				</FileConfiguration>
 			</File>
@@ -588,7 +588,7 @@
 				Name="Icons"
 				>
 				<File
-					RelativePath="..\res\Sonic.ico"
+					RelativePath="res\Sonic.ico"
 					>
 				</File>
 			</Filter>
