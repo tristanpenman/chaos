@@ -1,5 +1,4 @@
-#ifndef __CHAOS_ROM_SONIC3_H
-#define __CHAOS_ROM_SONIC3_H
+#pragma once
 
 /******************************************************************************
  *
@@ -16,20 +15,9 @@ public:
     explicit ChaosRom_Sonic3(std::fstream& rom);
     virtual ~ChaosRom_Sonic3() = default;
 
-/******************************************************************************
- *
- * Implementation of ChaosRom abstract interface
- *
- *****************************************************************************/
-
+    // Implementation of ChaosRom abstract interface
     virtual bool validateROM();
     virtual LevelNames_t getLevelNames();
-
-/******************************************************************************
- *
- * Data layout utility methods
- *
- *****************************************************************************/
 
     virtual uint32_t getPalettesAddress(unsigned int level_index);
     virtual uint32_t getPatternsAddress(unsigned int level_index);
@@ -41,7 +29,6 @@ public:
     virtual uint32_t getMapAddress(unsigned int level_index);
 
 protected:
-
     virtual Instance* instantiateLevel();
     virtual Instance* instantiateSprites();
 
@@ -49,12 +36,9 @@ protected:
     virtual uint32_t getPaletteIndex(unsigned int level_index);
 
 private:
-
     uint32_t m_level_layout_dir_address;       // Default level layout directory address
     uint32_t m_level_select_index;             // Level select order
     uint32_t m_level_data_dir;                 // Level data pointers (patterns, chunks, blocks)
     uint32_t m_level_data_dir_entry_size;      // Each pointer is 4 bytes, total of 3 pointers
     uint32_t m_level_palette_dir;	           // Directory of palette pointers
 };
-
-#endif

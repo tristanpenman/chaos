@@ -1,5 +1,4 @@
-#ifndef __SEGA_ROM_H
-#define __SEGA_ROM_H
+#pragma once
 
 /******************************************************************************
  *
@@ -48,5 +47,3 @@ inline std::fstream& SegaRom::getFile()
 {
     return m_file;
 }
-
-#endif

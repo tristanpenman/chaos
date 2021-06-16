@@ -1,5 +1,4 @@
-#ifndef __SONIC_MAP_H
-#define __SONIC_MAP_H
+#pragma once
 
 class SonicMap
 {
@@ -68,5 +67,3 @@ inline unsigned char SonicMap::setValue(unsigned int layer, unsigned int x, unsi
 
     return old_value;
 }
-
-#endif

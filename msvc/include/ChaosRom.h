@@ -1,5 +1,4 @@
-#ifndef __CHAOS_ROM_H
-#define __CHAOS_ROM_H
+#pragma once
 
 class Instance;
 class Instance_Level;
@@ -49,5 +48,3 @@ protected:
 
     Instances_t m_instances;
 };
-
-#endif

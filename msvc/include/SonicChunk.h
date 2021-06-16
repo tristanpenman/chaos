@@ -1,5 +1,4 @@
-#ifndef __SONIC_CHUNK_H
-#define __SONIC_CHUNK_H
+#pragma once
 
 #include <cstddef>
 
@@ -55,5 +54,3 @@ inline unsigned int SonicChunk::getChunkWidth()
 {
     return SegaPattern::getPatternWidth() * 2;
 }
-
-#endif

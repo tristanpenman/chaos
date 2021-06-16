@@ -1,5 +1,4 @@
-#ifndef __COMMON_DIALOG_FACTORY_H
-#define __COMMON_DIALOG_FACTORY_H
+#pragma once
 
 class CommonDialog;
 class CommonDialog_Open;
@@ -15,5 +14,3 @@ private:
     static CommonDialog_Open& ms_dialogOpen;
     static CommonDialog_Save& ms_dialogSave;
 };
-
-#endif

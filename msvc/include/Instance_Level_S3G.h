@@ -1,5 +1,4 @@
-#ifndef __INSTANCE_LEVEL_S3G_H
-#define __INSTANCE_LEVEL_S3G_H
+#pragma once
 
 class ChaosRom_Sonic3;
 
@@ -13,7 +12,6 @@ class ChaosRom_Sonic3;
 class Instance_Level_S3G : public Instance_Level
 {
 public:
-
     explicit Instance_Level_S3G(ChaosRom_Sonic3& rom);
     virtual ~Instance_Level_S3G();
 
@@ -41,23 +39,11 @@ public:
     virtual const Buffer_Blocks& getBlockBuffer() const;
     virtual const Buffer_Patterns& getPatternBuffer() const;
 
-/******************************************************************************
- *
- * Extension of the Instance_Level interface
- *
- *****************************************************************************/
-
-    const SonicChunk&              getChunk(unsigned int index) const;
-    const SonicChunk*              getChunks() const;
-    unsigned int                   getChunkCount() const;
+    const SonicChunk& getChunk(unsigned int index) const;
+    const SonicChunk* getChunks() const;
+    unsigned int getChunkCount() const;
 
 protected:
-
-/******************************************************************************
- *
- * Loader methods
- *
- *****************************************************************************/
 
     bool loadPalettes();
     bool loadPatterns();
@@ -67,12 +53,6 @@ protected:
 
     bool bufferPatterns();
     bool bufferBlocks();
-
-/******************************************************************************
- *
- * Cleanup methods
- *
- *****************************************************************************/
 
     void cleanup();
 
@@ -86,27 +66,23 @@ protected:
     void unloadBlockBuffer();
 
 private:
-
     ChaosRom_Sonic3& m_rom;
 
-    unsigned int     m_level_index;
-    bool             m_level_loaded;
+    unsigned int m_level_index;
+    bool m_level_loaded;
 
-    SegaPalette*     m_palettes;
-    SegaPattern*     m_patterns;
-    SonicChunk*      m_chunks;
-    SonicBlock**     m_blockPtrs;
+    SegaPalette* m_palettes;
+    SegaPattern* m_patterns;
+    SonicChunk* m_chunks;
+    SonicBlock** m_blockPtrs;
 
-    SonicMap*        m_pMap;
+    SonicMap* m_pMap;
 
-    unsigned int     m_palette_count;
-    unsigned int     m_pattern_count;
-    unsigned int     m_chunk_count;
-    unsigned int     m_blockCount;
+    unsigned int m_palette_count;
+    unsigned int m_pattern_count;
+    unsigned int m_chunk_count;
+    unsigned int m_blockCount;
 
     Buffer_Patterns* m_pBufferPatterns;
-    Buffer_Blocks*   m_pBufferBlocks;
-
+    Buffer_Blocks* m_pBufferBlocks;
 };
-
-#endif

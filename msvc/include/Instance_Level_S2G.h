@@ -1,5 +1,4 @@
-#ifndef __INSTANCE_LEVEL_S2G_H
-#define __INSTANCE_LEVEL_S2G_H
+#pragma once
 
 class ChaosRom_Sonic2;
 
@@ -13,9 +12,7 @@ class ChaosRom_Sonic2;
 class Instance_Level_S2G : public Instance_Level
 {
 public:
-
     explicit Instance_Level_S2G(ChaosRom_Sonic2& rom);
-
     virtual ~Instance_Level_S2G();
 
     virtual bool hasUnsavedChanges() const;
@@ -47,13 +44,6 @@ public:
     unsigned int getChunkCount() const;
 
 protected:
-
-/******************************************************************************
- *
- * Loader methods
- *
- *****************************************************************************/
-
     bool loadPalettes();
     bool loadPatterns();
     bool loadChunks();
@@ -62,12 +52,6 @@ protected:
 
     bool bufferPatterns();
     bool bufferBlocks();
-
-/******************************************************************************
- *
- * Cleanup methods
- *
- *****************************************************************************/
 
     void cleanup();
 
@@ -81,26 +65,23 @@ protected:
     void unloadBlockBuffer();
 
 private:
-
     ChaosRom_Sonic2& m_rom;
 
-    unsigned int     m_level_index;
-    bool             m_level_loaded;
+    unsigned int m_level_index;
+    bool m_level_loaded;
 
-    SegaPalette*     m_palettes;
-    SegaPattern*     m_patterns;
-    SonicChunk*      m_chunks;
-    SonicBlock**     m_blockPtrs;
+    SegaPalette* m_palettes;
+    SegaPattern* m_patterns;
+    SonicChunk* m_chunks;
+    SonicBlock** m_blockPtrs;
 
-    SonicMap*        m_pMap;
+    SonicMap* m_pMap;
 
-    unsigned int     m_palette_count;
-    unsigned int     m_pattern_count;
-    unsigned int     m_chunk_count;
-    unsigned int     m_blockCount;
+    unsigned int m_palette_count;
+    unsigned int m_pattern_count;
+    unsigned int m_chunk_count;
+    unsigned int m_blockCount;
 
     Buffer_Patterns* m_pBufferPatterns;
-    Buffer_Blocks*   m_pBufferBlocks;
+    Buffer_Blocks* m_pBufferBlocks;
 };
-
-#endif

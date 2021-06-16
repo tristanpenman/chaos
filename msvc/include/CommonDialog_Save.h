@@ -1,5 +1,4 @@
-#ifndef __COMMON_DIALOG_SAVE_H
-#define __COMMON_DIALOG_SAVE_H
+#pragma once
 
 class CommonDialog_Save : public CommonDialog
 {
@@ -12,5 +11,3 @@ public:
 
     virtual bool execute();
 };
-
-#endif

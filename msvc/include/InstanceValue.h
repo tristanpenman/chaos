@@ -1,5 +1,4 @@
-#ifndef __INSTANCE_VALUE_H
-#define __INSTANCE_VALUE_H
+#pragma once
 
 class InstanceValueException {};
 
@@ -70,5 +69,3 @@ inline T InstanceValue_t<T>::unset(InstanceValueLookup_t i)
 
     return t;
 }
-
-#endif

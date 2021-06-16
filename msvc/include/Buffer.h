@@ -1,5 +1,4 @@
-#ifndef __BUFFER_H
-#define __BUFFER_H
+#pragma once
 
 /******************************************************************************
  *
@@ -52,5 +51,3 @@ inline void Buffer::draw(HDC dest, int dest_x, int dest_y, int src_x, int src_y,
         }
     }
 }
-
-#endif  // __BUFFER_H

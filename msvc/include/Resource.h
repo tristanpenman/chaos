@@ -1,8 +1,5 @@
-#ifndef __RESOURCE_H
-#define __RESOURCE_H
+#pragma once
 
 #include "Dialogs.h"
 #include "Icons.h"
 #include "Menus.h"
-
-#endif

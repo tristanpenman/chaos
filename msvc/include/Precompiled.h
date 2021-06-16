@@ -1,5 +1,4 @@
-#ifndef __PRECOMPILED_H
-#define __PRECOMPILED_H
+#pragma once
 
 #include <iostream>
 #include <fstream>
@@ -18,5 +17,3 @@
 
 void REPORT_ERROR(const std::string& message, const std::string& title);
 void REPORT_INFO(const std::string& message, const std::string& title);
-
-#endif  // __PRECOMPILED_H

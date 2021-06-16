@@ -1,5 +1,4 @@
-#ifndef __CHAOS_EXCEPTION_H
-#define __CHAOS_EXCEPTION_H
+#pragma once
 
 class ChaosException
 {
@@ -14,5 +13,3 @@ public:
 private:
     std::string m_msg;
 };
-
-#endif

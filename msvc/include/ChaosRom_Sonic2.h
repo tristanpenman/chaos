@@ -1,5 +1,4 @@
-#ifndef __CHAOS_ROM_SONIC2_H
-#define __CHAOS_ROM_SONIC2_H
+#pragma once
 
 /******************************************************************************
  *
@@ -16,20 +15,9 @@ public:
     explicit ChaosRom_Sonic2(std::fstream& rom);
     virtual ~ChaosRom_Sonic2() = default;
 
-/******************************************************************************
- *
- * Implementation of ChaosRom abstract interface
- *
- *****************************************************************************/
-
+    // Implementation of ChaosRom abstract interface
     virtual bool validateROM();
     virtual LevelNames_t getLevelNames();
-
-/******************************************************************************
- *
- * Data layout utility methods
- *
- *****************************************************************************/
 
     virtual std::streamoff getPalettesAddress(unsigned int level_index);
     virtual std::streamoff getPatternsAddress(unsigned int level_index);
@@ -52,5 +40,3 @@ private:
     std::streamoff m_level_data_dir_entry_size;      // Each pointer is 4 bytes, total of 3 pointers
     std::streamoff m_level_palette_dir;	             // Directory of palette pointers
 };
-
-#endif

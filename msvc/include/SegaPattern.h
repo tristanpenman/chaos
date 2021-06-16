@@ -1,5 +1,4 @@
-#ifndef __SEGA_PATTERN_H
-#define __SEGA_PATTERN_H
+#pragma once
 
 #include <cstddef>
 
@@ -62,5 +61,3 @@ inline unsigned char SegaPattern::getPatternHeight()
 {
     return PATTERN_HEIGHT;
 }
-
-#endif

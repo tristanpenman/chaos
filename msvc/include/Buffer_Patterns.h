@@ -1,5 +1,4 @@
-#ifndef __PATTERN_BUFFER_H
-#define __PATTERN_BUFFER_H
+#pragma once
 
 class SegaPalette;
 class SegaPattern;
@@ -22,12 +21,6 @@ public:
         const SegaPalette* palettes, unsigned int palette_count,
         const SegaPattern* patterns, unsigned int pattern_count, HDC hdc);
 
-/******************************************************************************
- *
- * Public interface
- *
- *****************************************************************************/
-
     void drawPattern(
         unsigned int pattern_index, unsigned int palette_index,
         HDC dest, int x, int y, bool h_flip, bool v_flip) const;
@@ -40,5 +33,3 @@ public:
         const SegaPalette* palettes, unsigned int palette_count,
         const SegaPattern* patterns, unsigned int pattern_count, HDC hdc);
 };
-
-#endif	// __PATTERN_BUFFER_H

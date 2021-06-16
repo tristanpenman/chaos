@@ -1,5 +1,4 @@
-#ifndef __WND_LEVEL_H
-#define __WND_LEVEL_H
+#pragma once
 
 class WndLevel
 {
@@ -22,5 +21,3 @@ private:
     static HINSTANCE ms_hInstance;
     static InstanceValue_t<HWND> ms_mapWindows;
 };
-
-#endif // __WND_LEVEL_H

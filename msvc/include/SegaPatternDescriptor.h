@@ -1,5 +1,4 @@
-#ifndef __SEGA_PATTERN_DESCRIPTOR_H
-#define __SEGA_PATTERN_DESCRIPTOR_H
+#pragma once
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -110,5 +109,3 @@ inline void SegaPatternDescriptor::set(unsigned short new_index)
 {
     m_index = new_index;
 }
-
-#endif

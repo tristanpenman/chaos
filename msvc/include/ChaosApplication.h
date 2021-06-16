@@ -1,5 +1,4 @@
-#ifndef __CHAOS_APPLICATION_H
-#define __CHAOS_APPLICATION_H
+#pragma once
 
 class ChaosRom;
 
@@ -30,10 +29,6 @@ public:
 
     ChaosRom* getROM();
 
-    //
-    // File interface
-    //
-
     bool openROM(const std::string& path);
     bool saveROM();
     bool saveAsROM(const std::string& path);
@@ -53,5 +48,3 @@ inline ChaosRom* ChaosApplication::getROM()
 {
     return m_pROM;
 }
-
-#endif

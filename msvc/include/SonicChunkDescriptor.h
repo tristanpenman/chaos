@@ -1,5 +1,4 @@
-#ifndef __SONIC_CHUNK_DESCRIPTOR_H
-#define __SONIC_CHUNK_DESCRIPTOR_H
+#pragma once
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -75,5 +74,3 @@ inline size_t SonicChunkDescriptor::getIndexSize()
 {
     return sizeof(unsigned short);
 }
-
-#endif

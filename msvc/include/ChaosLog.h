@@ -1,5 +1,4 @@
-#ifndef __CHAOS_LOG_H
-#define __CHAOS_LOG_H
+#pragma once
 
 #include "ChaosException.h"
 
@@ -40,5 +39,3 @@ private:
     static HANDLE ms_fileMutex;
     static std::ofstream ms_file;
 };
-
-#endif  //__CHAOS_LOG_H

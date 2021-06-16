@@ -1,11 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
-//
-// SonicBlock.h
-//
-///////////////////////////////////////////////////////////////////////////////
-
-#ifndef __SONIC_BLOCK_H
-#define __SONIC_BLOCK_H
+#pragma once
 
 #define BYTES_PER_CHUNK 2
 
@@ -47,5 +40,3 @@ inline unsigned int SonicBlock::getChunksDown() const
 {
     return m_chunksDown;
 }
-
-#endif // __SONIC_BLOCK_H

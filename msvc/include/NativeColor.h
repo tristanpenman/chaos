@@ -1,5 +1,4 @@
-#ifndef __NATIVE_COLOR_H
-#define __NATIVE_COLOR_H
+#pragma once
 
 struct NativeColor
 {
@@ -23,5 +22,3 @@ struct NativeColor
     unsigned char g;
     unsigned char b;
 };
-
-#endif

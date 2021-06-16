@@ -1,5 +1,4 @@
-#ifndef __INSTANCE_H
-#define __INSTANCE_H
+#pragma once
 
 /******************************************************************************
  *
@@ -31,5 +30,3 @@ enum InstanceKind
     INSTANCE_KIND_LEVEL,
     INSTANCE_KIND_SPRITES
 };
-
-#endif

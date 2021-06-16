@@ -1,5 +1,4 @@
-#ifndef __DIALOGS_H
-#define __DIALOGS_H
+#pragma once
 
 #ifndef IDC_STATIC
 #define IDC_STATIC (-1)
@@ -30,5 +29,3 @@
 #define ID_DIALOG_INSTANCES_TXT_EXPANDED   20204
 #define ID_DIALOG_INSTANCES_UNLOAD         20205
 #define ID_DIALOG_INSTANCES_KILL           20206
-
-#endif

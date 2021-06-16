@@ -1,5 +1,4 @@
-#ifndef __SONIC_READER_H
-#define __SONIC_READER_H
+#pragma once
 
 /* ----------------------------------------------------------------------------
  *
@@ -151,5 +150,3 @@ private:
     unsigned char m_bitcount;
     std::fstream& m_rom;
 };
-
-#endif

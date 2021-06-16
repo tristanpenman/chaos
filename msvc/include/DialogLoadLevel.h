@@ -1,5 +1,4 @@
-#ifndef __DIALOG_LOAD_LEVEL_H
-#define __DIALOG_LOAD_LEVEL_H
+#pragma once
 
 class DialogLoadLevel
 {
@@ -19,5 +18,3 @@ private:
     static WNDPROC ms_defaultListProc;
     static InstanceValue_t<ListBoxLevelIndices_t> ms_listBoxLevelIndices;
 };
-
-#endif // __DIALOG_LOAD_LEVEL_H

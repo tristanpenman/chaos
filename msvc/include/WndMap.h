@@ -1,5 +1,4 @@
-#ifndef __WND_MAP_H
-#define __WND_MAP_H
+#pragma once
 
 class WndMap
 {
@@ -39,5 +38,3 @@ private:
     static InstanceValue_t<unsigned int> blockWidth;
     static InstanceValue_t<unsigned int> blockHeight;
 };
-
-#endif // __WND_MAP_H

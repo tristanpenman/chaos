@@ -1,20 +1,7 @@
-#ifndef __MENUS_H
-#define __MENUS_H
-
-/******************************************************************************
- *
- * Menus
- *
- *****************************************************************************/
+#pragma once
 
 #define ID_MENU_CHAOS                40001
 #define ID_MENU_LEVEL                40002
-
-/******************************************************************************
- *
- * Common menu items
- *
- *****************************************************************************/
 
 #define ID_FILE_OPEN                 40100
 #define ID_FILE_SAVE                 40102
@@ -31,17 +18,8 @@
 #define ID_WINDOW_TILE               40401
 #define ID_WINDOW_CLOSEALL           40402
 
-
-/******************************************************************************
- *
- * Level editor menu items
- *
- *****************************************************************************/
-
 #define ID_LEVEL_PALETTES            40201
 #define ID_LEVEL_PATTERNS            40202
 #define ID_LEVEL_CHUNKS              40203
 #define ID_LEVEL_BLOCKS              40204
 #define ID_LEVEL_EXPORT              40205
-
-#endif

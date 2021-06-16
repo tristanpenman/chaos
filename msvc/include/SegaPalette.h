@@ -1,5 +1,4 @@
-#ifndef __SEGA_PALETTE_H
-#define __SEGA_PALETTE_H
+#pragma once
 
 #include <fstream>
 #include <cstring>
@@ -75,5 +74,3 @@ inline void SegaPalette::convertSegaToNativeColor(char bytes[BYTES_PER_COLOR], N
     color.g = (bytes[1] & 0xF0);
     color.b = (bytes[0] * 0x10);
 }
-
-#endif

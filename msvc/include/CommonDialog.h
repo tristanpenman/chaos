@@ -1,5 +1,4 @@
-#ifndef __COMMON_DIALOG_H
-#define __COMMON_DIALOG_H
+#pragma once
 
 class CommonDialog
 {
@@ -27,5 +26,3 @@ inline const TCHAR* CommonDialog::getTitleName() const
 {
     return m_szTitleName;
 }
-
-#endif

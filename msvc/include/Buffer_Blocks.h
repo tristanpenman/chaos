@@ -1,5 +1,4 @@
-#ifndef __BUFFER_BLOCKS_H
-#define __BUFFER_BLOCKS_H
+#pragma once
 
 class Buffer_Patterns;
 class Instance_Level;
@@ -24,12 +23,6 @@ public:
         const SonicChunk* chunks, unsigned int chunkCount,
         const Buffer_Patterns*, HDC hdc);
 
-/******************************************************************************
- *
- * Public interface
- *
- *****************************************************************************/
-
     void drawBlock(unsigned int blockIndex, HDC dest, int x, int y) const;
 
     void refresh(const Instance_Level* level,
@@ -37,7 +30,6 @@ public:
         const SonicChunk* chunks, unsigned int chunkCount, const Buffer_Patterns*, HDC hdc);
 
 private:
-
     void renderChunkIntoBuffer(HDC hdc, int x, int y, const SonicChunk& chunk,
         bool h_flip, bool v_flip,
         const Buffer_Patterns* pPatternBuffer) const;
@@ -48,5 +40,3 @@ private:
 
     unsigned int m_blockWidth;
 };
-
-#endif  // __BUFFER_BLOCKS_H

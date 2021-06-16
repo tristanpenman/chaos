@@ -1,5 +1,4 @@
-#ifndef __WND_FRAME_H
-#define __WND_FRAME_H
+#pragma once
 
 class WndFrame
 {
@@ -17,5 +16,3 @@ private:
     static ATOM ms_class;
     static HINSTANCE ms_hInstance;
 };
-
-#endif // __WND_FRAME_H
