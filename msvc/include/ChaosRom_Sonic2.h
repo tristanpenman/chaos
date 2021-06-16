@@ -14,7 +14,7 @@ class ChaosRom_Sonic2: public ChaosRom
 {
 public:
     explicit ChaosRom_Sonic2(std::fstream& rom);
-    virtual ~ChaosRom_Sonic2();
+    virtual ~ChaosRom_Sonic2() = default;
 
 /******************************************************************************
  *

@@ -62,9 +62,11 @@ struct RGB_t
 class SegaPalette
 {
 public:
-    explicit SegaPalette();
+    SegaPalette();
+    SegaPalette(const SegaPalette&) = delete;
+    virtual ~SegaPalette() = default;
 
-    virtual ~SegaPalette();
+    SegaPalette& operator=(const SegaPalette&) = delete;
 
     const RGB_t& getRGB(unsigned char index) const throw(ChaosException);
 
@@ -79,9 +81,6 @@ public:
     static unsigned int getPaletteSize();
 
 private:
-    SegaPalette(const SegaPalette&);
-    SegaPalette& operator=(const SegaPalette&);
-
     RGB_t m_colors[PALETTE_SIZE];
 };
 

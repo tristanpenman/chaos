@@ -13,13 +13,14 @@
 class ChaosLog
 {
 public:
+    ChaosLog();
+    ChaosLog(const ChaosLog&) = delete;
+    virtual ~ChaosLog();
 
-    ChaosLog() throw(ChaosException);
+    ChaosLog& operator=(const ChaosLog&) = delete;
 
-    virtual ~ChaosLog() throw(ChaosException);
-
-    static bool init(const std::string& filename) throw(ChaosException);
-    static void cleanup() throw(ChaosException);
+    static bool init(const std::string& filename);
+    static void cleanup();
 
     template <typename T>
     std::ostringstream& operator<<(T const& value)
@@ -29,18 +30,11 @@ public:
     }
 
 protected:
-
-    static void lock() throw(ChaosException);
-    static void unlock() throw(ChaosException);
+    static void lock();
+    static void unlock();
 
 private:
-
-    // Disable copy construction
-    ChaosLog(const ChaosLog&);
-    ChaosLog& operator=(const ChaosLog&);
-
     std::ostringstream m_os;
-
     std::ofstream* m_pFile;
 
     static HANDLE ms_fileMutex;

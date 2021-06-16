@@ -12,11 +12,6 @@ SonicChunk::SonicChunk()
     memset(m_pattern_indices, 0, sizeof(SegaPatternDescriptor) * PATTERNS_PER_CHUNK);
 }
 
-SonicChunk::~SonicChunk()
-{
-
-}
-
 void SonicChunk::loadFromBuffer(unsigned char buffer[CHUNK_SIZE_IN_ROM])
 {
     unsigned short index = 0;

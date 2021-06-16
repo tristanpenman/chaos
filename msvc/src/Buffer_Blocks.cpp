@@ -38,7 +38,6 @@ void Buffer_Blocks::drawBlock(unsigned int blockIndex, HDC dest, int x, int y) c
     BitBlt(dest, x, y, m_blockWidth, m_blockWidth, m_hDC, blockIndex * m_blockWidth, 0, SRCCOPY);
 }
 
-
 /******************************************************************************
  *
  * Private interface

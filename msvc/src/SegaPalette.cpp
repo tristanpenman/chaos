@@ -13,11 +13,6 @@ SegaPalette::SegaPalette()
     memset(m_colors, 0, sizeof(RGB_t) * PALETTE_SIZE);
 }
 
-SegaPalette::~SegaPalette()
-{
-
-}
-
 bool SegaPalette::readFromFile(fstream& file)
 {
     try

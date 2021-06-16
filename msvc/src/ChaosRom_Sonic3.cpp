@@ -42,11 +42,6 @@ ChaosRom_Sonic3::ChaosRom_Sonic3(fstream& rom)
 
 }
 
-ChaosRom_Sonic3::~ChaosRom_Sonic3()
-{
-
-}
-
 /******************************************************************************
  *
  * Public interface

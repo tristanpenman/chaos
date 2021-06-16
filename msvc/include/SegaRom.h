@@ -14,7 +14,7 @@ class SegaRom
 {
 public:
     explicit SegaRom(std::fstream& file);
-    virtual ~SegaRom() {}
+    virtual ~SegaRom() = default;
 
     std::fstream& getFile();
     std::string getIdentifier();

@@ -9,11 +9,6 @@ SegaPattern::SegaPattern()
     memset(m_pixels, 0, sizeof(unsigned char) * PATTERN_SIZE_IN_MEM);
 }
 
-SegaPattern::~SegaPattern()
-{
-
-}
-
 void SegaPattern::loadFromBuffer(unsigned char buffer[PATTERN_SIZE_IN_ROM])
 {
     unsigned char bufferPos = 0;

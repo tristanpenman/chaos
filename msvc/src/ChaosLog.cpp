@@ -88,7 +88,7 @@ HANDLE ChaosLog::ms_fileMutex = CreateMutex(NULL, FALSE, NULL);
 
 ofstream ChaosLog::ms_file;
 
-void ChaosLog::lock() throw(ChaosException)
+void ChaosLog::lock()
 {
     if (ms_fileMutex == NULL)
     {
@@ -101,7 +101,7 @@ void ChaosLog::lock() throw(ChaosException)
     }
 }
 
-void ChaosLog::unlock() throw(ChaosException)
+void ChaosLog::unlock()
 {
     if (ReleaseMutex(ms_fileMutex) != TRUE)
     {
@@ -109,7 +109,7 @@ void ChaosLog::unlock() throw(ChaosException)
     }
 }
 
-ChaosLog::ChaosLog() throw(ChaosException)
+ChaosLog::ChaosLog()
   : m_pFile(NULL)
 {
     ChaosLog::lock();
@@ -127,7 +127,7 @@ ChaosLog::ChaosLog() throw(ChaosException)
     m_os << tv.tv_sec << "." << tv.tv_usec << " (" << GetCurrentThreadId() << "): ";
 }
 
-ChaosLog::~ChaosLog() throw(ChaosException)
+ChaosLog::~ChaosLog()
 {
     m_os << endl;
 
@@ -146,7 +146,7 @@ ChaosLog::~ChaosLog() throw(ChaosException)
     ChaosLog::unlock();
 }
 
-bool ChaosLog::init(const string& filename) throw(ChaosException)
+bool ChaosLog::init(const string& filename)
 {
     ChaosLog::lock();
 
@@ -182,7 +182,7 @@ bool ChaosLog::init(const string& filename) throw(ChaosException)
     return true;
 }
 
-void ChaosLog::cleanup() throw(ChaosException)
+void ChaosLog::cleanup()
 {
     if (ms_file.is_open())
     {

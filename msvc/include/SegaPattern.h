@@ -29,7 +29,10 @@ class SegaPattern
 {
 public:
     SegaPattern();
-    virtual ~SegaPattern();
+    SegaPattern(const SegaPattern&) = delete;
+    virtual ~SegaPattern() = default;
+
+    SegaPattern& operator=(const SegaPattern&) = delete;
 
     void loadFromBuffer(unsigned char[PATTERN_SIZE_IN_ROM]);
 
@@ -42,9 +45,6 @@ public:
     void setPixel(unsigned char x, unsigned char y, unsigned char value);
 
 private:
-    SegaPattern(const SegaPattern&);
-    SegaPattern& operator=(const SegaPattern&);
-
     unsigned char m_pixels[PATTERN_SIZE_IN_MEM];
 };
 

@@ -23,10 +23,9 @@ class SegaPatternDescriptor
 {
 public:
     SegaPatternDescriptor();
-    virtual ~SegaPatternDescriptor();
-
     explicit SegaPatternDescriptor(const SegaPatternDescriptor& desc);
-    explicit SegaPatternDescriptor(unsigned short patternIndex, unsigned short paletteIndex);
+    SegaPatternDescriptor(unsigned short patternIndex, unsigned short paletteIndex);
+    virtual ~SegaPatternDescriptor() = default;
 
     SegaPatternDescriptor& operator=(const SegaPatternDescriptor&);
 
@@ -64,11 +63,6 @@ inline SegaPatternDescriptor::SegaPatternDescriptor(unsigned short patternIndex,
 {
     m_index |= (paletteIndex & 0x3) << 13;
     m_index |= (patternIndex & 0x7FF);
-}
-
-inline SegaPatternDescriptor::~SegaPatternDescriptor()
-{
-
 }
 
 inline SegaPatternDescriptor& SegaPatternDescriptor::operator=(const SegaPatternDescriptor& rhs)

@@ -16,7 +16,6 @@ public:
     void cleanup();
 
     unsigned char getValue(unsigned int layer, unsigned int x, unsigned int y) const;
-
     unsigned int getWidth() const;
     unsigned int getHeight() const;
     unsigned int getLayerCount() const;
@@ -29,7 +28,6 @@ protected:
     unsigned int m_width;
 
     unsigned char* m_data;
-
 };
 
 inline unsigned int SonicMap::getWidth() const

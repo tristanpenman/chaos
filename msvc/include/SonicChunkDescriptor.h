@@ -20,42 +20,26 @@
 class SonicChunkDescriptor
 {
 public:
-    SonicChunkDescriptor();
-    virtual ~SonicChunkDescriptor();
+    SonicChunkDescriptor() = default;
+    SonicChunkDescriptor(const SonicChunkDescriptor&) = delete;
+    virtual ~SonicChunkDescriptor() = default;
+
+    SonicChunkDescriptor& operator=(const SonicChunkDescriptor&) = delete;
 
     unsigned short get() const;
     unsigned short getChunkIndex() const;
 
-    bool           getFlag_HFlip() const;
-    bool           getFlag_VFlip() const;
+    bool getFlag_HFlip() const;
+    bool getFlag_VFlip() const;
 
-    static size_t  getIndexSize();
+    void set(unsigned short);
+    void set(SonicChunkDescriptor& desc);
 
-    void           set(unsigned short);
-    void           set(SonicChunkDescriptor& desc);
+    static size_t getIndexSize();
 
 private:
-    SonicChunkDescriptor(const SonicChunkDescriptor&);
-    SonicChunkDescriptor& operator=(const SonicChunkDescriptor&);
-
     unsigned short m_index;
 };
-
-inline SonicChunkDescriptor::SonicChunkDescriptor()
-  : m_index(0)
-{
-
-}
-
-inline SonicChunkDescriptor::~SonicChunkDescriptor()
-{
-
-}
-
-inline size_t SonicChunkDescriptor::getIndexSize()
-{
-    return sizeof(unsigned short);
-}
 
 inline unsigned short SonicChunkDescriptor::get() const
 {
@@ -85,6 +69,11 @@ inline void SonicChunkDescriptor::set(unsigned short value)
 inline void SonicChunkDescriptor::set(SonicChunkDescriptor& desc)
 {
     m_index = desc.m_index;
+}
+
+inline size_t SonicChunkDescriptor::getIndexSize()
+{
+    return sizeof(unsigned short);
 }
 
 #endif

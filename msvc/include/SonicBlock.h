@@ -16,7 +16,10 @@ class SonicBlock
 {
 public:
     SonicBlock(unsigned int w, unsigned int h);
+    SonicBlock(const SonicBlock&) = delete;
     virtual ~SonicBlock();
+
+    SonicBlock& operator=(const SonicBlock&) = delete;
 
     bool loadFromBuffer(unsigned char* buffer);
 
@@ -28,9 +31,6 @@ public:
     unsigned int getChunksDown() const;
 
 private:
-    SonicBlock(const SonicBlock&);
-    SonicBlock& operator=(const SonicBlock&);
-
     SonicChunkDescriptor* m_chunkDescriptors;
 
     unsigned int m_chunksAcross;

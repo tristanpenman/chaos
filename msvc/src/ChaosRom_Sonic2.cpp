@@ -43,11 +43,6 @@ ChaosRom_Sonic2::ChaosRom_Sonic2(fstream& f)
 
 }
 
-ChaosRom_Sonic2::~ChaosRom_Sonic2()
-{
-
-}
-
 /******************************************************************************
  *
  * Implementation of ChaosRom abstract interface
