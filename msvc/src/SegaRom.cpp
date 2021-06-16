@@ -100,7 +100,7 @@ void SegaRom::fixHeader(uint32_t rom_length)
 
 uint16_t SegaRom::readAddress_16bit()
 {
-    streamoff o;
+    uint16_t o;
 
     // Read a 16-bit big-endian address
     o  = m_file.get() << 8;
@@ -112,7 +112,7 @@ uint16_t SegaRom::readAddress_16bit()
 
 uint16_t SegaRom::readAddress_16bit_at(streamoff src_offset)
 {
-    streamoff o;
+    uint16_t o;
     streamoff p = m_file.tellg();
 
     m_file.seekg(src_offset);

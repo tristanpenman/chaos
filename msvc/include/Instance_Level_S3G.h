@@ -2,13 +2,10 @@
 
 class ChaosRom_Sonic3;
 
-/******************************************************************************
- *
- * Implementation of the Instance_Level abstract interface for roms based on
- * the third generation engine used in Sonic 3 and Sonic & Knuckles.
- *
- *****************************************************************************/
-
+/**
+ * Implementation of the Instance_Level abstract interface for ROMs based on
+ * the Sonic The Hedgehog 3 engine.
+ */
 class Instance_Level_S3G : public Instance_Level
 {
 public:
@@ -44,7 +41,6 @@ public:
     unsigned int getChunkCount() const;
 
 protected:
-
     bool loadPalettes();
     bool loadPatterns();
     bool loadChunks();

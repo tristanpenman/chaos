@@ -3,16 +3,13 @@
 #include <windows.h>
 #include <time.h>
 
-#include "ChaosException.h"
 #include "ChaosLog.h"
 
 using namespace std;
 
-///////////////////////////////////////////////////////////////////////////////
 //
 // Windows implementation of gettimeofday()
 //
-///////////////////////////////////////////////////////////////////////////////
 
 #if defined(_MSC_VER) || defined(_MSC_EXTENSIONS)
   #define DELTA_EPOCH_IN_MICROSECS  11644473600000000Ui64
@@ -75,14 +72,12 @@ int gettimeofday(struct timeval *tv, struct timezone *tz)
     return 0;
 }
 
-///////////////////////////////////////////////////////////////////////////////
 //
 // ChaosLog class implementation
 //
-///////////////////////////////////////////////////////////////////////////////
-
 // Logging is thread safe. Only one ChaosLog instance can write to the
 // console or output file at a time.
+//
 
 HANDLE ChaosLog::ms_fileMutex = CreateMutex(NULL, FALSE, NULL);
 
@@ -92,12 +87,12 @@ void ChaosLog::lock()
 {
     if (ms_fileMutex == NULL)
     {
-        throw ChaosException("Failed to create mutex for log output");
+        throw std::runtime_error("Failed to create mutex for log output");
     }
 
     if (WaitForSingleObject(ms_fileMutex, INFINITE) != WAIT_OBJECT_0)
     {
-        throw ChaosException("Failed to lock mutex for log output");
+        throw std::runtime_error("Failed to lock mutex for log output");
     }
 }
 
@@ -105,7 +100,7 @@ void ChaosLog::unlock()
 {
     if (ReleaseMutex(ms_fileMutex) != TRUE)
     {
-        throw ChaosException("Failed unlock mutex for log output");
+        throw std::runtime_error("Failed unlock mutex for log output");
     }
 }
 

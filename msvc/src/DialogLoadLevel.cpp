@@ -3,7 +3,6 @@
 #include "InstanceValue.h"
 #include "SegaRom.h"
 #include "ChaosRom.h"
-#include "ChaosException.h"
 #include "ChaosApplication.h"
 
 #include "DialogLoadLevel.h"

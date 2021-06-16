@@ -3,6 +3,7 @@
 #include "CommonDialog.h"
 
 CommonDialog::CommonDialog(HWND hOwner)
+  : m_szFileName("")
 {
     static TCHAR szFilter[] =
         TEXT ("Genesis Binary ROMs (*.bin)\0*.bin\0")  \

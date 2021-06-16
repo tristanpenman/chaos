@@ -2,7 +2,6 @@
 
 #include "SegaRom.h"
 #include "InstanceValue.h"
-#include "ChaosException.h"
 #include "ChaosApplication.h"
 #include "ChaosRom.h"
 #include "Resource.h"

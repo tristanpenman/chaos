@@ -2,7 +2,6 @@
 
 #include "SegaRom.h"
 
-#include "ChaosException.h"
 #include "ChaosRom.h"
 #include "ChaosRom_Sonic2.h"
 
@@ -12,24 +11,12 @@
 
 using namespace std;
 
-/******************************************************************************
- *
- * Constants
- *
- *****************************************************************************/
-
 #define PALETTE_COUNT 4
 
 #define LEVEL_BUFFER_SIZE   0xFFFF
 #define BLOCK_BUFFER_SIZE   0xFFFF
 #define CHUNK_BUFFER_SIZE   0xFFFF
 #define PATTERN_BUFFER_SIZE 0xFFFF  // 64kB
-
-/******************************************************************************
- *
- * Constructor and destructor methods
- *
- *****************************************************************************/
 
 ChaosRom_Sonic2::ChaosRom_Sonic2(fstream& f)
   : ChaosRom(f)
@@ -42,12 +29,6 @@ ChaosRom_Sonic2::ChaosRom_Sonic2(fstream& f)
 {
 
 }
-
-/******************************************************************************
- *
- * Implementation of ChaosRom abstract interface
- *
- *****************************************************************************/
 
 bool ChaosRom_Sonic2::validateROM()
 {
@@ -92,17 +73,6 @@ Instance* ChaosRom_Sonic2::instantiateLevel()
 {
     return new Instance_Level_S2G(*this);
 }
-
-Instance* ChaosRom_Sonic2::instantiateSprites()
-{
-    return NULL;
-}
-
-/******************************************************************************
- *
- * Data layout utility methods
- *
- *****************************************************************************/
 
 streamoff ChaosRom_Sonic2::getPaletteIndex(unsigned int level_index)
 {

@@ -1,25 +1,22 @@
 #pragma once
 
-///////////////////////////////////////////////////////////////////////////////
-//
-// SonicChunkDescriptor class definition
-//
-// A Sonic chunk descriptor is used to specify which chunk to draw and how it
-// should be drawn. A chunk may be horizontally and/or vertically flipped.
-//
-//  ???? YXII IIII IIII
-//
-//  Masks:
-//   0x3FF chunk index
-//   0x400 X flip
-//   0x800 Y flip
-//
-///////////////////////////////////////////////////////////////////////////////
-
+/**
+ * SonicChunkDescriptor class definition
+ *
+ * A Sonic chunk descriptor is used to specify which chunk to draw and how it
+ * should be drawn. A chunk may be horizontally and/or vertically flipped.
+ *
+ *  ???? YXII IIII IIII
+ *
+ *  Masks:
+ *   0x3FF chunk index
+ *   0x400 X flip
+ *   0x800 Y flip
+ */
 class SonicChunkDescriptor
 {
 public:
-    SonicChunkDescriptor() = default;
+    SonicChunkDescriptor();
     SonicChunkDescriptor(const SonicChunkDescriptor&) = delete;
     virtual ~SonicChunkDescriptor() = default;
 
@@ -39,6 +36,12 @@ public:
 private:
     unsigned short m_index;
 };
+
+inline SonicChunkDescriptor::SonicChunkDescriptor()
+  : m_index(0)
+{
+
+}
 
 inline unsigned short SonicChunkDescriptor::get() const
 {

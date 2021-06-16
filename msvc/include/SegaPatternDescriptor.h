@@ -1,23 +1,20 @@
 #pragma once
 
-///////////////////////////////////////////////////////////////////////////////
-//
-// SegaPatternDescriptor class definition
-//
-// A SonicPatternDescriptor is used to specify which pattern to draw, how it
-// should be drawn, and which palette to use. A pattern may be horizontally
-// and/or vertically flipped, and must be drawn using 1 of 4 palettes.
-//
-// A pattern descriptor is defined as a 16-bit bitmask, in the form:
-//   PCCVHIII IIIIIIII
-//     P    - priority flag
-//     CC   - palette row index     [0 - 3]
-//     V    - vertical flip flag
-//     H    - horizontal flip flag
-//     I... - pattern index         [0 - 2047]
-//
-///////////////////////////////////////////////////////////////////////////////
-
+/**
+ * SegaPatternDescriptor class definition
+ *
+ * A SonicPatternDescriptor is used to specify which pattern to draw, how it
+ * should be drawn, and which palette to use. A pattern may be horizontally
+ * and/or vertically flipped, and must be drawn using 1 of 4 palettes.
+ *
+ * A pattern descriptor is defined as a 16-bit bitmask, in the form:
+ *   PCCVHIII IIIIIIII
+ *     P    - priority flag
+ *     CC   - palette row index     [0 - 3]
+ *     V    - vertical flip flag
+ *     H    - horizontal flip flag
+ *     I... - pattern index         [0 - 2047]
+ */
 class SegaPatternDescriptor
 {
 public:

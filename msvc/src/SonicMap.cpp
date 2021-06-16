@@ -1,6 +1,5 @@
 #include "Precompiled.h"
 
-#include "ChaosException.h"
 #include "SonicMap.h"
 
 SonicMap::SonicMap()
@@ -56,7 +55,7 @@ void SonicMap::reset(unsigned int layers, unsigned int width, unsigned int heigh
     m_data = new unsigned char[data_size];
     if (!m_data)
     {
-        throw ChaosException("Failed to allocate memory for level map");
+        throw std::runtime_error("Failed to allocate memory for level map");
     }
 
     memset(m_data, 0, sizeof(data_size));
@@ -75,7 +74,7 @@ void SonicMap::reset(unsigned int layers, unsigned int width, unsigned int heigh
     m_data = new unsigned char[data_size];
     if (!m_data)
     {
-        throw ChaosException("Failed to allocate memory for level map");
+        throw std::runtime_error("Failed to allocate memory for level map");
     }
 
     memcpy(m_data, data, data_size);

@@ -1,6 +1,5 @@
 #include "Precompiled.h"
 
-#include "ChaosException.h"
 #include "SegaPalette.h"
 #include "SegaPattern.h"
 #include "SonicChunk.h"
@@ -12,12 +11,6 @@
 #include "Instance.h"
 #include "Instance_Level.h"
 
-/******************************************************************************
- *
- * Constructors and destructor methods
- *
- *****************************************************************************/
-
 Buffer_Blocks::Buffer_Blocks(
     const Instance_Level* level,
     const SonicBlock** blocksArray, unsigned int blockCount,
@@ -27,22 +20,10 @@ Buffer_Blocks::Buffer_Blocks(
     refresh(level, blocksArray, blockCount, chunksArray, chunkCount, pPatternBuffer, hdc);
 }
 
-/******************************************************************************
- *
- * Public interface
- *
- *****************************************************************************/
-
 void Buffer_Blocks::drawBlock(unsigned int blockIndex, HDC dest, int x, int y) const
 {
     BitBlt(dest, x, y, m_blockWidth, m_blockWidth, m_hDC, blockIndex * m_blockWidth, 0, SRCCOPY);
 }
-
-/******************************************************************************
- *
- * Private interface
- *
- *****************************************************************************/
 
 void Buffer_Blocks::renderChunkIntoBuffer(HDC hdc, int x, int y, const SonicChunk& chunk, bool h_flip, bool v_flip,
     const Buffer_Patterns* pPatternBuffer) const

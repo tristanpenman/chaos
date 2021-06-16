@@ -1,7 +1,5 @@
 #include "Precompiled.h"
 
-#include "ChaosException.h"
-
 #include "SegaPalette.h"
 #include "SegaPattern.h"
 
@@ -34,7 +32,7 @@ const SegaPatternDescriptor& SonicChunk::getPatternDescriptor(unsigned int x, un
 {
     if (x > 1 || y > 1)
     {
-        throw ChaosException("Invalid pattern index");
+        throw std::runtime_error("Invalid pattern index");
     }
 
     return m_pattern_indices[y * 2 + x];

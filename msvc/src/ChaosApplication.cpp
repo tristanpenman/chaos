@@ -4,7 +4,6 @@
 
 #include "SegaRom.h"
 
-#include "ChaosException.h"
 #include "ChaosRom.h"
 #include "ChaosRomFactory.h"
 #include "ChaosApplication.h"
@@ -54,7 +53,7 @@ Instance_Level* ChaosApplication::getLevelInstance(HWND hwnd)
         }
     }
 
-    return dynamic_cast<Instance_Level*>(m_pROM->initInstance(hwnd, INSTANCE_KIND_LEVEL));
+    return dynamic_cast<Instance_Level*>(m_pROM->initInstance(hwnd));
 }
 
 bool ChaosApplication::destroyInstance(HWND hwnd)
@@ -86,13 +85,9 @@ int ChaosApplication::run(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szC
         }
 
     }
-    catch (ChaosException& e)
+    catch (std::exception& e)
     {
-        REPORT_ERROR(e.getMessage(), "Fatal error");
-    }
-    catch (...)
-    {
-        REPORT_ERROR("Unhandled exception", "Fatal error");
+        REPORT_ERROR(e.what(), "Fatal error");
     }
 
     return 0;
@@ -150,13 +145,9 @@ bool ChaosApplication::openROM(const string& path)
 
             return true;
         }
-        catch (ChaosException& e)
+        catch (std::exception& e)
         {
-            REPORT_ERROR(e.getMessage(), "Error loading ROM");
-        }
-        catch (...)
-        {
-            REPORT_ERROR("An error occured while loading the selected ROM.", "Error loading ROM");
+            REPORT_ERROR(e.what(), "Error loading ROM");
         }
     }
 

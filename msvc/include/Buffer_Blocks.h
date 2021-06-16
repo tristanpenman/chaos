@@ -5,16 +5,13 @@ class Instance_Level;
 class SonicChunk;
 class SonicBlock;
 
-/******************************************************************************
- *
+/**
  * Blocks image buffer class
  *
  * This class is pretty raw, and doesn't provide much protection. Block indices
  * should be checked against sane values to ensure that BitBlts don't copy data
  * from uninitialised locations in memory.
- *
- *****************************************************************************/
-
+ */
 class Buffer_Blocks : public Buffer
 {
 public:

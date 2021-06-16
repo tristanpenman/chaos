@@ -1,7 +1,5 @@
 #include "Precompiled.h"
 
-#include "ChaosException.h"
-
 #include "SegaPalette.h"
 #include "SegaPattern.h"
 
@@ -52,7 +50,7 @@ const SonicChunkDescriptor& SonicBlock::getChunkDescriptor(unsigned int x, unsig
 {
     if (x >= m_chunksAcross || y >= m_chunksAcross)
     {
-        throw ChaosException("Invalid chunk index");
+        throw std::runtime_error("Invalid chunk index");
     }
 
     return m_chunkDescriptors[y * m_chunksAcross + x];

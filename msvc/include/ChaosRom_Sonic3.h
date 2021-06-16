@@ -1,14 +1,11 @@
 #pragma once
 
-/******************************************************************************
- *
- * ROM wrapper for Sonic The Hedgehog 3 (Megadrive)
+/**
+ * ROM wrapper for Sonic The Hedgehog 3 (Mega Drive / Genesis)
  *
  * Specifies common data locations and implements the ChaosRom interface
  * necessary to instantiate level and sprite editors.
- *
- *****************************************************************************/
-
+ */
 class ChaosRom_Sonic3: public ChaosRom
 {
 public:
@@ -30,7 +27,6 @@ public:
 
 protected:
     virtual Instance* instantiateLevel();
-    virtual Instance* instantiateSprites();
 
     virtual uint32_t getDataAddress(unsigned int level_index, std::streamoff entry_offset);
     virtual uint32_t getPaletteIndex(unsigned int level_index);
@@ -40,5 +36,5 @@ private:
     uint32_t m_level_select_index;             // Level select order
     uint32_t m_level_data_dir;                 // Level data pointers (patterns, chunks, blocks)
     uint32_t m_level_data_dir_entry_size;      // Each pointer is 4 bytes, total of 3 pointers
-    uint32_t m_level_palette_dir;	           // Directory of palette pointers
+    uint32_t m_level_palette_dir;              // Directory of palette pointers
 };

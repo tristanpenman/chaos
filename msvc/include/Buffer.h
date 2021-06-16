@@ -1,16 +1,13 @@
 #pragma once
 
-/******************************************************************************
- *
+/**
  * Image buffer base class
  *
- * Provides the basic functionality to create image buffers in MS Windows.
+ * Provides the basic functionality to create image buffers on Windows.
  *
  * This class is pretty raw, and doesn't provide much protection. Bitmap
  * offsets should be checked before being passed to the drawing functions.
- *
- *****************************************************************************/
-
+ */
 class Buffer
 {
 public:

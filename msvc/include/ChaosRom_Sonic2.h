@@ -1,14 +1,11 @@
 #pragma once
 
-/******************************************************************************
- *
- * ROM wrapper for Sonic The Hedgehog 2 (Megadrive)
+/**
+ * ROM wrapper for Sonic The Hedgehog 2 (Mega Drive / Genesis)
  *
  * Specifies common data locations and implements the ChaosRom interface
  * necessary to instantiate level and sprite editors.
- *
- *****************************************************************************/
-
+ */
 class ChaosRom_Sonic2: public ChaosRom
 {
 public:
@@ -27,7 +24,6 @@ public:
 
 protected:
     virtual Instance* instantiateLevel();
-    virtual Instance* instantiateSprites();
 
     virtual std::streamoff getPaletteIndex(unsigned int level_index);
     virtual std::streamoff getDataAddress(unsigned int level_index, std::streamoff entry_offset);

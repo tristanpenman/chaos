@@ -1,14 +1,11 @@
 #pragma once
 
-/******************************************************************************
- *
+/**
  * Instance abstract class
  *
  * Provides a very simplistic interface to check whether or not changes have
  * been made in the given instance, and to save them if necessary.
- *
- *****************************************************************************/
-
+ */
 class Instance
 {
 public:
@@ -27,6 +24,5 @@ protected:
 
 enum InstanceKind
 {
-    INSTANCE_KIND_LEVEL,
-    INSTANCE_KIND_SPRITES
+    INSTANCE_KIND_LEVEL
 };

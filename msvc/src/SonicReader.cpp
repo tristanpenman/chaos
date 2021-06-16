@@ -1,13 +1,13 @@
 #include "Precompiled.h"
 
-#include "ChaosException.h"
-
 #include "SonicReader.h"
 
 using namespace std;
 
 SonicReader::SonicReader(fstream& rom)
   : m_rom(rom)
+  , m_bitcount(0)
+  , m_bitfield(0)
 {
 
 }
@@ -25,7 +25,7 @@ unsigned char SonicReader::getBit()
 
         if (m_rom.eof())
         {
-            throw ChaosException("Unexpected end of file");
+            throw std::runtime_error("Unexpected end of file");
         }
     }
 
@@ -142,14 +142,9 @@ SonicReader::result_t SonicReader::decompress(unsigned char buffer[], size_t buf
             }
         }
     }
-    catch (ChaosException& e)
+    catch (std::exception& e)
     {
-        REPORT_ERROR(e.getMessage(), "Decompression error");
-        exception = true;
-    }
-    catch (...)
-    {
-        // SonicReader handles all other exceptions quietly.
+        REPORT_ERROR(e.what(), "Decompression error");
         exception = true;
     }
 

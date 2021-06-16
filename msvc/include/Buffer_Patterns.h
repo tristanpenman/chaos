@@ -4,16 +4,13 @@ class SegaPalette;
 class SegaPattern;
 class SegaPatternDescriptor;
 
-/******************************************************************************
- *
- * Blocks image buffer class
+/**
+ * Patterns image buffer class
  *
  * This class is pretty raw, and doesn't provide much protection. Pattern indices
  * should be checked against sane values to ensure that BitBlts don't copy data
  * from uninitialised locations in memory.
- *
- *****************************************************************************/
-
+ */
 class Buffer_Patterns : public Buffer
 {
 public:

@@ -2,13 +2,10 @@
 
 class ChaosRom_Sonic2;
 
-/******************************************************************************
- *
- * Implementation of the Instance_Level abstract interface for roms based on
- * the second generation engine used in Sonic 2.
- *
- *****************************************************************************/
-
+/**
+ * Implementation of the Instance_Level abstract interface for ROMs based on
+ * the Sonic The Hedgehog 2 engine.
+ */
 class Instance_Level_S2G : public Instance_Level
 {
 public:

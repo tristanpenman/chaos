@@ -8,17 +8,14 @@
 #define PALETTE_SIZE 16
 #define BYTES_PER_COLOR 2
 
-///////////////////////////////////////////////////////////////////////////////
-//
-// SegaPalette class definition
-//
-// Provides an interface by which to read/write SEGA palettes from/to a file.
-//
-// Colors stored in memory are in RGB format, suitable for display and
-// manipulation on a PC.
-//
-///////////////////////////////////////////////////////////////////////////////
-
+/**
+ * SegaPalette class definition
+ *
+ * Provides an interface by which to read/write SEGA palettes from/to a file.
+ *
+ * Colors stored in memory are in RGB format, suitable for display and
+ * manipulation on a PC.
+ */
 class SegaPalette
 {
 public:
@@ -28,9 +25,9 @@ public:
 
     SegaPalette& operator=(const SegaPalette&) = delete;
 
-    const NativeColor& getNativeColor(unsigned char index) const throw(ChaosException);
+    const NativeColor& getNativeColor(unsigned char index) const;
 
-    void setNativeColor(unsigned char index, NativeColor color) throw(ChaosException);
+    void setNativeColor(unsigned char index, NativeColor color);
 
     bool readFromFile(std::fstream& file);
     bool writeToFile(std::fstream& file, std::streamoff address) const;
@@ -48,21 +45,21 @@ inline unsigned int SegaPalette::getPaletteSize()
     return PALETTE_SIZE;
 }
 
-inline const NativeColor& SegaPalette::getNativeColor(unsigned char index) const throw(ChaosException)
+inline const NativeColor& SegaPalette::getNativeColor(unsigned char index) const
 {
     if (index >= PALETTE_SIZE)
     {
-        throw ChaosException("Invalid palette index");
+        throw std::runtime_error("Invalid palette index");
     }
 
     return m_colors[index];
 }
 
-inline void SegaPalette::setNativeColor(unsigned char index, NativeColor color) throw(ChaosException)
+inline void SegaPalette::setNativeColor(unsigned char index, NativeColor color)
 {
     if (index >= PALETTE_SIZE)
     {
-        throw ChaosException("Invalid palette index");
+        throw std::runtime_error("Invalid palette index");
     }
 
     memcpy(&m_colors[index], &color, sizeof(NativeColor));

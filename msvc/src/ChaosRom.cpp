@@ -1,10 +1,7 @@
 #include "Precompiled.h"
 
 #include "SegaRom.h"
-
-#include "ChaosException.h"
 #include "ChaosRom.h"
-
 #include "Instance.h"
 
 using namespace std;
@@ -44,27 +41,14 @@ bool ChaosRom::hasUnsavedChanges() const
     return false;
 }
 
-Instance* ChaosRom::initInstance(HWND hwnd, InstanceKind k)
+Instance* ChaosRom::initInstance(HWND hwnd)
 {
     Instance* pInstance = NULL;
     Instances_t::iterator itr = m_instances.find(hwnd);
 
     if (itr == m_instances.end())
     {
-        switch (k)
-        {
-        case INSTANCE_KIND_LEVEL:
-            pInstance = instantiateLevel();
-            break;
-
-        case INSTANCE_KIND_SPRITES:
-            pInstance = instantiateSprites();
-            break;
-
-        default:
-            return NULL;
-        }
-
+        pInstance = instantiateLevel();
         pInstance->setWindow(hwnd);
 
         return (m_instances[hwnd] = pInstance);

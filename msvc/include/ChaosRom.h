@@ -6,8 +6,7 @@ class Instance_Sprites;
 
 enum InstanceKind;
 
-/******************************************************************************
- *
+/**
  * ROM wrapper base class
  *
  * Provides an interface used by the ChaosRomFactory class to select the
@@ -15,9 +14,7 @@ enum InstanceKind;
  *
  * Also provides an interface by which a subclass can instantiate level editor
  * and sprite editor instances.
- *
- *****************************************************************************/
-
+ */
 class ChaosRom : public SegaRom
 {
 public:
@@ -32,19 +29,16 @@ public:
     virtual bool validateROM() = 0;
     virtual LevelNames_t getLevelNames() = 0;
 
-    Instance* initInstance(HWND hwnd, InstanceKind k);
+    Instance* initInstance(HWND hwnd);
     Instance* getInstance(HWND hwnd);
 
     bool destroyInstance(HWND hwnd);
 
 protected:
     virtual Instance* instantiateLevel() = 0;
-    virtual Instance* instantiateSprites() = 0;
 
 protected:
     typedef std::map<HWND, Instance*> Instances_t;
-
-    bool addInstance(HWND hwnd, Instance*);
 
     Instances_t m_instances;
 };

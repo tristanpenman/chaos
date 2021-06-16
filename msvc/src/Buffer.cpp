@@ -1,13 +1,6 @@
 #include "Precompiled.h"
 
-#include "ChaosException.h"
 #include "Buffer.h"
-
-/******************************************************************************
- *
- * Constructors and destructor methods
- *
- *****************************************************************************/
 
 Buffer::Buffer()
   : m_hBitmap(0)
@@ -38,24 +31,17 @@ Buffer::~Buffer()
     }
 }
 
-
-/******************************************************************************
- *
- * Interface provided to subclasses
- *
- *****************************************************************************/
-
 void Buffer::reset(HDC compatible_with, int w, int h)
 {
     m_hBitmap = CreateCompatibleBitmap(compatible_with, w, h);
     if (!m_hBitmap)
     {
-        throw ChaosException("Could not allocate memory for pattern buffer");
+        throw std::runtime_error("Could not allocate memory for pattern buffer");
     }
 
     m_hDC = CreateCompatibleDC(compatible_with);
     if (!m_hDC)
     {
-        throw ChaosException("Could not create pattern buffer device context");
+        throw std::runtime_error("Could not create pattern buffer device context");
     }
 }

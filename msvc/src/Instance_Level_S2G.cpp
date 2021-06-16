@@ -2,7 +2,6 @@
 
 #include "SegaRom.h"
 
-#include "ChaosException.h"
 #include "ChaosRom.h"
 #include "ChaosRom_Sonic2.h"
 
@@ -180,7 +179,7 @@ bool Instance_Level_S2G::loadBlocks()
 
         if (r.second % blockSize != 0)
         {
-            throw ChaosException("Invalid block data");
+            throw std::runtime_error("Invalid block data");
         }
 
         m_blockPtrs = new SonicBlock*[blockCount];
@@ -258,12 +257,6 @@ void Instance_Level_S2G::unloadBlockBuffer()
     // TODO
 }
 
-/******************************************************************************
- *
- * Cleanup methods
- *
- *****************************************************************************/
-
 void Instance_Level_S2G::cleanup()
 {
     m_level_loaded = false;
@@ -328,12 +321,6 @@ void Instance_Level_S2G::unloadMap()
     }
 }
 
-/******************************************************************************
- *
- * Implementation of the Instance interface
- *
- *****************************************************************************/
-
 bool Instance_Level_S2G::hasUnsavedChanges() const
 {
     return true;
@@ -356,12 +343,6 @@ bool Instance_Level_S2G::saveChanges()
 
     return false;
 }
-
-/******************************************************************************
- *
- * Implementation of the Instance_Level interface
- *
- *****************************************************************************/
 
 bool Instance_Level_S2G::loadLevel(unsigned int level_index)
 {
@@ -457,12 +438,6 @@ const Buffer_Patterns& Instance_Level_S2G::getPatternBuffer() const
 {
     return *m_pBufferPatterns;
 }
-
-/******************************************************************************
- *
- * Extension of the Instance_Level interface
- *
- *****************************************************************************/
 
 const SonicChunk& Instance_Level_S2G::getChunk(unsigned int index) const
 {

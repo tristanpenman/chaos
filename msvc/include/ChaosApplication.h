@@ -6,7 +6,6 @@ class Buffer_Patterns;
 class Buffer_Blocks;
 
 class Instance_Level;
-class Instance_Sprites;
 
 class ChaosApplication
 {
@@ -23,7 +22,6 @@ public:
     void resetMainWindow(HWND);
 
     Instance_Level* getLevelInstance(HWND);
-    Instance_Sprites* getSpritesInstance(HWND);
 
     bool destroyInstance(HWND);
 

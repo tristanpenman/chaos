@@ -113,7 +113,6 @@
     <ClCompile Include="src\Buffer_Blocks.cpp" />
     <ClCompile Include="src\Buffer_Patterns.cpp" />
     <ClCompile Include="src\ChaosApplication.cpp" />
-    <ClCompile Include="src\ChaosException.cpp" />
     <ClCompile Include="src\ChaosLog.cpp">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> _CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> _CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -151,7 +150,6 @@
     <ClInclude Include="include\Buffer_Blocks.h" />
     <ClInclude Include="include\Buffer_Patterns.h" />
     <ClInclude Include="include\ChaosApplication.h" />
-    <ClInclude Include="include\ChaosException.h" />
     <ClInclude Include="include\ChaosLog.h" />
     <ClInclude Include="include\ChaosRom.h" />
     <ClInclude Include="include\ChaosRomFactory.h" />

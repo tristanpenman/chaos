@@ -1,5 +1,4 @@
 #include "Precompiled.h"
-#include "ChaosException.h"
 #include "ChaosLog.h"
 
 #include "SegaPalette.h"
@@ -22,7 +21,7 @@ bool SegaPalette::readFromFile(fstream& file)
         file.read(buffer, PALETTE_BUFFER_SIZE);
         if (file.gcount() != PALETTE_BUFFER_SIZE)
         {
-            throw ChaosException("Invalid palette data");
+            throw std::runtime_error("Invalid palette data");
         }
 
         unsigned char color_index = 0;

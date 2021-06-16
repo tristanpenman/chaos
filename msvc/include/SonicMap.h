@@ -48,12 +48,12 @@ inline unsigned char SonicMap::getValue(unsigned int layer, unsigned int x, unsi
 {
     if (layer >= m_layers)
     {
-        throw ChaosException("Invalid map layer index");
+        throw std::runtime_error("Invalid map layer index");
     }
 
     if (x >= m_width || y >= m_height)
     {
-        throw ChaosException("Invalid map tile index");
+        throw std::runtime_error("Invalid map tile index");
     }
 
     return m_data[y * m_width * m_layers + layer * m_width + x];

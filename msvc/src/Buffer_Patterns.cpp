@@ -1,6 +1,5 @@
 #include "Precompiled.h"
 
-#include "ChaosException.h"
 #include "SegaPalette.h"
 #include "SegaPattern.h"
 #include "SonicChunk.h"
@@ -8,22 +7,10 @@
 #include "Buffer.h"
 #include "Buffer_Patterns.h"
 
-/******************************************************************************
- *
- * Constructors and destructor methods
- *
- *****************************************************************************/
-
 Buffer_Patterns::Buffer_Patterns(const SegaPalette* palettes, unsigned int palCount, const SegaPattern* patterns, unsigned int patternCount, HDC hdc)
 {
     refresh(palettes, palCount, patterns, patternCount, hdc);
 }
-
-/******************************************************************************
- *
- * Public interface
- *
- *****************************************************************************/
 
 void Buffer_Patterns::drawPattern(unsigned int patternIndex, unsigned int palIndex, HDC dest, int x, int y, bool h_flip, bool v_flip) const
 {

@@ -10,20 +10,17 @@
 #define PATTERN_SIZE_IN_MEM PATTERN_WIDTH * PATTERN_HEIGHT
 #define PATTERN_SIZE_IN_ROM PATTERN_WIDTH * PATTERN_HEIGHT / PIXELS_PER_BYTE
 
-///////////////////////////////////////////////////////////////////////////////
-//
-// SegaPattern class definition
-//
-// Patterns are 8x8 pixels in size.
-//
-// In a ROM, two pixels are stored per byte (each pixel is one nibble). The
-// pixel value is a palette column index. Fifteen colors may be referenced,
-// with a zero value used to indicate transparent pixels.
-//
-// While in memory, the pixels are stored 1-per-byte.
-//
-///////////////////////////////////////////////////////////////////////////////
-
+/**
+ * SegaPattern class definition
+ *
+ * Patterns are 8x8 pixels in size.
+ *
+ * In a ROM, two pixels are stored per byte (each pixel is one nibble). The
+ * pixel value is a palette column index. Fifteen colors may be referenced,
+ * with a zero value used to indicate transparent pixels.
+ *
+ * Once loaded into memory, the pixels are stored 1-per-byte.
+ */
 class SegaPattern
 {
 public:

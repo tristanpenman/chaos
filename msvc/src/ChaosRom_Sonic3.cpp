@@ -2,7 +2,6 @@
 
 #include "SegaRom.h"
 
-#include "ChaosException.h"
 #include "ChaosRom.h"
 #include "ChaosRom_Sonic3.h"
 
@@ -10,24 +9,12 @@
 #include "Instance_Level.h"
 #include "Instance_Level_S3G.h"
 
-/******************************************************************************
- *
- * Constants
- *
- *****************************************************************************/
-
 #define PALETTE_COUNT 4
 
 #define LEVEL_BUFFER_SIZE   0xFFFF
 #define BLOCK_BUFFER_SIZE   0xFFFF
 #define CHUNK_BUFFER_SIZE   0xFFFF
 #define PATTERN_BUFFER_SIZE 0xFFFF	// 64kB
-
-/******************************************************************************
- *
- * Constructor and destructor methods
- *
- *****************************************************************************/
 
 using namespace std;
 
@@ -41,12 +28,6 @@ ChaosRom_Sonic3::ChaosRom_Sonic3(fstream& rom)
 {
 
 }
-
-/******************************************************************************
- *
- * Public interface
- *
- *****************************************************************************/
 
 bool ChaosRom_Sonic3::validateROM()
 {
@@ -87,17 +68,6 @@ Instance* ChaosRom_Sonic3::instantiateLevel()
 {
     return new Instance_Level_S3G(*this);
 }
-
-Instance* ChaosRom_Sonic3::instantiateSprites()
-{
-    return NULL;
-}
-
-/******************************************************************************
- *
- * Data layout utility methods
- *
- *****************************************************************************/
 
 uint32_t ChaosRom_Sonic3::getPalettesAddress(unsigned int level_index)
 {

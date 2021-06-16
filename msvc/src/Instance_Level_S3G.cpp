@@ -2,7 +2,6 @@
 
 #include "SegaRom.h"
 
-#include "ChaosException.h"
 #include "ChaosRom.h"
 #include "ChaosRom_Sonic3.h"
 
@@ -26,7 +25,7 @@
 #define LEVEL_BUFFER_SIZE   0xFFFF
 #define BLOCK_BUFFER_SIZE   0xFFFF
 #define CHUNK_BUFFER_SIZE   0xFFFF
-#define PATTERN_BUFFER_SIZE 0xFFFF	// 64kB
+#define PATTERN_BUFFER_SIZE 0xFFFF  // 64kB
 
 #define BLOCK_WIDTH 128
 #define BLOCK_HEIGHT 128
@@ -46,6 +45,8 @@ Instance_Level_S3G::Instance_Level_S3G(ChaosRom_Sonic3& rom)
   , m_pattern_count(0)
   , m_chunk_count(0)
   , m_blockCount(0)
+  , m_pBufferBlocks(NULL)
+  , m_pBufferPatterns(NULL)
 {
 
 }
@@ -404,12 +405,6 @@ void Instance_Level_S3G::unloadBlockBuffer()
     // TODO
 }
 
-/******************************************************************************
- *
- * Cleanup methods
- *
- *****************************************************************************/
-
 void Instance_Level_S3G::cleanup()
 {
     m_level_loaded = false;
@@ -474,12 +469,6 @@ void Instance_Level_S3G::unloadMap()
     }
 }
 
-/******************************************************************************
- *
- * Implementation of the Instance interface
- *
- *****************************************************************************/
-
 bool Instance_Level_S3G::hasUnsavedChanges() const
 {
     return true;
@@ -502,12 +491,6 @@ bool Instance_Level_S3G::saveChanges()
 
     return false;
 }
-
-/******************************************************************************
- *
- * Implementation of the Instance_Level interface
- *
- *****************************************************************************/
 
 bool Instance_Level_S3G::loadLevel(unsigned int level_index)
 {
@@ -598,12 +581,6 @@ const Buffer_Patterns& Instance_Level_S3G::getPatternBuffer() const
 {
     return *m_pBufferPatterns;
 }
-
-/******************************************************************************
- *
- * Extension of the Instance_Level interface
- *
- *****************************************************************************/
 
 const SonicChunk& Instance_Level_S3G::getChunk(unsigned int index) const
 {

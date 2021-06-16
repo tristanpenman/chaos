@@ -9,16 +9,13 @@
 #define BYTES_PER_PATTERN 2
 #define CHUNK_SIZE_IN_ROM PATTERNS_PER_CHUNK * BYTES_PER_PATTERN
 
-///////////////////////////////////////////////////////////////////////////////
-//
-// SonicChunk class definition
-//
-// A Sonic chunk represents a 16x16 tile, composed of 4 8x8 SEGA patterns.
-// Pattern indices are defined using the standard SEGA pattern descriptor -
-// see SegaPattern.h for more details.
-//
-///////////////////////////////////////////////////////////////////////////////
-
+/**
+ * SonicChunk class definition
+ *
+ * A Sonic chunk represents a 16x16 tile, composed of 4 8x8 SEGA patterns.
+ * Pattern indices are defined using the standard SEGA pattern descriptor -
+ * see SegaPattern.h for more details.
+ */
 class SonicChunk
 {
 public:
