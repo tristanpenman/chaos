@@ -93,11 +93,8 @@
     <ClCompile Include="src\ChaosRomFactory.cpp" />
     <ClCompile Include="src\ChaosRom_Sonic2.cpp" />
     <ClCompile Include="src\ChaosRom_Sonic3.cpp" />
-    <ClCompile Include="src\CommonDialog.cpp" />
-    <ClCompile Include="src\CommonDialogFactory.cpp" />
-    <ClCompile Include="src\CommonDialog_Open.cpp" />
-    <ClCompile Include="src\CommonDialog_Save.cpp" />
     <ClCompile Include="src\DialogLoadLevel.cpp" />
+    <ClCompile Include="src\DialogOpen.cpp" />
     <ClCompile Include="src\Instance.cpp" />
     <ClCompile Include="src\Instance_Level_S2G.cpp" />
     <ClCompile Include="src\Instance_Level_S3G.cpp" />
@@ -126,11 +123,8 @@
     <ClInclude Include="include\ChaosRomFactory.h" />
     <ClInclude Include="include\ChaosRom_Sonic2.h" />
     <ClInclude Include="include\ChaosRom_Sonic3.h" />
-    <ClInclude Include="include\CommonDialog.h" />
-    <ClInclude Include="include\CommonDialogFactory.h" />
-    <ClInclude Include="include\CommonDialog_Open.h" />
-    <ClInclude Include="include\CommonDialog_Save.h" />
     <ClInclude Include="include\DialogLoadLevel.h" />
+    <ClInclude Include="include\DialogOpen.h" />
     <ClInclude Include="include\Dialogs.h" />
     <ClInclude Include="include\Icons.h" />
     <ClInclude Include="include\Instance.h" />

@@ -2,11 +2,8 @@
 
 #include "InstanceValue.h"
 #include "ChaosApplication.h"
-
-#include "CommonDialog.h"
-#include "CommonDialogFactory.h"
-
 #include "DialogLoadLevel.h"
+#include "DialogOpen.h"
 
 #include "WndFrame.h"
 #include "WndMap.h"
@@ -20,7 +17,6 @@ ATOM      WndFrame::ms_class = 0;
 extern ChaosApplication g_application;
 
 extern HMENU g_menuChaos;
-extern HMENU g_menuLevel;
 
 HWND WndFrame::createWindow(HINSTANCE hInstance, HWND hParent)
 {
@@ -69,11 +65,10 @@ HWND WndFrame::createWindow(HINSTANCE hInstance, HWND hParent)
 
 bool WndFrame::openFile()
 {
-    CommonDialog& d = CommonDialogFactory::openDialog();
-
-    if (d.execute())
+    DialogOpen dialog;
+    if (dialog.showDialog())
     {
-        return g_application.openROM(d.getFileName());
+        return g_application.openROM(dialog.getFileName());
     }
 
     return false;
@@ -108,10 +103,10 @@ HWND WndFrame::createLevelWindow(HWND hClient)
 
 void WndFrame::enableMenuItems(HWND hwnd)
 {
-    EnableMenuItem(GetMenu(hwnd), ID_TOOLS_EDIT_LEVEL, MF_ENABLED);
+    EnableMenuItem(GetMenu(hwnd), ID_FILE_OPEN_LEVEL, MF_ENABLED);
 }
 
-LRESULT CALLBACK WndFrame::frameWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK WndFrame::frameWndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 {
     static HWND         hwndClient;
     static HMENU        hMenuWindow;
@@ -148,7 +143,7 @@ LRESULT CALLBACK WndFrame::frameWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
             }
             return 0;
 
-        case ID_TOOLS_EDIT_LEVEL:
+        case ID_FILE_OPEN_LEVEL:
             // Is ROM loaded?
             if (g_application.getROM())
             {
