@@ -100,18 +100,14 @@ void ChaosApplication::destroyWindowClasses()
     WndLevel::destroyClass();
 }
 
-bool ChaosApplication::cleanup(bool force)
+bool ChaosApplication::cleanup()
 {
-    SendMessage (m_hMain, WM_COMMAND, ID_WINDOW_CLOSEALL, 0) ;
+    SendMessage(m_hMain, WM_COMMAND, ID_WINDOW_CLOSEALL, 0) ;
 
     if (m_pROM)
     {
-        if (!force && m_pROM->hasUnsavedChanges())
-        {
-            return false;
-        }
-
-        delete m_pROM; m_pROM = NULL;
+        delete m_pROM;
+        m_pROM = NULL;
     }
 
     return true;
@@ -151,7 +147,7 @@ bool ChaosApplication::openROM(const string& path)
         }
     }
 
-    cleanup(true);
+    cleanup();
 
     if (m_file.is_open())
     {
@@ -175,12 +171,13 @@ bool ChaosApplication::closeROM()
 {
     if (m_pROM)
     {
-        if (!cleanup(false))
+        if (!cleanup())
         {
             return false;
         }
 
-        delete m_pROM; m_pROM = NULL;
+        delete m_pROM;
+        m_pROM = NULL;
 
         m_file.close();
     }

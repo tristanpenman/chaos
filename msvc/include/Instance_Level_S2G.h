@@ -12,9 +12,6 @@ public:
     explicit Instance_Level_S2G(ChaosRom_Sonic2& rom);
     virtual ~Instance_Level_S2G();
 
-    virtual bool hasUnsavedChanges() const;
-    virtual bool saveChanges();
-
     virtual bool loadLevel(unsigned int level_index);
 
     virtual const SegaPalette& getPalette(unsigned int index) const;

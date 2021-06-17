@@ -7,6 +7,7 @@
 #include <sstream>
 #include <map>
 #include <exception>
+#include <vector>
 
 #include <assert.h>
 #include <windows.h>

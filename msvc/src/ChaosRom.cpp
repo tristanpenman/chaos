@@ -25,22 +25,6 @@ ChaosRom::~ChaosRom()
     m_instances.clear();
 }
 
-bool ChaosRom::hasUnsavedChanges() const
-{
-    Instances_t::const_iterator itr;
-
-    for (itr = m_instances.begin(); itr != m_instances.end(); ++itr)
-    {
-        Instance* pInstance = itr->second;
-        if (pInstance->hasUnsavedChanges())
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
 Instance* ChaosRom::initInstance(HWND hwnd)
 {
     Instance* pInstance = NULL;
@@ -79,15 +63,6 @@ bool ChaosRom::destroyInstance(HWND hwnd)
     }
 
     Instance* pInstance = itr->second;
-
-    if (pInstance->hasUnsavedChanges())
-    {
-        if (!pInstance->saveChanges())
-        {
-            return false;
-        }
-    }
-
     m_instances.erase(itr);
     delete pInstance;
     return true;

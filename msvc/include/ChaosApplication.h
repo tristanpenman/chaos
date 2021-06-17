@@ -15,7 +15,7 @@ public:
 
     int run(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow);
 
-    bool cleanup(bool force);
+    bool cleanup();
 
     const HWND getMainWindow() const;
 

@@ -18,7 +18,6 @@ class SonicChunkDescriptor
 public:
     SonicChunkDescriptor();
     SonicChunkDescriptor(const SonicChunkDescriptor&) = delete;
-    virtual ~SonicChunkDescriptor() = default;
 
     SonicChunkDescriptor& operator=(const SonicChunkDescriptor&) = delete;
 

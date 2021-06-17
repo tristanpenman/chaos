@@ -21,8 +21,6 @@ public:
     explicit ChaosRom(std::fstream& rom);
     virtual ~ChaosRom();
 
-    bool hasUnsavedChanges() const;
-
     typedef std::map<unsigned int, std::string> LevelNames_t;
 
     // abstract

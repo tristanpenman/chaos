@@ -469,29 +469,6 @@ void Instance_Level_S3G::unloadMap()
     }
 }
 
-bool Instance_Level_S3G::hasUnsavedChanges() const
-{
-    return true;
-}
-
-bool Instance_Level_S3G::saveChanges()
-{
-    int r = MessageBox(getWindow(), "Save changes made to this level?", "Save changes?", MB_YESNOCANCEL);
-
-    if (r == IDYES)
-    {
-        // Save changes
-
-        return true;
-    }
-    else if (r == IDNO)
-    {
-        return true;
-    }
-
-    return false;
-}
-
 bool Instance_Level_S3G::loadLevel(unsigned int level_index)
 {
     m_level_index = level_index;

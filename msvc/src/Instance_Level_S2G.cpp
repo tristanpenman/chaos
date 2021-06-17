@@ -45,6 +45,8 @@ Instance_Level_S2G::Instance_Level_S2G(ChaosRom_Sonic2& rom)
   , m_pattern_count(0)
   , m_chunk_count(0)
   , m_blockCount(0)
+  , m_pBufferBlocks(NULL)
+  , m_pBufferPatterns(NULL)
 {
 
 }
@@ -79,12 +81,12 @@ bool Instance_Level_S2G::loadPatterns()
 {
     fstream& file = m_rom.getFile();
 
-    unsigned char buffer[PATTERN_BUFFER_SIZE];
+    std::vector<unsigned char> buffer(PATTERN_BUFFER_SIZE);
 
     streamoff patternsAddr = m_rom.getPatternsAddress(m_level_index);
 
     SonicReader sr(file);
-    SonicReader::result_t r = sr.decompress(buffer, PATTERN_BUFFER_SIZE, patternsAddr);
+    SonicReader::result_t r = sr.decompress(buffer.data(), PATTERN_BUFFER_SIZE, patternsAddr);
 
     if (r.first)
     {
@@ -121,12 +123,12 @@ bool Instance_Level_S2G::loadChunks()
 {
     fstream& file = m_rom.getFile();
 
-    unsigned char buffer[CHUNK_BUFFER_SIZE];
+    std::vector<unsigned char> buffer(CHUNK_BUFFER_SIZE);
 
     streamoff chunks_addr = m_rom.getChunksAddress(m_level_index);
 
     SonicReader sr(file);
-    SonicReader::result_t r = sr.decompress(buffer, CHUNK_BUFFER_SIZE, chunks_addr);
+    SonicReader::result_t r = sr.decompress(buffer.data(), CHUNK_BUFFER_SIZE, chunks_addr);
 
     if (r.first)
     {
@@ -163,12 +165,12 @@ bool Instance_Level_S2G::loadBlocks()
 {
     fstream& file = m_rom.getFile();
 
-    unsigned char buffer[BLOCK_BUFFER_SIZE];
+    std::vector<unsigned char> buffer(BLOCK_BUFFER_SIZE);
 
     streamoff blocks_addr = m_rom.getBlocksAddress(m_level_index);
 
     SonicReader sr(file);
-    SonicReader::result_t r = sr.decompress(buffer, BLOCK_BUFFER_SIZE, blocks_addr);
+    SonicReader::result_t r = sr.decompress(buffer.data(), BLOCK_BUFFER_SIZE, blocks_addr);
 
     if (r.first)
     {
@@ -203,20 +205,19 @@ bool Instance_Level_S2G::loadMap()
 {
     fstream& file = m_rom.getFile();
 
-    unsigned char buffer[LEVEL_BUFFER_SIZE];
+    std::vector<unsigned char> buffer(LEVEL_BUFFER_SIZE);
 
     SonicReader reader(file);
 
     SonicReader::result_t result =
         reader.decompress(
-            buffer,
+            buffer.data(),
             LEVEL_BUFFER_SIZE,
             m_rom.getMapAddress(m_level_index));
 
     if (result.first)
     {
-        m_pMap = new SonicMap(2, 128, 16, buffer);
-
+        m_pMap = new SonicMap(2, 128, 16, buffer.data());
         return true;
     }
 
@@ -275,7 +276,8 @@ void Instance_Level_S2G::unloadPalettes()
 {
     if (m_palettes)
     {
-        delete[] m_palettes; m_palettes = NULL;
+        delete[] m_palettes;
+        m_palettes = NULL;
     }
 
     m_palette_count = 0;
@@ -285,7 +287,8 @@ void Instance_Level_S2G::unloadPatterns()
 {
     if (m_patterns)
     {
-        delete[] m_patterns; m_patterns = NULL;
+        delete[] m_patterns;
+        m_patterns = NULL;
     }
 
     m_pattern_count = 0;
@@ -295,7 +298,8 @@ void Instance_Level_S2G::unloadChunks()
 {
     if (m_chunks)
     {
-        delete[] m_chunks; m_chunks = NULL;
+        delete[] m_chunks;
+        m_chunks = NULL;
     }
 
     m_chunk_count = 0;
@@ -305,10 +309,12 @@ void Instance_Level_S2G::unloadBlocks()
 {
     for (unsigned int i = 0; i < m_blockCount; i++)
     {
-        delete m_blockPtrs[i]; m_blockPtrs[i] = NULL;
+        delete m_blockPtrs[i];
+        m_blockPtrs[i] = NULL;
     }
 
-    delete[] m_blockPtrs; m_blockPtrs = NULL;
+    delete[] m_blockPtrs;
+    m_blockPtrs = NULL;
 
     m_blockCount = 0;
 }
@@ -317,31 +323,9 @@ void Instance_Level_S2G::unloadMap()
 {
     if (m_pMap)
     {
-        delete m_pMap; m_pMap = 0;
+        delete m_pMap;
+        m_pMap = 0;
     }
-}
-
-bool Instance_Level_S2G::hasUnsavedChanges() const
-{
-    return true;
-}
-
-bool Instance_Level_S2G::saveChanges()
-{
-    int r = MessageBox(getWindow(), "Save changes made to this level?", "Save changes?", MB_YESNOCANCEL);
-
-    if (r == IDYES)
-    {
-        // Save changes
-
-        return true;
-    }
-    else if (r == IDNO)
-    {
-        return true;
-    }
-
-    return false;
 }
 
 bool Instance_Level_S2G::loadLevel(unsigned int level_index)

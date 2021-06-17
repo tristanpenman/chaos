@@ -13,9 +13,6 @@ class Buffer_Patterns;
 class Instance_Level : public Instance
 {
 public:
-    virtual bool hasUnsavedChanges() const = 0;
-    virtual bool saveChanges() = 0;
-
     virtual bool loadLevel(unsigned int level_index) = 0;
 
     virtual const SegaPalette& getPalette(unsigned int index) const = 0;
