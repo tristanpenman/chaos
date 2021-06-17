@@ -26,8 +26,7 @@ public:
     ChaosRom* getROM();
 
     bool openROM(const std::string& path);
-    bool saveROM();
-    bool saveAsROM(const std::string& path);
+
     bool closeROM();
 
 protected:

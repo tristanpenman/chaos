@@ -148,16 +148,6 @@ bool ChaosApplication::openROM(const string& path)
     return false;
 }
 
-bool ChaosApplication::saveROM()
-{
-    return false;
-}
-
-bool ChaosApplication::saveAsROM(const std::string& path)
-{
-    return false;
-}
-
 bool ChaosApplication::closeROM()
 {
     if (m_pROM)
