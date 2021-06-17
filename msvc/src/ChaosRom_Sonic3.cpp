@@ -1,13 +1,8 @@
 #include "Precompiled.h"
 
-#include "SegaRom.h"
-
 #include "ChaosRom.h"
 #include "ChaosRom_Sonic3.h"
-
-#include "Instance.h"
-#include "Instance_Level.h"
-#include "Instance_Level_S3G.h"
+#include "Level_Sonic3.h"
 
 #define PALETTE_COUNT 4
 
@@ -64,9 +59,9 @@ ChaosRom::LevelNames_t ChaosRom_Sonic3::getLevelNames()
     return levelNames;
 }
 
-Instance* ChaosRom_Sonic3::instantiateLevel()
+Level* ChaosRom_Sonic3::instantiateLevel()
 {
-    return new Instance_Level_S3G(*this);
+    return new Level_Sonic3(*this);
 }
 
 uint32_t ChaosRom_Sonic3::getPalettesAddress(unsigned int level_index)

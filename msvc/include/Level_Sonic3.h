@@ -1,16 +1,18 @@
 #pragma once
 
-class ChaosRom_Sonic2;
+#include "Level.h"
+
+class ChaosRom_Sonic3;
 
 /**
  * Implementation of the Instance_Level abstract interface for ROMs based on
- * the Sonic The Hedgehog 2 engine.
+ * the Sonic The Hedgehog 3 engine.
  */
-class Instance_Level_S2G : public Instance_Level
+class Level_Sonic3 : public Level
 {
 public:
-    explicit Instance_Level_S2G(ChaosRom_Sonic2& rom);
-    virtual ~Instance_Level_S2G();
+    explicit Level_Sonic3(ChaosRom_Sonic3& rom);
+    virtual ~Level_Sonic3();
 
     virtual bool loadLevel(unsigned int level_index);
 
@@ -59,7 +61,7 @@ protected:
     void unloadBlockBuffer();
 
 private:
-    ChaosRom_Sonic2& m_rom;
+    ChaosRom_Sonic3& m_rom;
 
     unsigned int m_level_index;
     bool m_level_loaded;

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <InstanceValue.h>
+
 class WndMap
 {
 public:

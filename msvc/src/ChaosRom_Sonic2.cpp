@@ -1,13 +1,8 @@
 #include "Precompiled.h"
 
-#include "SegaRom.h"
-
 #include "ChaosRom.h"
 #include "ChaosRom_Sonic2.h"
-
-#include "Instance.h"
-#include "Instance_Level.h"
-#include "Instance_Level_S2G.h"
+#include "Level_Sonic2.h"
 
 using namespace std;
 
@@ -69,9 +64,9 @@ ChaosRom::LevelNames_t ChaosRom_Sonic2::getLevelNames()
     return levelNames;
 }
 
-Instance* ChaosRom_Sonic2::instantiateLevel()
+Level* ChaosRom_Sonic2::instantiateLevel()
 {
-    return new Instance_Level_S2G(*this);
+    return new Level_Sonic2(*this);
 }
 
 streamoff ChaosRom_Sonic2::getPaletteIndex(unsigned int level_index)

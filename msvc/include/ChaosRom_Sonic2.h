@@ -23,7 +23,7 @@ public:
     virtual std::streamoff getMapAddress(unsigned int level_index);
 
 protected:
-    virtual Instance* instantiateLevel();
+    virtual Level* instantiateLevel();
 
     virtual std::streamoff getPaletteIndex(unsigned int level_index);
     virtual std::streamoff getDataAddress(unsigned int level_index, std::streamoff entry_offset);

@@ -1,10 +1,8 @@
 #include "Precompiled.h"
 
 #include "InstanceValue.h"
-#include "SegaRom.h"
 #include "ChaosRom.h"
 #include "ChaosApplication.h"
-
 #include "DialogLoadLevel.h"
 
 #define MAX_LEVEL_STR 100

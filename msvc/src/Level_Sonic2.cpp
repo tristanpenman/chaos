@@ -1,7 +1,5 @@
 #include "Precompiled.h"
 
-#include "SegaRom.h"
-
 #include "ChaosRom.h"
 #include "ChaosRom_Sonic2.h"
 
@@ -16,9 +14,7 @@
 #include "Buffer_Blocks.h"
 #include "Buffer_Patterns.h"
 
-#include "Instance.h"
-#include "Instance_Level.h"
-#include "Instance_Level_S2G.h"
+#include "Level_Sonic2.h"
 
 #define PALETTE_COUNT 4
 
@@ -32,7 +28,7 @@
 
 using namespace std;
 
-Instance_Level_S2G::Instance_Level_S2G(ChaosRom_Sonic2& rom)
+Level_Sonic2::Level_Sonic2(ChaosRom_Sonic2& rom)
   : m_rom(rom)
   , m_level_index(0)
   , m_level_loaded(false)
@@ -51,12 +47,12 @@ Instance_Level_S2G::Instance_Level_S2G(ChaosRom_Sonic2& rom)
 
 }
 
-Instance_Level_S2G::~Instance_Level_S2G()
+Level_Sonic2::~Level_Sonic2()
 {
     cleanup();
 }
 
-bool Instance_Level_S2G::loadPalettes()
+bool Level_Sonic2::loadPalettes()
 {
     fstream& file = m_rom.getFile();
     streamoff paletteAddr = m_rom.getPalettesAddress(m_level_index);
@@ -77,7 +73,7 @@ bool Instance_Level_S2G::loadPalettes()
     return true;
 }
 
-bool Instance_Level_S2G::loadPatterns()
+bool Level_Sonic2::loadPatterns()
 {
     fstream& file = m_rom.getFile();
 
@@ -119,7 +115,7 @@ bool Instance_Level_S2G::loadPatterns()
     return false;
 }
 
-bool Instance_Level_S2G::loadChunks()
+bool Level_Sonic2::loadChunks()
 {
     fstream& file = m_rom.getFile();
 
@@ -161,7 +157,7 @@ bool Instance_Level_S2G::loadChunks()
     return false;
 }
 
-bool Instance_Level_S2G::loadBlocks()
+bool Level_Sonic2::loadBlocks()
 {
     fstream& file = m_rom.getFile();
 
@@ -201,7 +197,7 @@ bool Instance_Level_S2G::loadBlocks()
     return false;
 }
 
-bool Instance_Level_S2G::loadMap()
+bool Level_Sonic2::loadMap()
 {
     fstream& file = m_rom.getFile();
 
@@ -224,7 +220,7 @@ bool Instance_Level_S2G::loadMap()
     return false;
 }
 
-bool Instance_Level_S2G::bufferPatterns()
+bool Level_Sonic2::bufferPatterns()
 {
     HWND hwnd = getWindow();
     HDC hdc = GetDC(hwnd);
@@ -236,7 +232,7 @@ bool Instance_Level_S2G::bufferPatterns()
     return true;
 }
 
-bool Instance_Level_S2G::bufferBlocks()
+bool Level_Sonic2::bufferBlocks()
 {
     HWND hwnd = getWindow();
     HDC hdc = GetDC(hwnd);
@@ -248,17 +244,17 @@ bool Instance_Level_S2G::bufferBlocks()
     return true;
 }
 
-void Instance_Level_S2G::unloadPatternBuffer()
+void Level_Sonic2::unloadPatternBuffer()
 {
     // TODO
 }
 
-void Instance_Level_S2G::unloadBlockBuffer()
+void Level_Sonic2::unloadBlockBuffer()
 {
     // TODO
 }
 
-void Instance_Level_S2G::cleanup()
+void Level_Sonic2::cleanup()
 {
     m_level_loaded = false;
     m_level_index = 0;
@@ -272,7 +268,7 @@ void Instance_Level_S2G::cleanup()
     unloadPalettes();
 }
 
-void Instance_Level_S2G::unloadPalettes()
+void Level_Sonic2::unloadPalettes()
 {
     if (m_palettes)
     {
@@ -283,7 +279,7 @@ void Instance_Level_S2G::unloadPalettes()
     m_palette_count = 0;
 }
 
-void Instance_Level_S2G::unloadPatterns()
+void Level_Sonic2::unloadPatterns()
 {
     if (m_patterns)
     {
@@ -294,7 +290,7 @@ void Instance_Level_S2G::unloadPatterns()
     m_pattern_count = 0;
 }
 
-void Instance_Level_S2G::unloadChunks()
+void Level_Sonic2::unloadChunks()
 {
     if (m_chunks)
     {
@@ -305,7 +301,7 @@ void Instance_Level_S2G::unloadChunks()
     m_chunk_count = 0;
 }
 
-void Instance_Level_S2G::unloadBlocks()
+void Level_Sonic2::unloadBlocks()
 {
     for (unsigned int i = 0; i < m_blockCount; i++)
     {
@@ -319,7 +315,7 @@ void Instance_Level_S2G::unloadBlocks()
     m_blockCount = 0;
 }
 
-void Instance_Level_S2G::unloadMap()
+void Level_Sonic2::unloadMap()
 {
     if (m_pMap)
     {
@@ -328,7 +324,7 @@ void Instance_Level_S2G::unloadMap()
     }
 }
 
-bool Instance_Level_S2G::loadLevel(unsigned int level_index)
+bool Level_Sonic2::loadLevel(unsigned int level_index)
 {
     if (level_index > 19)
     {
@@ -353,87 +349,87 @@ bool Instance_Level_S2G::loadLevel(unsigned int level_index)
     return false;
 }
 
-const SegaPalette& Instance_Level_S2G::getPalette(unsigned int index) const
+const SegaPalette& Level_Sonic2::getPalette(unsigned int index) const
 {
     return m_palettes[index];
 }
 
-const SegaPalette* Instance_Level_S2G::getPalettes() const
+const SegaPalette* Level_Sonic2::getPalettes() const
 {
     return m_palettes;
 }
 
-unsigned int Instance_Level_S2G::getPaletteCount() const
+unsigned int Level_Sonic2::getPaletteCount() const
 {
     return m_palette_count;
 }
 
-const SegaPattern& Instance_Level_S2G::getPattern(unsigned int index) const
+const SegaPattern& Level_Sonic2::getPattern(unsigned int index) const
 {
     return m_patterns[index];
 }
 
-const SegaPattern* Instance_Level_S2G::getPatterns() const
+const SegaPattern* Level_Sonic2::getPatterns() const
 {
     return m_patterns;
 }
 
-unsigned int Instance_Level_S2G::getPatternCount() const
+unsigned int Level_Sonic2::getPatternCount() const
 {
     return m_pattern_count;
 }
 
-const SonicBlock& Instance_Level_S2G::getBlock(unsigned int index) const
+const SonicBlock& Level_Sonic2::getBlock(unsigned int index) const
 {
     return *m_blockPtrs[index];
 }
 
-const SonicBlock** Instance_Level_S2G::getBlocks() const
+const SonicBlock** Level_Sonic2::getBlocks() const
 {
     return const_cast<const SonicBlock**>(m_blockPtrs);
 }
 
-unsigned int Instance_Level_S2G::getBlockCount() const
+unsigned int Level_Sonic2::getBlockCount() const
 {
     return m_blockCount;
 }
 
-unsigned int Instance_Level_S2G::getBlockHeight() const
+unsigned int Level_Sonic2::getBlockHeight() const
 {
     return BLOCK_WIDTH;
 }
 
-unsigned int Instance_Level_S2G::getBlockWidth() const
+unsigned int Level_Sonic2::getBlockWidth() const
 {
     return BLOCK_HEIGHT;
 }
 
-const SonicMap& Instance_Level_S2G::getMap() const
+const SonicMap& Level_Sonic2::getMap() const
 {
     return *m_pMap;
 }
 
-const Buffer_Blocks& Instance_Level_S2G::getBlockBuffer() const
+const Buffer_Blocks& Level_Sonic2::getBlockBuffer() const
 {
     return *m_pBufferBlocks;
 }
 
-const Buffer_Patterns& Instance_Level_S2G::getPatternBuffer() const
+const Buffer_Patterns& Level_Sonic2::getPatternBuffer() const
 {
     return *m_pBufferPatterns;
 }
 
-const SonicChunk& Instance_Level_S2G::getChunk(unsigned int index) const
+const SonicChunk& Level_Sonic2::getChunk(unsigned int index) const
 {
     return m_chunks[index];
 }
 
-const SonicChunk* Instance_Level_S2G::getChunks() const
+const SonicChunk* Level_Sonic2::getChunks() const
 {
     return m_chunks;
 }
 
-unsigned int Instance_Level_S2G::getChunkCount() const
+unsigned int Level_Sonic2::getChunkCount() const
 {
     return m_chunk_count;
 }

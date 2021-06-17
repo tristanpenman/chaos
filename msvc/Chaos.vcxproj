@@ -95,9 +95,8 @@
     <ClCompile Include="src\ChaosRom_Sonic3.cpp" />
     <ClCompile Include="src\DialogLoadLevel.cpp" />
     <ClCompile Include="src\DialogOpen.cpp" />
-    <ClCompile Include="src\Instance.cpp" />
-    <ClCompile Include="src\Instance_Level_S2G.cpp" />
-    <ClCompile Include="src\Instance_Level_S3G.cpp" />
+    <ClCompile Include="src\Level_Sonic2.cpp" />
+    <ClCompile Include="src\Level_Sonic3.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Precompiled.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -105,7 +104,6 @@
     </ClCompile>
     <ClCompile Include="src\SegaPalette.cpp" />
     <ClCompile Include="src\SegaPattern.cpp" />
-    <ClCompile Include="src\SegaRom.cpp" />
     <ClCompile Include="src\SonicBlock.cpp" />
     <ClCompile Include="src\SonicChunk.cpp" />
     <ClCompile Include="src\SonicMap.cpp" />
@@ -127,11 +125,10 @@
     <ClInclude Include="include\DialogOpen.h" />
     <ClInclude Include="include\Dialogs.h" />
     <ClInclude Include="include\Icons.h" />
-    <ClInclude Include="include\Instance.h" />
     <ClInclude Include="include\InstanceValue.h" />
-    <ClInclude Include="include\Instance_Level.h" />
-    <ClInclude Include="include\Instance_Level_S2G.h" />
-    <ClInclude Include="include\Instance_Level_S3G.h" />
+    <ClInclude Include="include\Level.h" />
+    <ClInclude Include="include\Level_Sonic2.h" />
+    <ClInclude Include="include\Level_Sonic3.h" />
     <ClInclude Include="include\Menus.h" />
     <ClInclude Include="include\NativeColor.h" />
     <ClInclude Include="include\Precompiled.h" />
@@ -139,7 +136,6 @@
     <ClInclude Include="include\SegaPalette.h" />
     <ClInclude Include="include\SegaPattern.h" />
     <ClInclude Include="include\SegaPatternDescriptor.h" />
-    <ClInclude Include="include\SegaRom.h" />
     <ClInclude Include="include\SonicBlock.h" />
     <ClInclude Include="include\SonicChunk.h" />
     <ClInclude Include="include\SonicChunkDescriptor.h" />

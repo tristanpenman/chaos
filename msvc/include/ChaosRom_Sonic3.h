@@ -26,7 +26,7 @@ public:
     virtual uint32_t getMapAddress(unsigned int level_index);
 
 protected:
-    virtual Instance* instantiateLevel();
+    virtual Level* instantiateLevel();
 
     virtual uint32_t getDataAddress(unsigned int level_index, std::streamoff entry_offset);
     virtual uint32_t getPaletteIndex(unsigned int level_index);

@@ -1,6 +1,5 @@
 #include "Precompiled.h"
 
-#include "SegaRom.h"
 #include "InstanceValue.h"
 #include "ChaosApplication.h"
 #include "ChaosRom.h"
@@ -12,8 +11,7 @@
 #include "SonicChunk.h"
 #include "SonicBlock.h"
 #include "SonicMap.h"
-#include "Instance.h"
-#include "Instance_Level.h"
+#include "Level.h"
 
 #include "WndMap.h"
 #include "WndLevel.h"
@@ -68,9 +66,8 @@ int WndLevel::messageCreate(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
     try
     {
-        Instance_Level* pInstance = g_application.getLevelInstance(hwnd);
-
-        if (!pInstance->loadLevel(levelIndex))
+        Level* pLevel = g_application.getLevelInstance(hwnd);
+        if (!pLevel->loadLevel(levelIndex))
         {
             REPORT_ERROR("Failed to load the selected level", "ROM error");
             return 0;

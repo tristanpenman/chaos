@@ -8,11 +8,10 @@
 #include "Buffer.h"
 #include "Buffer_Patterns.h"
 #include "Buffer_Blocks.h"
-#include "Instance.h"
-#include "Instance_Level.h"
+#include "Level.h"
 
 Buffer_Blocks::Buffer_Blocks(
-    const Instance_Level* level,
+    const Level* level,
     const SonicBlock** blocksArray, unsigned int blockCount,
     const SonicChunk* chunksArray, unsigned int chunkCount,
     const Buffer_Patterns* pPatternBuffer, HDC hdc)
@@ -82,7 +81,7 @@ void Buffer_Blocks::renderBlockIntoBuffer(const SonicBlock& block, HDC hdc, int 
 }
 
 void Buffer_Blocks::refresh(
-    const Instance_Level* level,
+    const Level* level,
     const SonicBlock** blocksArray, unsigned int blockCount,
     const SonicChunk* chunksArray, unsigned int chunkCount, const Buffer_Patterns* pPatternBuffer, HDC hdc)
 {

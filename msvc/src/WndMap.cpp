@@ -1,6 +1,5 @@
 #include "Precompiled.h"
 
-#include "SegaRom.h"
 #include "InstanceValue.h"
 #include "ChaosApplication.h"
 #include "ChaosRom.h"
@@ -13,8 +12,7 @@
 #include "SonicBlock.h"
 #include "SonicMap.h"
 #include "WndMap.h"
-#include "Instance.h"
-#include "Instance_Level.h"
+#include "Level.h"
 
 extern ChaosApplication g_application;
 
@@ -81,13 +79,13 @@ void WndMap::resetScrollBars(HWND hwnd)
 {
     HWND hParent = GetParent(hwnd);
 
-    Instance_Level* pInstance = g_application.getLevelInstance(hParent);
-    if (!pInstance)
+    Level* pLevel = g_application.getLevelInstance(hParent);
+    if (!pLevel)
     {
         return;
     }
 
-    const SonicMap& map = pInstance->getMap();
+    const SonicMap& map = pLevel->getMap();
 
     RECT rect;
     if (GetClientRect(hwnd, &rect) == TRUE)
@@ -98,17 +96,17 @@ void WndMap::resetScrollBars(HWND hwnd)
         si.nPos = 0;
         si.nPage = rect.right - rect.left;
         si.nMin = 0;
-        si.nMax = map.getWidth() * pInstance->getBlockWidth();
+        si.nMax = map.getWidth() * pLevel->getBlockWidth();
         SetScrollInfo(hwnd, SB_HORZ, &si, TRUE);
 
         si.nPage = rect.bottom - rect.top;
-        si.nMax = map.getHeight() * pInstance->getBlockHeight();
+        si.nMax = map.getHeight() * pLevel->getBlockHeight();
         SetScrollInfo(hwnd, SB_VERT, &si, TRUE);
 
         WndMap::x[hwnd] = 0;
         WndMap::y[hwnd] = 0;
-        WndMap::blockWidth[hwnd] = pInstance->getBlockWidth();
-        WndMap::blockHeight[hwnd] = pInstance->getBlockHeight();
+        WndMap::blockWidth[hwnd] = pLevel->getBlockWidth();
+        WndMap::blockHeight[hwnd] = pLevel->getBlockHeight();
     }
 }
 
@@ -288,16 +286,16 @@ int WndMap::messagePaint(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     HWND hParent = GetParent(hwnd);
 
-    Instance_Level* pInstance = g_application.getLevelInstance(hParent);
-    if (!pInstance)
+    Level* pLevel = g_application.getLevelInstance(hParent);
+    if (!pLevel)
     {
         return DefWindowProc(hwnd, msg, wParam, lParam);
     }
 
-    const SonicMap& map = pInstance->getMap();
+    const SonicMap& map = pLevel->getMap();
 
-    const Buffer_Patterns& patternBuffer = pInstance->getPatternBuffer();
-    const Buffer_Blocks& blockBuffer = pInstance->getBlockBuffer();
+    const Buffer_Patterns& patternBuffer = pLevel->getPatternBuffer();
+    const Buffer_Blocks& blockBuffer = pLevel->getBlockBuffer();
     const unsigned int blockWidth = WndMap::blockWidth[hwnd];
     const unsigned int blockHeight = WndMap::blockHeight[hwnd];
 

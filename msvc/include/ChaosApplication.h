@@ -1,11 +1,9 @@
 #pragma once
 
-class ChaosRom;
-
 class Buffer_Patterns;
 class Buffer_Blocks;
-
-class Instance_Level;
+class ChaosRom;
+class Level;
 
 class ChaosApplication
 {
@@ -21,7 +19,7 @@ public:
 
     void resetMainWindow(HWND);
 
-    Instance_Level* getLevelInstance(HWND);
+    Level* getLevelInstance(HWND);
 
     bool destroyInstance(HWND);
 

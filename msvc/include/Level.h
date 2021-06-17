@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Windows.h>
+
 class SegaPalette;
 class SegaPattern;
 
@@ -10,9 +12,15 @@ class SonicMap;
 class Buffer_Blocks;
 class Buffer_Patterns;
 
-class Instance_Level : public Instance
+class Level
 {
 public:
+    Level();
+    virtual ~Level() = default;
+
+    void setWindow(HWND hwnd);
+    HWND getWindow() const;
+
     virtual bool loadLevel(unsigned int level_index) = 0;
 
     virtual const SegaPalette& getPalette(unsigned int index) const = 0;
@@ -33,4 +41,23 @@ public:
 
     virtual const Buffer_Patterns& getPatternBuffer() const = 0;
     virtual const Buffer_Blocks& getBlockBuffer() const = 0;
+
+protected:
+    HWND m_hWnd;
 };
+
+inline Level::Level()
+  : m_hWnd(0)
+{
+
+}
+
+inline void Level::setWindow(HWND hWnd)
+{
+    m_hWnd = hWnd;
+}
+
+inline HWND Level::getWindow() const
+{
+    return m_hWnd;
+}

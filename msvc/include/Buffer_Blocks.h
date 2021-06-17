@@ -1,7 +1,7 @@
 #pragma once
 
 class Buffer_Patterns;
-class Instance_Level;
+class Level;
 class SonicChunk;
 class SonicBlock;
 
@@ -15,14 +15,14 @@ class SonicBlock;
 class Buffer_Blocks : public Buffer
 {
 public:
-    explicit Buffer_Blocks(const Instance_Level* level,
+    explicit Buffer_Blocks(const Level* level,
         const SonicBlock** blocks, unsigned int blockCount,
         const SonicChunk* chunks, unsigned int chunkCount,
         const Buffer_Patterns*, HDC hdc);
 
     void drawBlock(unsigned int blockIndex, HDC dest, int x, int y) const;
 
-    void refresh(const Instance_Level* level,
+    void refresh(const Level* level,
         const SonicBlock** blocks, unsigned int blockCount,
         const SonicChunk* chunks, unsigned int chunkCount, const Buffer_Patterns*, HDC hdc);
 

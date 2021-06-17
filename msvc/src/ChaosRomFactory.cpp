@@ -1,7 +1,5 @@
 #include "Precompiled.h"
 
-#include "SegaRom.h"
-
 #include "ChaosRom.h"
 #include "ChaosRom_Sonic2.h"
 #include "ChaosRom_Sonic3.h"

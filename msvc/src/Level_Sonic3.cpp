@@ -1,7 +1,5 @@
 #include "Precompiled.h"
 
-#include "SegaRom.h"
-
 #include "ChaosRom.h"
 #include "ChaosRom_Sonic3.h"
 
@@ -16,9 +14,7 @@
 #include "Buffer_Blocks.h"
 #include "Buffer_Patterns.h"
 
-#include "Instance.h"
-#include "Instance_Level.h"
-#include "Instance_Level_S3G.h"
+#include "Level_Sonic3.h"
 
 #define PALETTE_COUNT 4
 
@@ -32,7 +28,7 @@
 
 using namespace std;
 
-Instance_Level_S3G::Instance_Level_S3G(ChaosRom_Sonic3& rom)
+Level_Sonic3::Level_Sonic3(ChaosRom_Sonic3& rom)
   : m_rom(rom)
   , m_level_index(0)
   , m_level_loaded(false)
@@ -51,12 +47,12 @@ Instance_Level_S3G::Instance_Level_S3G(ChaosRom_Sonic3& rom)
 
 }
 
-Instance_Level_S3G::~Instance_Level_S3G()
+Level_Sonic3::~Level_Sonic3()
 {
     cleanup();
 }
 
-bool Instance_Level_S3G::loadPalettes()
+bool Level_Sonic3::loadPalettes()
 {
     fstream& file = m_rom.getFile();
 
@@ -78,7 +74,7 @@ bool Instance_Level_S3G::loadPalettes()
     return true;
 }
 
-bool Instance_Level_S3G::loadPatterns()
+bool Level_Sonic3::loadPatterns()
 {
     fstream& file = m_rom.getFile();
 
@@ -172,7 +168,7 @@ bool Instance_Level_S3G::loadPatterns()
     return true;
 }
 
-bool Instance_Level_S3G::loadChunks()
+bool Level_Sonic3::loadChunks()
 {
     fstream& file = m_rom.getFile();
 
@@ -243,7 +239,7 @@ bool Instance_Level_S3G::loadChunks()
     return true;
 }
 
-bool Instance_Level_S3G::loadBlocks()
+bool Level_Sonic3::loadBlocks()
 {
     fstream& file = m_rom.getFile();
 
@@ -315,7 +311,7 @@ bool Instance_Level_S3G::loadBlocks()
     return true;
 }
 
-bool Instance_Level_S3G::loadMap()
+bool Level_Sonic3::loadMap()
 {
     fstream& file = m_rom.getFile();
 
@@ -371,7 +367,7 @@ bool Instance_Level_S3G::loadMap()
     return result;
 }
 
-bool Instance_Level_S3G::bufferPatterns()
+bool Level_Sonic3::bufferPatterns()
 {
     HWND hwnd = getWindow();
     HDC hdc = GetDC(hwnd);
@@ -383,7 +379,7 @@ bool Instance_Level_S3G::bufferPatterns()
     return true;
 }
 
-bool Instance_Level_S3G::bufferBlocks()
+bool Level_Sonic3::bufferBlocks()
 {
     HWND hwnd = getWindow();
     HDC hdc = GetDC(hwnd);
@@ -395,17 +391,17 @@ bool Instance_Level_S3G::bufferBlocks()
     return true;
 }
 
-void Instance_Level_S3G::unloadPatternBuffer()
+void Level_Sonic3::unloadPatternBuffer()
 {
     // TODO
 }
 
-void Instance_Level_S3G::unloadBlockBuffer()
+void Level_Sonic3::unloadBlockBuffer()
 {
     // TODO
 }
 
-void Instance_Level_S3G::cleanup()
+void Level_Sonic3::cleanup()
 {
     m_level_loaded = false;
     m_level_index = 0;
@@ -419,7 +415,7 @@ void Instance_Level_S3G::cleanup()
     unloadPalettes();
 }
 
-void Instance_Level_S3G::unloadPalettes()
+void Level_Sonic3::unloadPalettes()
 {
     if (m_palettes)
     {
@@ -429,7 +425,7 @@ void Instance_Level_S3G::unloadPalettes()
     m_palette_count = 0;
 }
 
-void Instance_Level_S3G::unloadPatterns()
+void Level_Sonic3::unloadPatterns()
 {
     if (m_patterns)
     {
@@ -439,7 +435,7 @@ void Instance_Level_S3G::unloadPatterns()
     m_pattern_count = 0;
 }
 
-void Instance_Level_S3G::unloadChunks()
+void Level_Sonic3::unloadChunks()
 {
     if (m_chunks)
     {
@@ -449,7 +445,7 @@ void Instance_Level_S3G::unloadChunks()
     m_chunk_count = 0;
 }
 
-void Instance_Level_S3G::unloadBlocks()
+void Level_Sonic3::unloadBlocks()
 {
     for (unsigned int i = 0; i < m_blockCount; i++)
     {
@@ -461,7 +457,7 @@ void Instance_Level_S3G::unloadBlocks()
     m_blockCount = 0;
 }
 
-void Instance_Level_S3G::unloadMap()
+void Level_Sonic3::unloadMap()
 {
     if (m_pMap)
     {
@@ -469,7 +465,7 @@ void Instance_Level_S3G::unloadMap()
     }
 }
 
-bool Instance_Level_S3G::loadLevel(unsigned int level_index)
+bool Level_Sonic3::loadLevel(unsigned int level_index)
 {
     m_level_index = level_index;
 
@@ -489,87 +485,87 @@ bool Instance_Level_S3G::loadLevel(unsigned int level_index)
     return false;
 }
 
-const SegaPalette& Instance_Level_S3G::getPalette(unsigned int index) const
+const SegaPalette& Level_Sonic3::getPalette(unsigned int index) const
 {
     return m_palettes[index];
 }
 
-const SegaPalette* Instance_Level_S3G::getPalettes() const
+const SegaPalette* Level_Sonic3::getPalettes() const
 {
     return m_palettes;
 }
 
-unsigned int Instance_Level_S3G::getPaletteCount() const
+unsigned int Level_Sonic3::getPaletteCount() const
 {
     return m_palette_count;
 }
 
-const SegaPattern& Instance_Level_S3G::getPattern(unsigned int index) const
+const SegaPattern& Level_Sonic3::getPattern(unsigned int index) const
 {
     return m_patterns[index];
 }
 
-const SegaPattern* Instance_Level_S3G::getPatterns() const
+const SegaPattern* Level_Sonic3::getPatterns() const
 {
     return m_patterns;
 }
 
-unsigned int Instance_Level_S3G::getPatternCount() const
+unsigned int Level_Sonic3::getPatternCount() const
 {
     return m_pattern_count;
 }
 
-const SonicBlock& Instance_Level_S3G::getBlock(unsigned int index) const
+const SonicBlock& Level_Sonic3::getBlock(unsigned int index) const
 {
     return *m_blockPtrs[index];
 }
 
-const SonicBlock** Instance_Level_S3G::getBlocks() const
+const SonicBlock** Level_Sonic3::getBlocks() const
 {
     return const_cast<const SonicBlock**>(m_blockPtrs);
 }
 
-unsigned int Instance_Level_S3G::getBlockCount() const
+unsigned int Level_Sonic3::getBlockCount() const
 {
     return m_blockCount;
 }
 
-unsigned int Instance_Level_S3G::getBlockHeight() const
+unsigned int Level_Sonic3::getBlockHeight() const
 {
     return BLOCK_WIDTH;
 }
 
-unsigned int Instance_Level_S3G::getBlockWidth() const
+unsigned int Level_Sonic3::getBlockWidth() const
 {
     return BLOCK_HEIGHT;
 }
 
-const SonicMap& Instance_Level_S3G::getMap() const
+const SonicMap& Level_Sonic3::getMap() const
 {
     return *m_pMap;
 }
 
-const Buffer_Blocks& Instance_Level_S3G::getBlockBuffer() const
+const Buffer_Blocks& Level_Sonic3::getBlockBuffer() const
 {
     return *m_pBufferBlocks;
 }
 
-const Buffer_Patterns& Instance_Level_S3G::getPatternBuffer() const
+const Buffer_Patterns& Level_Sonic3::getPatternBuffer() const
 {
     return *m_pBufferPatterns;
 }
 
-const SonicChunk& Instance_Level_S3G::getChunk(unsigned int index) const
+const SonicChunk& Level_Sonic3::getChunk(unsigned int index) const
 {
     return m_chunks[index];
 }
 
-const SonicChunk* Instance_Level_S3G::getChunks() const
+const SonicChunk* Level_Sonic3::getChunks() const
 {
     return m_chunks;
 }
 
-unsigned int Instance_Level_S3G::getChunkCount() const
+unsigned int Level_Sonic3::getChunkCount() const
 {
     return m_chunk_count;
 }

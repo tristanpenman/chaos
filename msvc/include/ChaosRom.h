@@ -1,10 +1,6 @@
 #pragma once
 
-class Instance;
-class Instance_Level;
-class Instance_Sprites;
-
-enum InstanceKind;
+class Level;
 
 /**
  * ROM wrapper base class
@@ -15,28 +11,52 @@ enum InstanceKind;
  * Also provides an interface by which a subclass can instantiate level editor
  * and sprite editor instances.
  */
-class ChaosRom : public SegaRom
+class ChaosRom
 {
 public:
+    typedef std::map<unsigned int, std::string> LevelNames_t;
+
     explicit ChaosRom(std::fstream& rom);
     virtual ~ChaosRom();
 
-    typedef std::map<unsigned int, std::string> LevelNames_t;
+    std::fstream& getFile();
 
     // abstract
     virtual bool validateROM() = 0;
     virtual LevelNames_t getLevelNames() = 0;
 
-    Instance* initInstance(HWND hwnd);
-    Instance* getInstance(HWND hwnd);
+    Level* getLevelInstance(HWND hwnd);
+    Level* initLevelInstance(HWND hwnd);
 
     bool destroyInstance(HWND hwnd);
 
-protected:
-    virtual Instance* instantiateLevel() = 0;
+    std::string getDomesticName();
+    std::string getInternationalName();
+
+    // BIG-ENDIAN ADDRESS READERS
+    uint16_t readAddress_16bit();                    // Read address at current offset
+    uint16_t readAddress_16bit_at(std::streamoff o); // Read address at offset 'o'
+    uint32_t readAddress_32bit();
+    uint32_t readAddress_32bit_at(std::streamoff o);
+
+    // BIG-ENDIAN ADDRESS WRITERS
+    void writeAddress_16bit(uint16_t address);
+    void writeAddress_16bit_at(uint16_t address, std::streamoff offset);
+    void writeAddress_32bit(uint32_t address);
+    void writeAddress_32bit_at(uint32_t address, std::streamoff offset);
 
 protected:
-    typedef std::map<HWND, Instance*> Instances_t;
+    virtual Level* instantiateLevel() = 0;
 
-    Instances_t m_instances;
+    std::fstream& m_file;
+
+protected:
+    typedef std::map<HWND, Level*> LevelInstances;
+
+    LevelInstances m_levelInstances;
 };
+
+inline std::fstream& ChaosRom::getFile()
+{
+    return m_file;
+}

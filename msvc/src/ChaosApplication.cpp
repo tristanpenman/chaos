@@ -1,9 +1,5 @@
 #include "Precompiled.h"
 
-#include "InstanceValue.h"
-
-#include "SegaRom.h"
-
 #include "ChaosRom.h"
 #include "ChaosRomFactory.h"
 #include "ChaosApplication.h"
@@ -21,8 +17,7 @@
 #include "Buffer_Patterns.h"
 #include "Buffer_Blocks.h"
 
-#include "Instance.h"
-#include "Instance_Level.h"
+#include "Level.h"
 
 using namespace std;
 
@@ -41,19 +36,15 @@ ChaosApplication::~ChaosApplication()
     destroyWindowClasses();
 }
 
-Instance_Level* ChaosApplication::getLevelInstance(HWND hwnd)
+Level* ChaosApplication::getLevelInstance(HWND hwnd)
 {
-    Instance* pInstance = m_pROM->getInstance(hwnd);
-    if (pInstance)
+    Level* pLevel = m_pROM->getLevelInstance(hwnd);
+    if (pLevel)
     {
-        Instance_Level* pLevelInstance = dynamic_cast<Instance_Level*>(pInstance);
-        if (pLevelInstance)
-        {
-            return pLevelInstance;
-        }
+        return pLevel;
     }
 
-    return dynamic_cast<Instance_Level*>(m_pROM->initInstance(hwnd));
+    return dynamic_cast<Level*>(m_pROM->initLevelInstance(hwnd));
 }
 
 bool ChaosApplication::destroyInstance(HWND hwnd)
