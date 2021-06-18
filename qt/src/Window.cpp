@@ -6,6 +6,8 @@
 #include <QMenuBar>
 #include <QMessageBox>
 
+#include "Rom.h"
+#include "RomFactory.h"
 #include "Window.h"
 
 using namespace std;
@@ -15,7 +17,7 @@ Window::Window(QWidget * parent)
 {
   setWindowTitle("Chaos");
 
-  QAction *openRomAction = new QAction(QString("&Open ROM..."), this);
+  QAction *openRomAction = new QAction(tr("&Open ROM..."), this);
   openRomAction->setShortcuts(QKeySequence::Open);
   connect(openRomAction, SIGNAL(triggered()), this, SLOT(showOpenModelDialog()));
 
@@ -33,21 +35,23 @@ void Window::showOpenModelDialog()
 
 void Window::openRom(const QString &path)
 {
-  m_rom = std::make_shared<ifstream>(path.toStdString(), ios::binary);
-  if (!m_rom->good()) {
-    showError("Open ROM", "Failed to open ROM file");
+  m_file = std::make_shared<ifstream>(path.toStdString(), ios::binary);
+  if (!m_file->good()) {
+    showError(tr("ROM Error"), tr("Failed to open ROM file"));
     m_rom.reset();
   }
 
-  if (!parseLevelData()) {
-    showError("Open ROM", "Failed to parse level data");
-    m_rom.reset();
+  m_rom = RomFactory::build(m_file);
+  if (!m_rom) {
+    showError(tr("ROM Error"), tr("Failed to identify ROM"));
+    m_file.reset();
   }
-}
 
-bool Window::parseLevelData()
-{
-  return false;
+  if (!m_rom->parseLevelData()) {
+    showError(tr("ROM Error"), tr("Failed to parse level data"));
+    m_rom.reset();
+    m_file.reset();
+  }
 }
 
 void Window::showError(const QString& title, const QString& text)

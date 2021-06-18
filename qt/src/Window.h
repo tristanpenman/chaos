@@ -5,6 +5,8 @@
 
 #include <QMainWindow>
 
+class Rom;
+
 class Window : public QMainWindow
 {
   Q_OBJECT
@@ -22,5 +24,6 @@ private:
 
   void showError(const QString& title, const QString& text);
 
-  std::shared_ptr<std::istream> m_rom;
+  std::shared_ptr<std::istream> m_file;
+  std::shared_ptr<Rom> m_rom;
 };

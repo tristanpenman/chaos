@@ -20,11 +20,16 @@ set(IDENTIFIER "com.tristanpenman.chaos")
 
 set(SOURCE_FILES
     src/main.cpp
+    src/Rom.cpp
+    src/RomFactory.cpp
     src/SonicReader.cpp
     src/Window.cpp
+    # rom support
+    src/roms/Sonic2.cpp
+    src/roms/Sonic3.cpp
 )
 
-include_directories(SYSTEM ../include)
+include_directories(SYSTEM)
 
 add_project_meta(META_FILES_TO_INCLUDE)
 
