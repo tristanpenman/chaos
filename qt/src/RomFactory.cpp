@@ -7,7 +7,7 @@
 
 using namespace std;
 
-shared_ptr<Rom> RomFactory::build(shared_ptr<istream>& m_file)
+shared_ptr<Rom> RomFactory::build(shared_ptr<fstream>& m_file)
 {
   // try Sonic2
   shared_ptr<Rom> rom = make_shared<Sonic2>(m_file);

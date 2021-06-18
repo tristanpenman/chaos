@@ -5,7 +5,7 @@
 class Sonic3 : public Rom
 {
 public:
-  Sonic3(const std::shared_ptr<std::istream>& file);
+  Sonic3(const std::shared_ptr<std::fstream>& file);
 
   ~Sonic3() override = default;
 
@@ -13,7 +13,7 @@ public:
   bool parseLevelData() override;
 };
 
-inline Sonic3::Sonic3(const std::shared_ptr<std::istream>& file)
+inline Sonic3::Sonic3(const std::shared_ptr<std::fstream>& file)
   : Rom(file)
 {
 

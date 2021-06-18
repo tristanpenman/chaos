@@ -24,6 +24,6 @@ private:
 
   void showError(const QString& title, const QString& text);
 
-  std::shared_ptr<std::istream> m_file;
+  std::shared_ptr<std::fstream> m_file;
   std::shared_ptr<Rom> m_rom;
 };

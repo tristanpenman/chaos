@@ -35,7 +35,7 @@ void Window::showOpenModelDialog()
 
 void Window::openRom(const QString &path)
 {
-  m_file = std::make_shared<ifstream>(path.toStdString(), ios::binary);
+  m_file = std::make_shared<fstream>(path.toStdString(), ios::binary);
   if (!m_file->good()) {
     showError(tr("ROM Error"), tr("Failed to open ROM file"));
     m_rom.reset();

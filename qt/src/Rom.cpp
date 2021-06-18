@@ -1,4 +1,4 @@
-#include <istream>
+#include <fstream>
 #include <string>
 
 #include "Rom.h"
@@ -38,4 +38,90 @@ string Rom::readInternationalName()
   buffer[m_file->gcount()] = 0;
 
   return buffer;
+}
+
+uint16_t Rom::read16BitAddr()
+{
+    uint16_t addr = m_file->get() << 8;
+    addr |= m_file->get();
+
+    return addr;
+}
+
+uint16_t Rom::read16BitAddr(streamoff offset)
+{
+    streamoff bookmark = m_file->tellg();
+
+    m_file->seekg(offset);
+
+    uint16_t addr = m_file->get() << 8;
+    addr |= m_file->get();
+
+    m_file->seekg(bookmark);
+
+    return addr;
+}
+
+uint32_t Rom::read32BitAddr()
+{
+    uint32_t addr = m_file->get() << 24;
+    addr |= m_file->get() << 16;
+    addr |= m_file->get() << 8;
+    addr |= m_file->get();
+
+    return addr;
+}
+
+uint32_t Rom::read32BitAddr(streamoff offset)
+{
+    streamoff bookmark = m_file->tellg();
+
+    m_file->seekg(offset);
+
+    uint32_t addr = m_file->get() << 24;
+    addr |= m_file->get() << 16;
+    addr |= m_file->get() << 8;
+    addr |= m_file->get();
+
+    m_file->seekg(bookmark);
+
+    return addr;
+}
+
+void Rom::write16BitAddr(uint16_t addr)
+{
+    m_file->put((char)((addr >> 8) & 0xFF));
+    m_file->put((char)((addr) & 0xFF));
+}
+
+void Rom::write16BitAddr(uint16_t addr, streamoff offset)
+{
+    streamoff bookmark = m_file->tellp();
+
+    m_file->seekp(offset);
+    m_file->put((char)((addr >> 8) & 0xFF));
+    m_file->put((char)((addr) & 0xFF));
+
+    m_file->seekp(bookmark);
+}
+
+void Rom::write32BitAddr(uint32_t addr)
+{
+    m_file->put((char)((addr >> 24) & 0xFF));
+    m_file->put((char)((addr >> 16) & 0xFF));
+    m_file->put((char)((addr >> 8) & 0xFF));
+    m_file->put((char)((addr) & 0xFF));
+}
+
+void Rom::write32BitAddr(uint32_t addr, streamoff offset)
+{
+    streamoff bookmark = m_file->tellp();
+
+    m_file->seekp(offset);
+    m_file->put((char)((addr >> 24) & 0xFF));
+    m_file->put((char)((addr >> 16) & 0xFF));
+    m_file->put((char)((addr >> 8) & 0xFF));
+    m_file->put((char)((addr) & 0xFF));
+
+    m_file->seekp(bookmark);
 }
