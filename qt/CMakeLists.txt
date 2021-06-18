@@ -20,6 +20,7 @@ set(IDENTIFIER "com.tristanpenman.chaos")
 
 set(SOURCE_FILES
     src/main.cpp
+    src/SonicReader.cpp
     src/Window.cpp
 )
 
