@@ -78,15 +78,15 @@ bool Level_Sonic3::loadPatterns()
 {
     fstream& file = m_rom.getFile();
 
-    unsigned char buffer[PATTERN_BUFFER_SIZE];
+    vector<unsigned char> buffer(PATTERN_BUFFER_SIZE);
 
     // Get address of base and extended pattern data
     streamoff patterns_address_base = m_rom.getPatternsAddress(m_level_index);
     streamoff patterns_address_ext  = m_rom.getPatternsAddress_extended(m_level_index);
 
     // Get length of base and extended pattern data
-    uint16_t data_length_base = m_rom.readAddress_16bit_at(patterns_address_base);
-    uint16_t data_length_ext  = m_rom.readAddress_16bit_at(patterns_address_ext);
+    uint16_t data_length_base = m_rom.read16BitAddr(patterns_address_base);
+    uint16_t data_length_ext  = m_rom.read16BitAddr(patterns_address_ext);
 
     const size_t pattern_size = SegaPattern::getPatternSize();
     const size_t pattern_count = (data_length_base + data_length_ext) / pattern_size;
@@ -112,9 +112,9 @@ bool Level_Sonic3::loadPatterns()
     {
         while (read_total < read_size && !error)
         {
-            memset(buffer, 0, PATTERN_BUFFER_SIZE);
+            memset(buffer.data(), 0, PATTERN_BUFFER_SIZE);
 
-            SonicReader::result_t r = sr.decompress(buffer, PATTERN_BUFFER_SIZE, read_address);
+            SonicReader::result_t r = sr.decompress(buffer.data(), PATTERN_BUFFER_SIZE, read_address);
 
             if (r.first)
             {
@@ -172,7 +172,7 @@ bool Level_Sonic3::loadChunks()
 {
     fstream& file = m_rom.getFile();
 
-    unsigned char buffer[CHUNK_BUFFER_SIZE];
+    vector<unsigned char> buffer(CHUNK_BUFFER_SIZE);
 
     // Get address of base and extended pattern data
     uint32_t chunks_address_base = m_rom.getChunksAddress(m_level_index);
@@ -182,8 +182,8 @@ bool Level_Sonic3::loadChunks()
     SonicReader::result_t r;
 
     uint32_t data_length = 0;
-    data_length += sr.decompress(buffer, CHUNK_BUFFER_SIZE, chunks_address_base).second;
-    data_length += sr.decompress(buffer, CHUNK_BUFFER_SIZE, chunks_address_ext).second;
+    data_length += sr.decompress(buffer.data(), CHUNK_BUFFER_SIZE, chunks_address_base).second;
+    data_length += sr.decompress(buffer.data(), CHUNK_BUFFER_SIZE, chunks_address_ext).second;
 
     const size_t chunk_size = SonicChunk::getChunkSize();
     const size_t chunk_count = data_length / chunk_size;
@@ -203,7 +203,7 @@ bool Level_Sonic3::loadChunks()
 
     while (!error)
     {
-        SonicReader::result_t r = sr.decompress(buffer, CHUNK_BUFFER_SIZE, read_address);
+        SonicReader::result_t r = sr.decompress(buffer.data(), CHUNK_BUFFER_SIZE, read_address);
 
         if (r.first)
         {
@@ -243,7 +243,7 @@ bool Level_Sonic3::loadBlocks()
 {
     fstream& file = m_rom.getFile();
 
-    unsigned char buffer[BLOCK_BUFFER_SIZE];
+    vector<unsigned char> buffer(BLOCK_BUFFER_SIZE);
 
     // Get address of base and extended pattern data
     uint32_t blocks_address_base = m_rom.getBlocksAddress(m_level_index);
@@ -253,8 +253,8 @@ bool Level_Sonic3::loadBlocks()
     SonicReader::result_t r;
 
     uint32_t data_length = 0;
-    data_length += sr.decompress(buffer, BLOCK_BUFFER_SIZE, blocks_address_base).second;
-    data_length += sr.decompress(buffer, BLOCK_BUFFER_SIZE, blocks_address_ext).second;
+    data_length += sr.decompress(buffer.data(), BLOCK_BUFFER_SIZE, blocks_address_base).second;
+    data_length += sr.decompress(buffer.data(), BLOCK_BUFFER_SIZE, blocks_address_ext).second;
 
     const size_t blockSize = SonicBlock::calculateBlockSize(getBlockWidth(), getBlockHeight());
     const size_t blockCount = data_length / blockSize;
@@ -274,7 +274,7 @@ bool Level_Sonic3::loadBlocks()
 
     while (!error)
     {
-        SonicReader::result_t r = sr.decompress(buffer, BLOCK_BUFFER_SIZE, read_address);
+        SonicReader::result_t r = sr.decompress(buffer.data(), BLOCK_BUFFER_SIZE, read_address);
 
         if (r.first)
         {
@@ -321,10 +321,10 @@ bool Level_Sonic3::loadMap()
     const uint32_t map_address = m_rom.getMapAddress(m_level_index);
 
     // Read map header
-    const uint32_t row_size_fg = m_rom.readAddress_16bit_at(map_address);
-    const uint32_t row_size_bg = m_rom.readAddress_16bit_at(map_address+2);
-    const uint32_t row_count_fg = m_rom.readAddress_16bit_at(map_address+4);
-    const uint32_t row_count_bg = m_rom.readAddress_16bit_at(map_address+6);
+    const uint32_t row_size_fg = m_rom.read16BitAddr(map_address);
+    const uint32_t row_size_bg = m_rom.read16BitAddr(map_address+2);
+    const uint32_t row_count_fg = m_rom.read16BitAddr(map_address+4);
+    const uint32_t row_count_bg = m_rom.read16BitAddr(map_address+6);
 
     const uint32_t ptr_table = map_address + 8;
 
@@ -342,7 +342,7 @@ bool Level_Sonic3::loadMap()
 
             for (uint32_t row_index = 0; row_index < row_count_fg; row_index++)
             {
-                streamoff row_ptr = m_rom.readAddress_16bit_at(ptr_table + row_index * 4) - 0x8000;
+                streamoff row_ptr = m_rom.read16BitAddr(ptr_table + row_index * 4) - 0x8000;
 
                 file.seekg(row_ptr + ptr_table);
                 file.read(buffer, buffer_size);

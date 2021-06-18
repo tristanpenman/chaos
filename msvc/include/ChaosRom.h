@@ -33,17 +33,10 @@ public:
     std::string getDomesticName();
     std::string getInternationalName();
 
-    // BIG-ENDIAN ADDRESS READERS
-    uint16_t readAddress_16bit();                    // Read address at current offset
-    uint16_t readAddress_16bit_at(std::streamoff o); // Read address at offset 'o'
-    uint32_t readAddress_32bit();
-    uint32_t readAddress_32bit_at(std::streamoff o);
-
-    // BIG-ENDIAN ADDRESS WRITERS
-    void writeAddress_16bit(uint16_t address);
-    void writeAddress_16bit_at(uint16_t address, std::streamoff offset);
-    void writeAddress_32bit(uint32_t address);
-    void writeAddress_32bit_at(uint32_t address, std::streamoff offset);
+    uint16_t read16BitAddr();
+    uint16_t read16BitAddr(std::streamoff offset);
+    uint32_t read32BitAddr();
+    uint32_t read32BitAddr(std::streamoff offset);
 
 protected:
     virtual Level* instantiateLevel() = 0;

@@ -76,7 +76,7 @@ streamoff ChaosRom_Sonic2::getPaletteIndex(unsigned int level_index)
 
 streamoff ChaosRom_Sonic2::getPalettesAddress(unsigned int level_index)
 {
-    return readAddress_32bit_at(m_level_palette_dir + getPaletteIndex(level_index) * 8);
+    return read32BitAddr(m_level_palette_dir + getPaletteIndex(level_index) * 8);
 }
 
 streamoff ChaosRom_Sonic2::getPatternsAddress(unsigned int level_index)
@@ -102,8 +102,8 @@ streamoff ChaosRom_Sonic2::getMapAddress(unsigned int level_index)
     const unsigned char act_index = m_file.get();
 
     // Read level address from directory
-    const streamoff dir_addr = readAddress_32bit_at(m_level_layout_dir_address_ptr);
-    const streamoff level_offset = readAddress_16bit_at(dir_addr + zone_index * 4 + act_index * 2);
+    const streamoff dir_addr = read32BitAddr(m_level_layout_dir_address_ptr);
+    const streamoff level_offset = read16BitAddr(dir_addr + zone_index * 4 + act_index * 2);
 
     return dir_addr + level_offset;
 }
@@ -117,7 +117,7 @@ streamoff ChaosRom_Sonic2::getDataAddress(unsigned int level_index, streamoff en
     m_file.seekg(m_level_select_index + level_index * 2);
     int dir_index = m_file.get();
 
-    addr = readAddress_32bit_at(m_level_data_dir + dir_index * m_level_data_dir_entry_size + entry_offset);
+    addr = read32BitAddr(m_level_data_dir + dir_index * m_level_data_dir_entry_size + entry_offset);
 
     m_file.seekg(p);
 

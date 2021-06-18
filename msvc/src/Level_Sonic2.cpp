@@ -77,7 +77,7 @@ bool Level_Sonic2::loadPatterns()
 {
     fstream& file = m_rom.getFile();
 
-    std::vector<unsigned char> buffer(PATTERN_BUFFER_SIZE);
+    vector<unsigned char> buffer(PATTERN_BUFFER_SIZE);
 
     streamoff patternsAddr = m_rom.getPatternsAddress(m_level_index);
 
@@ -119,7 +119,7 @@ bool Level_Sonic2::loadChunks()
 {
     fstream& file = m_rom.getFile();
 
-    std::vector<unsigned char> buffer(CHUNK_BUFFER_SIZE);
+    vector<unsigned char> buffer(CHUNK_BUFFER_SIZE);
 
     streamoff chunks_addr = m_rom.getChunksAddress(m_level_index);
 
@@ -161,7 +161,7 @@ bool Level_Sonic2::loadBlocks()
 {
     fstream& file = m_rom.getFile();
 
-    std::vector<unsigned char> buffer(BLOCK_BUFFER_SIZE);
+    vector<unsigned char> buffer(BLOCK_BUFFER_SIZE);
 
     streamoff blocks_addr = m_rom.getBlocksAddress(m_level_index);
 
@@ -201,7 +201,7 @@ bool Level_Sonic2::loadMap()
 {
     fstream& file = m_rom.getFile();
 
-    std::vector<unsigned char> buffer(LEVEL_BUFFER_SIZE);
+    vector<unsigned char> buffer(LEVEL_BUFFER_SIZE);
 
     SonicReader reader(file);
 

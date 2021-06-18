@@ -97,104 +97,52 @@ string ChaosRom::getInternationalName()
     return buffer;
 }
 
-uint16_t ChaosRom::readAddress_16bit()
+uint16_t ChaosRom::read16BitAddr()
 {
-    uint16_t o;
+    uint16_t addr = m_file.get() << 8;
+    addr |= m_file.get();
 
-    // Read a 16-bit big-endian address
-    o = m_file.get() << 8;
-    o |= m_file.get();
-
-    // Return little-endian address
-    return o & 0xFFFF;
+    return addr;
 }
 
-uint16_t ChaosRom::readAddress_16bit_at(streamoff src_offset)
+uint16_t ChaosRom::read16BitAddr(streamoff offset)
 {
-    uint16_t o;
-    streamoff p = m_file.tellg();
+    
+    const streamoff bookmark = m_file.tellg();
 
-    m_file.seekg(src_offset);
+    m_file.seekg(offset);
 
-    // Read a 16-bit big-endian address
-    o = m_file.get() << 8;
-    o |= m_file.get();
+    uint16_t addr = m_file.get() << 8;
+    addr |= m_file.get();
 
-    m_file.seekg(p);
+    m_file.seekg(bookmark);
 
-    // Return little-endian address
-    return o & 0xFFFF;
+    return addr;
 }
 
-uint32_t ChaosRom::readAddress_32bit()
+uint32_t ChaosRom::read32BitAddr()
 {
-    uint32_t o;
+    uint32_t addr = m_file.get() << 24;
+    addr |= m_file.get() << 16;
+    addr |= m_file.get() << 8;
+    addr |= m_file.get();
 
-    // Read a 32-bit big-endian address
-    o = m_file.get() << 24;
-    o |= m_file.get() << 16;
-    o |= m_file.get() << 8;
-    o |= m_file.get();
-
-    // Return little-endian address
-    return o;
+    return addr;
 }
 
-uint32_t ChaosRom::readAddress_32bit_at(streamoff src_offset)
+uint32_t ChaosRom::read32BitAddr(streamoff offset)
 {
-    uint32_t o;
-    streamoff p = m_file.tellg();
+    const streamoff bookmark = m_file.tellg();
 
-    m_file.seekg(src_offset);
+    m_file.seekg(offset);
 
-    // Read a 32-bit big-endian address
-    o = m_file.get() << 24;
-    o |= m_file.get() << 16;
-    o |= m_file.get() << 8;
-    o |= m_file.get();
+    uint32_t addr = m_file.get() << 24;
+    addr |= m_file.get() << 16;
+    addr |= m_file.get() << 8;
+    addr |= m_file.get();
 
-    m_file.seekg(p);
+    m_file.seekg(bookmark);
 
-    // Return little-endian address
-    return o;
+    return addr;
 }
 
-void ChaosRom::writeAddress_16bit(uint16_t address)
-{
-    m_file.put((char)((address >> 8) & 0xFF));
-    m_file.put((char)((address) & 0xFF));
-}
-
-void ChaosRom::writeAddress_16bit_at(uint16_t address, std::streamoff offset)
-{
-    streamoff p = m_file.tellp();
-
-    m_file.seekp(offset);
-
-    m_file.put((char)((address >> 8) & 0xFF));
-    m_file.put((char)((address) & 0xFF));
-
-    m_file.seekp(p);
-}
-
-void ChaosRom::writeAddress_32bit(uint32_t address)
-{
-    m_file.put((char)((address >> 24) & 0xFF));
-    m_file.put((char)((address >> 16) & 0xFF));
-    m_file.put((char)((address >> 8) & 0xFF));
-    m_file.put((char)((address) & 0xFF));
-}
-
-void ChaosRom::writeAddress_32bit_at(uint32_t address, std::streamoff offset)
-{
-    streamoff p = m_file.tellp();
-
-    m_file.seekp(offset);
-
-    m_file.put((char)((address >> 24) & 0xFF));
-    m_file.put((char)((address >> 16) & 0xFF));
-    m_file.put((char)((address >> 8) & 0xFF));
-    m_file.put((char)((address) & 0xFF));
-
-    m_file.seekp(p);
-}

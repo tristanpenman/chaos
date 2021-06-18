@@ -62,7 +62,7 @@ Level* ChaosRom_Sonic3::instantiateLevel()
 
 uint32_t ChaosRom_Sonic3::getPalettesAddress(unsigned int level_index)
 {
-    return readAddress_32bit_at(m_level_palette_dir + getPaletteIndex(level_index) * 8);
+    return read32BitAddr(m_level_palette_dir + getPaletteIndex(level_index) * 8);
 }
 
 uint32_t ChaosRom_Sonic3::getPaletteIndex(unsigned int level_index)
@@ -102,7 +102,7 @@ uint32_t ChaosRom_Sonic3::getBlocksAddress_extended(unsigned int level_index)
 
 uint32_t ChaosRom_Sonic3::getMapAddress(unsigned int level_index)
 {
-    return readAddress_32bit_at(m_level_layout_dir_address + level_index * 4);
+    return read32BitAddr(m_level_layout_dir_address + level_index * 4);
 }
 
 uint32_t ChaosRom_Sonic3::getDataAddress(unsigned int level_index, streamoff entry_offset)
@@ -115,7 +115,7 @@ uint32_t ChaosRom_Sonic3::getDataAddress(unsigned int level_index, streamoff ent
     int zone_index = m_file.get();
     int act_index = m_file.get();
 
-    addr = readAddress_32bit_at(m_level_data_dir + zone_index * 2 * m_level_data_dir_entry_size + act_index * m_level_data_dir_entry_size + entry_offset);
+    addr = read32BitAddr(m_level_data_dir + zone_index * 2 * m_level_data_dir_entry_size + act_index * m_level_data_dir_entry_size + entry_offset);
 
     m_file.seekg(p);
 
