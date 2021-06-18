@@ -4,8 +4,6 @@
 #include "ChaosRom.h"
 #include "Level.h"
 
-#define CHECKSUM_OFFSET 0x018E
-#define CHECKSUM_BUFFER_SIZE 0x8000  // 32kB
 #define ROM_HEADER_OFFSET 0x100
 #define ROM_LENGTH_OFFSET 0x01A4
 #define DOMESTIC_NAME_LEN 48
@@ -19,6 +17,7 @@ ChaosRom::ChaosRom(fstream& file)
   : m_file(file)
   , m_levelInstances()
 {
+
 }
 
 ChaosRom::~ChaosRom()

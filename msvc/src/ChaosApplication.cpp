@@ -54,31 +54,22 @@ bool ChaosApplication::destroyInstance(HWND hwnd)
 
 int ChaosApplication::run(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow)
 {
-    try
+    InitCommonControls();
+
+    m_hInstance = hInstance;
+    m_hMain = WndFrame::createWindow(hInstance, NULL);
+
+    if (m_hMain)
     {
-        InitCommonControls();
-
-        m_hMain = WndFrame::createWindow(hInstance, NULL);
-        m_hInstance = hInstance;
-
-        if (m_hMain)
-        {
-            ShowWindow(m_hMain, iCmdShow);
-            UpdateWindow(m_hMain);
-        }
-
-        MSG msg;
-
-        while (GetMessage(&msg, NULL, 0, 0))
-        {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-        }
-
+        ShowWindow(m_hMain, iCmdShow);
+        UpdateWindow(m_hMain);
     }
-    catch (std::exception& e)
+
+    MSG msg;
+    while (GetMessage(&msg, NULL, 0, 0))
     {
-        REPORT_ERROR(e.what(), "Fatal error");
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
     }
 
     return 0;
@@ -116,36 +107,28 @@ void ChaosApplication::resetMainWindow(HWND hwnd)
 
 bool ChaosApplication::openROM(const string& path)
 {
-    if (closeROM())
+    if (!closeROM())
     {
-        try
-        {
-            m_file.open(path.c_str(), ios::in | ios::out | ios::binary);
-
-            if (!m_file.is_open())
-            {
-                REPORT_ERROR("Could not open the selected ROM", "File error");
-                return false;
-            }
-
-            m_pROM = ChaosRomFactory::loadROM(m_file);
-
-            return true;
-        }
-        catch (std::exception& e)
-        {
-            REPORT_ERROR(e.what(), "Error loading ROM");
-        }
+        REPORT_ERROR("Failed to clean up previously loaded ROM", "ROM Error");
+        return false;
     }
 
-    cleanup();
-
-    if (m_file.is_open())
+    m_file.open(path.c_str(), ios::in | ios::out | ios::binary);
+    if (!m_file.is_open())
     {
+        REPORT_ERROR("Failed to open the selected ROM", "ROM Error");
+        return false;
+    }
+
+    m_pROM = ChaosRomFactory::loadROM(m_file);
+    if (!m_pROM)
+    {
+        REPORT_ERROR("Failed to identify ROM", "Error loading ROM");
         m_file.close();
+        return false;
     }
 
-    return false;
+    return true;
 }
 
 bool ChaosApplication::closeROM()

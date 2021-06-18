@@ -15,12 +15,12 @@ ChaosRom* ChaosRomFactory::loadROM(fstream& rom)
     pRom = new ChaosRom_Sonic2(rom);
     if (pRom->validateROM())
     {
-        return pRom;  // Found a Sonic2 ROM
+        // Found a Sonic2 ROM
+        return pRom;
     }
-    else
-    {
-        delete pRom;  // Not Sonic 2
-    }
+
+    // Not Sonic 2
+    delete pRom;
 
     // Check for Sonic 3 ROM
     pRom = new ChaosRom_Sonic3(rom);
@@ -28,10 +28,9 @@ ChaosRom* ChaosRomFactory::loadROM(fstream& rom)
     {
         return pRom;  // Found a Sonic 3 ROM
     }
-    else
-    {
-        delete pRom;  // Not Sonic 3
-    }
+
+    // Not Sonic 3
+    delete pRom;
 
     // ROM not supported
     throw std::runtime_error("Could not load selected ROM");

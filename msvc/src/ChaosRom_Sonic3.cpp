@@ -26,13 +26,9 @@ ChaosRom_Sonic3::ChaosRom_Sonic3(fstream& rom)
 
 bool ChaosRom_Sonic3::validateROM()
 {
-    string name = getDomesticName();
-    if ((name.find("SONIC THE") != name.npos) && (name.find("HEDGEHOG 3") != name.npos))
-    {
-        return true;
-    }
+    const string name = getDomesticName();
 
-    return false;
+    return name.find("SONIC THE") != name.npos && name.find("HEDGEHOG 3") != name.npos;
 }
 
 ChaosRom::LevelNames_t ChaosRom_Sonic3::getLevelNames()

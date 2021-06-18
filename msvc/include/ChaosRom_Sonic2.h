@@ -12,7 +12,6 @@ public:
     explicit ChaosRom_Sonic2(std::fstream& rom);
     virtual ~ChaosRom_Sonic2() = default;
 
-    // Implementation of ChaosRom abstract interface
     virtual bool validateROM();
     virtual LevelNames_t getLevelNames();
 

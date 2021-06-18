@@ -29,7 +29,7 @@ bool ChaosRom_Sonic2::validateROM()
 {
     const string name = getDomesticName();
 
-    return ((name.find("SONIC THE") != name.npos) && (name.find("HEDGEHOG 2") != name.npos));
+    return name.find("SONIC THE") != name.npos && name.find("HEDGEHOG 2") != name.npos;
 }
 
 ChaosRom::LevelNames_t ChaosRom_Sonic2::getLevelNames()
