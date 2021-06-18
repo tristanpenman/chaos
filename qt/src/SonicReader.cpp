@@ -39,14 +39,15 @@ void SonicReader::loadBitfield()
 }
 
 
-SonicReader::Result SonicReader::decompress(unsigned char buffer[], size_t bufferSize, streamoff readFrom)
+SonicReader::Result SonicReader::decompress(unsigned char buffer[], size_t bufferSize, streamoff romOffset)
 {
   bool overflow = false;
-  uint32_t writePos = 0;
-  unsigned int offset = 0;
-  unsigned int count = 0;
 
-  m_rom.seekg(readFrom);
+  size_t count = 0;
+  size_t offset = 0;
+  size_t writePos = 0;
+
+  m_rom.seekg(romOffset);
 
   loadBitfield();
 
@@ -60,7 +61,7 @@ SonicReader::Result SonicReader::decompress(unsigned char buffer[], size_t buffe
       writePos++;
 
       // Don't write any more bytes if the buffer is full.
-      if (writePos >= 0 && (size_t)writePos >= bufferSize) {
+      if (writePos >= 0 && writePos >= bufferSize) {
         overflow = true;
       }
 
@@ -68,8 +69,8 @@ SonicReader::Result SonicReader::decompress(unsigned char buffer[], size_t buffe
     }
 
     if (getBit() == 1) {
-      unsigned int lo = m_rom.get();
-      unsigned int hi = m_rom.get();
+      const unsigned int lo = m_rom.get();
+      const unsigned int hi = m_rom.get();
 
       // ---hi--- ---lo---
       // OOOOOCCC OOOOOOOO [CCCCCCCC]<- optional
@@ -119,7 +120,7 @@ SonicReader::Result SonicReader::decompress(unsigned char buffer[], size_t buffe
       count--;
 
       // Don't write any more bytes if the buffer is full.
-      if (writePos >= 0 && (size_t)writePos >= bufferSize) {
+      if (writePos >= 0 && writePos >= bufferSize) {
         overflow = true;
       }
     }
@@ -129,13 +130,5 @@ SonicReader::Result SonicReader::decompress(unsigned char buffer[], size_t buffe
     writePos = 0;
   }
 
-  if (overflow) {
-    // Decompression failed due to buffer overflow.
-    // Return the buffer size required for successful decompression.
-    return Result(false, writePos);
-  }
-
-  // Decompression successful.
-  // Return the number of bytes written to the buffer.
-  return Result(true, writePos);
+  return Result(!overflow, writePos);
 }

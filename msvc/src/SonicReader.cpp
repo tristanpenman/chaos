@@ -43,127 +43,110 @@ void SonicReader::loadBitfield()
 
 SonicReader::result_t SonicReader::decompress(unsigned char buffer[], size_t buffer_size, streamoff rom_offset)
 {
-    streamoff rom_pos = 0;
-    uint32_t write_pos = 0;
-
     bool overflow = false;
-    bool exception = false;
 
-    try
+    size_t count = 0;
+    size_t offset = 0;
+    size_t write_pos = 0;
+
+    m_rom.seekg(rom_offset);
+
+    loadBitfield();
+
+    while (1)
     {
-        rom_pos = m_rom.tellg();
-
-        unsigned int offset = 0, count = 0;
-
-        m_rom.seekg(rom_offset);
-
-        loadBitfield();
-
-        while (1)
+        if (getBit() == 1)
         {
-            if (getBit() == 1)
+            // Don't write this byte if the buffer is full.
+            if (!overflow)
             {
-                // Don't write this byte if the buffer is full.
-                if (!overflow)
+                buffer[write_pos] = m_rom.get();
+            }
+
+            write_pos++;
+
+            // Don't write any more bytes if the buffer is full.
+            if (write_pos >= 0 && write_pos >= buffer_size)
+            {
+                overflow = true;
+            }
+
+            continue;
+        }
+        
+        if (getBit() == 1)
+        {
+            const unsigned int lo = m_rom.get();
+            const unsigned int hi = m_rom.get();
+
+            // ---hi--- ---lo---
+            // OOOOOCCC OOOOOOOO [CCCCCCCC]<- optional
+            // O - Offset bit
+            // C - Count bit
+
+            // Offsets are negative numbers stored using a 13-bit two's complement representation. Before the offset
+            // can be applied to a 32-bit offset, we have to convert it to 32-bit two's complement representation.
+            // Positive numbers are not used, so a naive conversion is okay.
+            offset = (0xFFFFFF00 | hi) << 5;
+            offset = (offset & 0xFFFFFF00) | lo;
+
+            // Mask off the count bits
+            count = hi & 0x7;
+
+            if (count == 0)
+            {
+                count = m_rom.get();
+
+                if (count == 0)
                 {
-                    buffer[write_pos] = m_rom.get();
+                    break;
                 }
 
-                write_pos++;
-
-                // Don't write any more bytes if the buffer is full.
-                if (write_pos >= 0 && (size_t)write_pos >= buffer_size)
+                if (count <= 1)
                 {
-                    overflow = true;
+                    continue;
                 }
             }
             else
             {
-                if (getBit() == 1)
-                {
-                    unsigned int lo = m_rom.get();
-                    unsigned int hi = m_rom.get();
-
-                    // ---hi--- ---lo---
-                    // OOOOOCCC OOOOOOOO [CCCCCCCC]<- optional
-                    // O - Offset bit
-                    // C - Count bit
-
-                    // Offsets are negative numbers stored using a 13-bit two's complement representation. Before the offset
-                    // can be applied to a 32-bit offset, we have to convert it to 32-bit two's complement representation.
-                    // Positive numbers are not used, so a naive conversion is okay.
-                    offset = (0xFFFFFF00 | hi) << 5;
-                    offset = (offset & 0xFFFFFF00) | lo;
-
-                    // Mask off the count bits
-                    count = hi & 0x7;
-
-                    if (count == 0)
-                    {
-                        count = m_rom.get();
-
-                        if (count == 0) break;
-                        if (count <= 1) continue;
-                    }
-                    else
-                    {
-                        count++;
-                    }
-                }
-                else
-                {
-                    count = (getBit() << 1) | getBit();
-                    count++;
-
-                    // Convert 8-bit two's complement representation to 32-bit representation
-                    offset = m_rom.get() | 0xFFFFFF00;
-                }
-
                 count++;
+            }
+        }
+        else
+        {
+            count = (getBit() << 1) | getBit();
+            count++;
 
-                // Copy 'count' bytes from the specified 'offset', relative to the current buffer position
-                while(count > 0)
-                {
-                    // Don't write if the buffer is full.
-                    if (!overflow)
-                    {
-                        buffer[write_pos] = buffer[write_pos + offset];
-                    }
+            // Convert 8-bit two's complement representation to 32-bit representation
+            offset = m_rom.get() | 0xFFFFFF00;
+        }
 
-                    write_pos++;
-                    count--;
+        count++;
 
-                    // Don't write any more bytes if the buffer is full.
-                    if (write_pos >= 0 && (size_t)write_pos >= buffer_size)
-                    {
-                        overflow = true;
-                    }
-                }
+        // Copy 'count' bytes from the specified 'offset', relative to the current buffer position
+        while (count > 0)
+        {
+            // Don't write if the buffer is full.
+            if (!overflow)
+            {
+                buffer[write_pos] = buffer[write_pos + offset];
+            }
+
+            write_pos++;
+            count--;
+
+            // Don't write any more bytes if the buffer is full.
+            if (write_pos >= 0 && write_pos >= buffer_size)
+            {
+                overflow = true;
             }
         }
     }
-    catch (std::exception& e)
-    {
-        REPORT_ERROR(e.what(), "Decompression error");
-        exception = true;
-    }
 
-    if (write_pos < 0) {
+    if (write_pos < 0)
+    {
         write_pos = 0;
     }
 
-    if (overflow)
-    {
-        // Decompression failed due to buffer overflow.
-        // Return the buffer size required for successful decompression.
-        return result_t(false, write_pos);
-    }
-    else if (exception)
-    {
-        return result_t(false, 0);
-    }
-
-    // Decompression successful.
-    // Return the number of bytes written to the buffer.
-    return result_t(true, write_pos);
+    return result_t(!overflow, write_pos);
 }
