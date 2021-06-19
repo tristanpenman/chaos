@@ -29,9 +29,8 @@ protected:
 
 private:
     std::streamoff m_level_layout_dir_address_ptr;   // Location of pointer to level layout dir address
-    std::streamoff m_level_layout_dir_address;       // Default level layout directory address
     std::streamoff m_level_select_index;             // Level select order
     std::streamoff m_level_data_dir;                 // Level data pointers (patterns, chunks, blocks)
     std::streamoff m_level_data_dir_entry_size;      // Each pointer is 4 bytes, total of 3 pointers
-    std::streamoff m_level_palette_dir;	             // Directory of palette pointers
+    std::streamoff m_level_palette_dir;              // Directory of palette pointers
 };

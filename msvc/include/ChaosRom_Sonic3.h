@@ -18,12 +18,13 @@ public:
 
     virtual uint32_t getPalettesAddress(unsigned int level_index);
     virtual uint32_t getPatternsAddress(unsigned int level_index);
-    virtual uint32_t getPatternsAddress_extended(unsigned int level_index);
     virtual uint32_t getChunksAddress(unsigned int level_index);
-    virtual uint32_t getChunksAddress_extended(unsigned int level_index);
     virtual uint32_t getBlocksAddress(unsigned int level_index);
-    virtual uint32_t getBlocksAddress_extended(unsigned int level_index);
     virtual uint32_t getMapAddress(unsigned int level_index);
+
+    virtual uint32_t getPatternsAddress_extended(unsigned int level_index);
+    virtual uint32_t getChunksAddress_extended(unsigned int level_index);
+    virtual uint32_t getBlocksAddress_extended(unsigned int level_index);
 
 protected:
     virtual Level* instantiateLevel();
