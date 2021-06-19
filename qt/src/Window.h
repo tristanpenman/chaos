@@ -14,15 +14,18 @@ class Window : public QMainWindow
 public:
   Window(QWidget* parent = 0);
 
-  void openRom(const QString& path);
+  void setDebug(bool debug);
+
+  bool openRom(const QString& path);
+  void openLevel(const QString& level);
 
 public slots:
   void showOpenModelDialog();
 
 private:
-  bool parseLevelData();
-
   void showError(const QString& title, const QString& text);
+
+  bool m_debug;
 
   std::shared_ptr<std::fstream> m_file;
   std::shared_ptr<Rom> m_rom;

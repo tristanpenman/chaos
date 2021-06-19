@@ -12,6 +12,9 @@ public:
   std::string readDomesticName();
   std::string readInternationalName();
 
+  uint8_t readByte();
+  uint8_t readByte(std::streamoff offset);
+
   uint16_t read16BitAddr();
   uint16_t read16BitAddr(std::streamoff offset);
   uint32_t read32BitAddr();
@@ -21,6 +24,12 @@ public:
   void write16BitAddr(uint16_t addr, std::streamoff offset);
   void write32BitAddr(uint32_t addr);
   void write32BitAddr(uint32_t addr, std::streamoff offset);
+
+  virtual uint32_t getPalettesAddr(unsigned int levelIdx) = 0;
+  virtual uint32_t getPatternsAddr(unsigned int levelIdx) = 0;
+  virtual uint32_t getChunksAddr(unsigned int levelIdx) = 0;
+  virtual uint32_t getBlocksAddr(unsigned int levelIdx) = 0;
+  virtual uint32_t getTilesAddr(unsigned int levelIdx) = 0;
 
   virtual bool isCompatible() = 0;
   virtual bool parseLevelData() = 0;
