@@ -2,6 +2,7 @@
 
 #include <iosfwd>
 #include <memory>
+#include <optional>
 #include <string>
 
 class Rom
@@ -25,14 +26,18 @@ public:
   void write32BitAddr(uint32_t addr);
   void write32BitAddr(uint32_t addr, std::streamoff offset);
 
+  virtual bool isCompatible() = 0;
+  virtual bool parseLevelData() = 0;
+
   virtual uint32_t getPalettesAddr(unsigned int levelIdx) = 0;
   virtual uint32_t getPatternsAddr(unsigned int levelIdx) = 0;
   virtual uint32_t getChunksAddr(unsigned int levelIdx) = 0;
   virtual uint32_t getBlocksAddr(unsigned int levelIdx) = 0;
   virtual uint32_t getTilesAddr(unsigned int levelIdx) = 0;
 
-  virtual bool isCompatible() = 0;
-  virtual bool parseLevelData() = 0;
+  virtual std::optional<uint32_t> getExtendedBlocksAddr(unsigned int levelIdx) = 0;
+  virtual std::optional<uint32_t> getExtendedChunksAddr(unsigned int levelIdx) = 0;
+  virtual std::optional<uint32_t> getExtendedPatternsAddr(unsigned int levelIdx) = 0;
 
 protected:
   Rom(const std::shared_ptr<std::fstream>& file);

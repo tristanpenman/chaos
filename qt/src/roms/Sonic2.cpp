@@ -1,13 +1,12 @@
 #include "Sonic2.h"
 
-constexpr uint32_t levelLayoutDirAddrLoc(0xE46E);  // Pointer to directory of layout pointers
-constexpr uint32_t levelLayoutDirAddr(0x45A80);    // Layout pointers are found here
-constexpr uint32_t levelSelectIndex(0x9454);       // Level select order
-constexpr uint32_t levelDataDir(0x42594);          // Level data pointers (patterns, chunks, blocks)
-constexpr uint32_t levelDataDirEntrySize(12);      // Each pointer is 4 bytes, total of 3 pointers
-constexpr uint32_t levelPaletteDir(0x2782);        // Directory of palette pointers
-
 using namespace std;
+
+constexpr uint32_t levelLayoutDirAddrLoc = 0xE46E;  // Pointer to directory of layout pointers
+constexpr uint32_t levelSelectIndex = 0x9454;       // Level select order
+constexpr uint32_t levelDataDir = 0x42594;          // Level data pointers (patterns, chunks, blocks)
+constexpr uint32_t levelDataDirEntrySize = 12;      // Each pointer is 4 bytes, total of 3 pointers
+constexpr uint32_t levelPaletteDir = 0x2782;        // Directory of palette pointers
 
 bool Sonic2::isCompatible()
 {
@@ -48,19 +47,42 @@ uint32_t Sonic2::getPatternsAddr(unsigned int levelIdx)
 
 uint32_t Sonic2::getTilesAddr(unsigned int levelIdx)
 {
-  const uint8_t zoneIdx = readByte(levelSelectIndex + levelIdx * 2);
-  const uint8_t actIdx = readByte(levelSelectIndex + levelIdx * 2 + 1);
+  const uint32_t zoneIdxLoc = levelSelectIndex + levelIdx * 2;
+  const uint8_t zoneIdx = readByte(zoneIdxLoc);
 
-  const uint32_t dirAddr = read32BitAddr(levelLayoutDirAddrLoc);
-  const uint16_t levelOffset = read16BitAddr(dirAddr + zoneIdx * 4 + actIdx * 2);
+  const uint32_t actIdxLoc = zoneIdxLoc + 1;
+  const uint8_t actIdx = readByte(actIdxLoc);
 
-  return dirAddr + levelOffset;
+  const uint32_t levelLayoutDirAddr = read32BitAddr(levelLayoutDirAddrLoc);
+  const uint32_t levelOffsetLoc = levelLayoutDirAddr + zoneIdx * 4 + actIdx * 2;
+  const uint16_t levelOffset = read16BitAddr(levelOffsetLoc);
+
+  return levelLayoutDirAddr + levelOffset;
+}
+
+optional<uint32_t> Sonic2::getExtendedBlocksAddr(unsigned int levelIdx)
+{
+  return {};
+}
+
+optional<uint32_t> Sonic2::getExtendedChunksAddr(unsigned int levelIdx)
+{
+  return {};
+}
+
+optional<uint32_t> Sonic2::getExtendedPatternsAddr(unsigned int levelIdx)
+{
+  return {};
 }
 
 uint32_t Sonic2::getDataAddress(unsigned int levelIdx, unsigned int entryOffset)
 {
-  const uint8_t dirIndex = readByte(levelSelectIndex + levelIdx * 2);
-  const uint32_t dataAddrLoc = levelDataDir + dirIndex * levelDataDirEntrySize + entryOffset;
+  const uint32_t levelDataIdxLoc = levelSelectIndex + levelIdx * 2;
+  const uint8_t levelDataIdx = readByte(levelDataIdxLoc);
+
+  const uint32_t dataAddrLoc = levelDataDir +
+      levelDataIdx * levelDataDirEntrySize +
+      entryOffset;
 
   return read32BitAddr(dataAddrLoc);
 }
