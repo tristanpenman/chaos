@@ -5,6 +5,7 @@
 
 #include <QMainWindow>
 
+class Game;
 class Rom;
 
 class Window : public QMainWindow
@@ -27,6 +28,6 @@ private:
 
   bool m_debug;
 
-  std::shared_ptr<std::fstream> m_file;
   std::shared_ptr<Rom> m_rom;
+  std::shared_ptr<Game> m_game;
 };

@@ -1,3 +1,5 @@
+#include "../Rom.h"
+
 #include "Sonic3.h"
 
 const uint32_t levelLayoutDirAddr = 0x81360;  // Layout pointers are found here
@@ -8,9 +10,15 @@ const uint32_t levelPaletteDir = 0x8BF54;     // Directory of palette pointers
 
 using namespace std;
 
+Sonic3::Sonic3(std::shared_ptr<Rom>& rom)
+  : m_rom(rom)
+{
+
+}
+
 bool Sonic3::isCompatible()
 {
-  const auto name = readDomesticName();
+  const auto name = m_rom->readDomesticName();
 
   return name.find("SONIC THE") != name.npos && name.find("HEDGEHOG 3") != name.npos;
 }
@@ -18,7 +26,7 @@ bool Sonic3::isCompatible()
 bool Sonic3::parseLevelData()
 {
   // TODO
-  return false;
+  return true;
 }
 
 uint32_t Sonic3::getBlocksAddr(unsigned int levelIdx)
@@ -37,7 +45,7 @@ uint32_t Sonic3::getPalettesAddr(unsigned int levelIdx)
   const uint32_t paletteIdx = dataAddr >> 24;
   const uint32_t paletteAddrLoc = levelPaletteDir + paletteIdx * 8;
 
-  return read32BitAddr(paletteAddrLoc);
+  return m_rom->read32BitAddr(paletteAddrLoc);
 }
 
 uint32_t Sonic3::getPatternsAddr(unsigned int levelIdx)
@@ -49,7 +57,7 @@ uint32_t Sonic3::getTilesAddr(unsigned int levelIdx)
 {
   const uint32_t tilesAddrLoc = levelLayoutDirAddr + levelIdx * 4;
 
-  return read32BitAddr(tilesAddrLoc);
+  return m_rom->read32BitAddr(tilesAddrLoc);
 }
 
 optional<uint32_t> Sonic3::getExtendedBlocksAddr(unsigned int levelIdx)
@@ -70,15 +78,15 @@ optional<uint32_t> Sonic3::getExtendedPatternsAddr(unsigned int levelIdx)
 uint32_t Sonic3::getDataAddress(unsigned int levelIdx, unsigned int entryOffset)
 {
   const uint32_t zoneIndexLoc = levelSelectIndex + levelIdx * 2;
-  const uint32_t zoneIndex = readByte(zoneIndexLoc);
+  const uint32_t zoneIndex = m_rom->readByte(zoneIndexLoc);
 
   const uint32_t actIndexLoc = zoneIndexLoc + 1;
-  const uint32_t actIndex = readByte(actIndexLoc);
+  const uint32_t actIndex = m_rom->readByte(actIndexLoc);
 
   const uint32_t dataAddrLoc = levelDataDir +
       zoneIndex * levelDataDirEntrySize * 2 +
       actIndex * levelDataDirEntrySize +
       entryOffset;
 
-  return read32BitAddr(dataAddrLoc);
+  return m_rom->read32BitAddr(dataAddrLoc);
 }

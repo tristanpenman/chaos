@@ -1,3 +1,5 @@
+#include "../Rom.h"
+
 #include "Sonic2.h"
 
 using namespace std;
@@ -8,9 +10,16 @@ constexpr uint32_t levelDataDir = 0x42594;          // Level data pointers (patt
 constexpr uint32_t levelDataDirEntrySize = 12;      // Each pointer is 4 bytes, total of 3 pointers
 constexpr uint32_t levelPaletteDir = 0x2782;        // Directory of palette pointers
 
+Sonic2::Sonic2(std::shared_ptr<Rom>& rom)
+  : m_rom(rom)
+{
+
+}
+
+
 bool Sonic2::isCompatible()
 {
-  const auto name = readDomesticName();
+  const auto name = m_rom->readDomesticName();
 
   return name.find("SONIC THE") != name.npos && name.find("HEDGEHOG 2") != name.npos;
 }
@@ -37,7 +46,7 @@ uint32_t Sonic2::getPalettesAddr(unsigned int levelIdx)
   const uint32_t paletteIndex = dataAddr >> 24;
   const uint32_t paletteAddrLoc = levelPaletteDir + paletteIndex * 8;
 
-  return read32BitAddr(paletteAddrLoc);
+  return m_rom->read32BitAddr(paletteAddrLoc);
 }
 
 uint32_t Sonic2::getPatternsAddr(unsigned int levelIdx)
@@ -48,14 +57,14 @@ uint32_t Sonic2::getPatternsAddr(unsigned int levelIdx)
 uint32_t Sonic2::getTilesAddr(unsigned int levelIdx)
 {
   const uint32_t zoneIdxLoc = levelSelectIndex + levelIdx * 2;
-  const uint8_t zoneIdx = readByte(zoneIdxLoc);
+  const uint8_t zoneIdx = m_rom->readByte(zoneIdxLoc);
 
   const uint32_t actIdxLoc = zoneIdxLoc + 1;
-  const uint8_t actIdx = readByte(actIdxLoc);
+  const uint8_t actIdx = m_rom->readByte(actIdxLoc);
 
-  const uint32_t levelLayoutDirAddr = read32BitAddr(levelLayoutDirAddrLoc);
+  const uint32_t levelLayoutDirAddr = m_rom->read32BitAddr(levelLayoutDirAddrLoc);
   const uint32_t levelOffsetLoc = levelLayoutDirAddr + zoneIdx * 4 + actIdx * 2;
-  const uint16_t levelOffset = read16BitAddr(levelOffsetLoc);
+  const uint16_t levelOffset = m_rom->read16BitAddr(levelOffsetLoc);
 
   return levelLayoutDirAddr + levelOffset;
 }
@@ -78,11 +87,11 @@ optional<uint32_t> Sonic2::getExtendedPatternsAddr(unsigned int levelIdx)
 uint32_t Sonic2::getDataAddress(unsigned int levelIdx, unsigned int entryOffset)
 {
   const uint32_t levelDataIdxLoc = levelSelectIndex + levelIdx * 2;
-  const uint8_t levelDataIdx = readByte(levelDataIdxLoc);
+  const uint8_t levelDataIdx = m_rom->readByte(levelDataIdxLoc);
 
   const uint32_t dataAddrLoc = levelDataDir +
       levelDataIdx * levelDataDirEntrySize +
       entryOffset;
 
-  return read32BitAddr(dataAddrLoc);
+  return m_rom->read32BitAddr(dataAddrLoc);
 }

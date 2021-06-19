@@ -7,8 +7,9 @@
 #include <QMenuBar>
 #include <QMessageBox>
 
+#include "Game.h"
+#include "GameFactory.h"
 #include "Rom.h"
-#include "RomFactory.h"
 #include "Window.h"
 
 using namespace std;
@@ -34,17 +35,17 @@ void Window::setDebug(bool debug)
 
 bool Window::openRom(const QString &path)
 {
-  m_file = std::make_shared<fstream>(path.toStdString(), ios::in | ios::out | ios::binary);
-  if (!m_file->good()) {
+  m_rom = std::make_shared<Rom>();
+  if (!m_rom->open(path.toStdString())) {
     showError(tr("ROM Error"), tr("Failed to open ROM file"));
-    m_file.reset();
+    m_rom.reset();
     return false;
   }
 
-  m_rom = RomFactory::build(m_file);
-  if (!m_rom) {
-    showError(tr("ROM Error"), tr("Failed to identify ROM"));
-    m_file.reset();
+  m_game = GameFactory::build(m_rom);
+  if (!m_game) {
+    showError(tr("ROM Error"), tr("Failed to identify game"));
+    m_rom.reset();
     return false;
   }
 
@@ -53,10 +54,10 @@ bool Window::openRom(const QString &path)
     cout << "[Window] Domestic name: '" << m_rom->readDomesticName() << "'" << endl;
   }
 
-  if (!m_rom->parseLevelData()) {
+  if (!m_game->parseLevelData()) {
     showError(tr("ROM Error"), tr("Failed to parse level data"));
+    m_game.reset();
     m_rom.reset();
-    m_file.reset();
     return false;
   }
 
@@ -81,11 +82,11 @@ void Window::openLevel(const QString& level)
     cout << "[Window] Loading level: " << levelIdx << endl;
   }
 
-  uint32_t palettesAddr = m_rom->getPalettesAddr(levelIdx);
-  uint32_t patternsAddr = m_rom->getPatternsAddr(levelIdx);
-  uint32_t chunksAddr = m_rom->getChunksAddr(levelIdx);
-  uint32_t blocksAddr = m_rom->getBlocksAddr(levelIdx);
-  uint32_t tilesAddr = m_rom->getTilesAddr(levelIdx);
+  uint32_t palettesAddr = m_game->getPalettesAddr(levelIdx);
+  uint32_t patternsAddr = m_game->getPatternsAddr(levelIdx);
+  uint32_t chunksAddr = m_game->getChunksAddr(levelIdx);
+  uint32_t blocksAddr = m_game->getBlocksAddr(levelIdx);
+  uint32_t tilesAddr = m_game->getTilesAddr(levelIdx);
 
   if (m_debug) {
     cout << "[Window]  - Palettes: 0x" << hex << palettesAddr << " (" << dec << palettesAddr << ")" << endl;
