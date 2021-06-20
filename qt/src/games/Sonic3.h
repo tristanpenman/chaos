@@ -14,7 +14,8 @@ public:
   ~Sonic3() override = default;
 
   bool isCompatible() override;
-  bool parseLevelData() override;
+
+  std::vector<std::string> getTitleCards() override;
 
   uint32_t getBlocksAddr(uint32_t levelIdx) override;
   uint32_t getChunksAddr(uint32_t levelIdx) override;

@@ -23,10 +23,22 @@ bool Sonic3::isCompatible()
   return name.find("SONIC THE") != name.npos && name.find("HEDGEHOG 3") != name.npos;
 }
 
-bool Sonic3::parseLevelData()
+vector<string> Sonic3::getTitleCards()
 {
-  // TODO
-  return true;
+  return {
+    "Angel Island Zone - Act 1",
+    "Angel Island Zone - Act 2",
+    "Hydrocity Zone - Act 1",
+    "Hydrocity Zone - Act 2",
+    "Marble Garden Zone - Act 1",
+    "Marble Garden Zone - Act 2",
+    "Carnival Night Zone - Act 1",
+    "Carnival Night Zone - Act 1",
+    "Ice Cap Zone - Act 1",
+    "Ice Cap Zone - Act 2",
+    "Launch Base Zone - Act 1",
+    "Launch Base Zone - Act 2"
+  };
 }
 
 uint32_t Sonic3::getBlocksAddr(unsigned int levelIdx)

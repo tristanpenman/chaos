@@ -13,13 +13,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(SOURCE_FILES
     src/main.cpp
-    src/GameFactory.cpp
-    src/LoadLevelDialog.cpp
+    src/GameFactory.cpp   
     src/Rom.cpp
     src/SonicReader.cpp
-    src/Window.cpp
     src/games/Sonic2.cpp
     src/games/Sonic3.cpp
+    src/ui/LevelSelect.cpp
+    src/ui/Window.cpp
 )
 
 find_package(Qt6 COMPONENTS Core REQUIRED)

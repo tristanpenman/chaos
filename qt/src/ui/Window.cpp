@@ -7,9 +7,11 @@
 #include <QMenuBar>
 #include <QMessageBox>
 
-#include "Game.h"
-#include "GameFactory.h"
-#include "Rom.h"
+#include "../Game.h"
+#include "../GameFactory.h"
+#include "../Rom.h"
+
+#include "LevelSelect.h"
 #include "Window.h"
 
 using namespace std;
@@ -24,8 +26,12 @@ Window::Window(QWidget * parent)
   openRomAction->setShortcuts(QKeySequence::Open);
   connect(openRomAction, SIGNAL(triggered()), this, SLOT(showOpenModelDialog()));
 
+  QAction* levelSelectAction = new QAction(tr("Level Select..."), this);
+  connect(levelSelectAction, SIGNAL(triggered()), this, SLOT(showLevelSelectDialog()));
+
   QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
   fileMenu->addAction(openRomAction);
+  fileMenu->addAction(levelSelectAction);
 }
 
 void Window::setDebug(bool debug)
@@ -54,27 +60,24 @@ bool Window::openRom(const QString &path)
     cout << "[Window] Domestic name: '" << m_rom->readDomesticName() << "'" << endl;
   }
 
-  if (!m_game->parseLevelData()) {
-    showError(tr("ROM Error"), tr("Failed to parse level data"));
-    m_game.reset();
-    m_rom.reset();
-    return false;
-  }
-
   return true;
 }
 
 void Window::openLevel(const QString& level)
 {
+  bool parsed = false;
+  const unsigned int levelIdx = level.toUInt(&parsed);
+  if (parsed) {
+    openLevel(levelIdx);
+  } else {
+    showError(tr("Level Error"), tr("Failed to parse level index"));
+  }
+}
+
+void Window::openLevel(int levelIdx)
+{
   if (!m_rom) {
     showError(tr("Level Error"), tr("Cannot load level until ROM has been loaded"));
-    return;
-  }
-
-  bool parsed = false;
-  unsigned int levelIdx = level.toUInt(&parsed);
-  if (!parsed) {
-    showError(tr("Level Error"), tr("Failed to parse level index"));
     return;
   }
 
@@ -103,6 +106,25 @@ void Window::showOpenModelDialog()
   if (!fileName.isEmpty()) {
     openRom(fileName);
   }
+}
+
+void Window::showLevelSelectDialog()
+{
+  m_levelSelect = new LevelSelect(m_game);
+  connect(m_levelSelect, SIGNAL(levelSelected(int)), this, SLOT(levelSelected(int)));
+  connect(m_levelSelect, SIGNAL(finished(int)), this, SLOT(levelSelectFinished(int)));
+  m_levelSelect->show();
+}
+
+void Window::levelSelectFinished(int)
+{
+  delete m_levelSelect;
+  m_levelSelect = nullptr;
+}
+
+void Window::levelSelected(int levelIdx)
+{
+  openLevel(levelIdx);
 }
 
 void Window::showError(const QString& title, const QString& text)

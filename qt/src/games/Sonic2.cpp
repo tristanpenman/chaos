@@ -24,10 +24,30 @@ bool Sonic2::isCompatible()
   return name.find("SONIC THE") != name.npos && name.find("HEDGEHOG 2") != name.npos;
 }
 
-bool Sonic2::parseLevelData()
+vector<string> Sonic2::getTitleCards()
 {
-  // TODO
-  return true;
+  return {
+    "Emerald Hill Zone - Act 1",
+    "Emerald Hill Zone - Act 2",
+    "Chemical Plant Zone - Act 1",
+    "Chemical Plant Zone - Act 2",
+    "Aquatic Ruins Zone - Act 1",
+    "Aquatic Ruins Zone - Act 2",
+    "Casino Night Zone - Act 1",
+    "Casino Night Zone - Act 1",
+    "Hill Top Zone - Act 1",
+    "Hill Top Zone - Act 2",
+    "Mystic Cave Zone - Act 1",
+    "Mystic Zone - Act 2",
+    "Oil Ocean Zone - Act 1",
+    "Oil Ocean Zone - Act 2",
+    "Metropolis Zone - Act 1",
+    "Metropolis Zone - Act 2",
+    "Metropolis Zone - Act 3",
+    "Sky Chase Zone - Act 1",
+    "Wing Fortress Zone - Act 1",
+    "Death Egg Zone - Act 1"
+  };
 }
 
 uint32_t Sonic2::getBlocksAddr(unsigned int levelIdx)

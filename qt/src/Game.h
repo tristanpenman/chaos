@@ -2,6 +2,8 @@
 
 #include <cstdint>
 #include <optional>
+#include <string>
+#include <vector>
 
 class Game
 {
@@ -9,7 +11,8 @@ public:
   virtual ~Game() = default;
 
   virtual bool isCompatible() = 0;
-  virtual bool parseLevelData() = 0;
+
+  virtual std::vector<std::string> getTitleCards() = 0;
 
   virtual uint32_t getPalettesAddr(uint32_t levelIdx) = 0;
   virtual uint32_t getPatternsAddr(uint32_t levelIdx) = 0;
