@@ -35,14 +35,14 @@ Level_Sonic3::Level_Sonic3(ChaosRom_Sonic3& rom)
   , m_palettes(NULL)
   , m_patterns(NULL)
   , m_chunks(NULL)
-  , m_blockPtrs(NULL)
-  , m_pMap(NULL)
+  , m_block_ptrs(NULL)
+  , m_map(NULL)
   , m_palette_count(0)
   , m_pattern_count(0)
   , m_chunk_count(0)
-  , m_blockCount(0)
-  , m_pBufferBlocks(NULL)
-  , m_pBufferPatterns(NULL)
+  , m_block_count(0)
+  , m_buffer_blocks(NULL)
+  , m_buffer_patterns(NULL)
 {
 
 }
@@ -56,14 +56,14 @@ bool Level_Sonic3::loadPalettes()
 {
     fstream& file = m_rom.getFile();
 
-    streamoff paletteAddr = m_rom.getPalettesAddress(m_level_index);
+    streamoff palette_addr = m_rom.getPalettesAddress(m_level_index);
 
-    file.seekg(paletteAddr);
+    file.seekg(palette_addr);
     m_palettes = new SegaPalette[PALETTE_COUNT];
 
-    for (unsigned int palRow = 1; palRow < PALETTE_COUNT; palRow++)
+    for (unsigned int row = 1; row < PALETTE_COUNT; row++)
     {
-        if (!m_palettes[palRow].readFromFile(file))
+        if (!m_palettes[row].readFromFile(file))
         {
             return false;
         }
@@ -108,44 +108,46 @@ bool Level_Sonic3::loadPatterns()
     bool extended = false;
     bool error = false;
 
-    while (!error)
+    while (1)
     {
         while (read_total < read_size && !error)
         {
             memset(buffer.data(), 0, PATTERN_BUFFER_SIZE);
 
             SonicReader::result_t r = sr.decompress(buffer.data(), PATTERN_BUFFER_SIZE, read_address);
-
-            if (r.first)
-            {
-                // Find the beginning of the next module...
-                char b = 0;
-                while (b == 0)
-                {
-                    b = file.get();
-                }
-
-                // Set read address to the next packet/module
-
-                read_address = file.tellg();
-                read_address--;
-
-                unsigned int bufferPos = 0;
-
-                while (pattern_idx < pattern_count && bufferPos < r.second)
-                {
-                    m_patterns[pattern_idx].loadFromBuffer(&buffer[bufferPos]);
-
-                    pattern_idx++;
-                    bufferPos += pattern_size;
-                }
-
-                read_total += r.second;
-            }
-            else
+            if (!r.first)
             {
                 error = true;
+                break;
             }
+            // Find the beginning of the next module...
+            char b = 0;
+            while (b == 0)
+            {
+                b = file.get();
+            }
+
+            // Set read address to the next packet/module
+
+            read_address = file.tellg();
+            read_address--;
+
+            unsigned int buffer_pos = 0;
+
+            while (pattern_idx < pattern_count && buffer_pos < r.second)
+            {
+                m_patterns[pattern_idx].loadFromBuffer(&buffer[buffer_pos]);
+
+                pattern_idx++;
+                buffer_pos += pattern_size;
+            }
+
+            read_total += r.second;
+        }
+
+        if (error)
+        {
+            break;
         }
 
         // Reset the parser to read extended data
@@ -165,7 +167,7 @@ bool Level_Sonic3::loadPatterns()
 
     m_pattern_count = pattern_count;
 
-    return true;
+    return !error;
 }
 
 bool Level_Sonic3::loadChunks()
@@ -201,25 +203,23 @@ bool Level_Sonic3::loadChunks()
     bool extended = false;
     bool error = false;
 
-    while (!error)
+    while (1)
     {
         SonicReader::result_t r = sr.decompress(buffer.data(), CHUNK_BUFFER_SIZE, read_address);
-
-        if (r.first)
-        {
-            unsigned int bufferPos = 0;
-
-            while (chunk_idx < chunk_count && bufferPos < r.second)
-            {
-                m_chunks[chunk_idx].loadFromBuffer(&buffer[bufferPos]);
-
-                chunk_idx++;
-                bufferPos += chunk_size;
-            }
-        }
-        else
+        if (!r.first)
         {
             error = true;
+            break;
+        }
+
+        unsigned int buffer_pos = 0;
+
+        while (chunk_idx < chunk_count && buffer_pos < r.second)
+        {
+            m_chunks[chunk_idx].loadFromBuffer(&buffer[buffer_pos]);
+
+            chunk_idx++;
+            buffer_pos += chunk_size;
         }
 
         if (extended)
@@ -236,7 +236,7 @@ bool Level_Sonic3::loadChunks()
 
     m_chunk_count = chunk_count;
 
-    return true;
+    return !error;
 }
 
 bool Level_Sonic3::loadBlocks()
@@ -257,9 +257,9 @@ bool Level_Sonic3::loadBlocks()
     data_length += sr.decompress(buffer.data(), BLOCK_BUFFER_SIZE, blocks_address_ext).second;
 
     const size_t blockSize = SonicBlock::calculateBlockSize(getBlockWidth(), getBlockHeight());
-    const size_t blockCount = data_length / blockSize;
+    const size_t block_count = data_length / blockSize;
 
-    m_blockPtrs = new SonicBlock*[blockCount];
+    m_block_ptrs = new SonicBlock*[block_count];
 
     //
     // Main block reader loop
@@ -272,26 +272,24 @@ bool Level_Sonic3::loadBlocks()
     bool extended = false;
     bool error = false;
 
-    while (!error)
+    while (1)
     {
         SonicReader::result_t r = sr.decompress(buffer.data(), BLOCK_BUFFER_SIZE, read_address);
-
-        if (r.first)
-        {
-            unsigned int bufferPos = 0;
-
-            while (blockIndex < blockCount && bufferPos < r.second)
-            {
-                m_blockPtrs[blockIndex] = new SonicBlock(getBlockWidth(), getBlockHeight());
-                m_blockPtrs[blockIndex]->loadFromBuffer(&buffer[bufferPos]);
-
-                blockIndex++;
-                bufferPos += blockSize;
-            }
-        }
-        else
+        if (!r.first)
         {
             error = true;
+            break;
+        }
+
+        unsigned int buffer_pos = 0;
+
+        while (blockIndex < block_count && buffer_pos < r.second)
+        {
+            m_block_ptrs[blockIndex] = new SonicBlock(getBlockWidth(), getBlockHeight());
+            m_block_ptrs[blockIndex]->loadFromBuffer(&buffer[buffer_pos]);
+
+            blockIndex++;
+            buffer_pos += blockSize;
         }
 
         if (extended)
@@ -306,7 +304,7 @@ bool Level_Sonic3::loadBlocks()
         }
     }
 
-    m_blockCount = blockCount;
+    m_block_count = block_count;
 
     return true;
 }
@@ -315,54 +313,57 @@ bool Level_Sonic3::loadMap()
 {
     fstream& file = m_rom.getFile();
 
-    bool result = false;
-
     // Find map address
     const uint32_t map_address = m_rom.getMapAddress(m_level_index);
 
     // Read map header
     const uint32_t row_size_fg = m_rom.read16BitAddr(map_address);
-    const uint32_t row_size_bg = m_rom.read16BitAddr(map_address+2);
-    const uint32_t row_count_fg = m_rom.read16BitAddr(map_address+4);
-    const uint32_t row_count_bg = m_rom.read16BitAddr(map_address+6);
+    const uint32_t row_size_bg = m_rom.read16BitAddr(map_address + 2);
+    const uint32_t row_count_fg = m_rom.read16BitAddr(map_address + 4);
+    const uint32_t row_count_bg = m_rom.read16BitAddr(map_address + 6);
 
     const uint32_t ptr_table = map_address + 8;
 
-    size_t map_width = max(row_size_bg, row_size_fg);
-    size_t map_height = max(row_count_bg, row_count_fg);
+    const size_t map_width = max(row_size_bg, row_size_fg);
+    const size_t map_height = max(row_count_bg, row_count_fg);
 
-    size_t buffer_size = sizeof(char) * map_width;
+    const size_t buffer_size = sizeof(char) * map_width;
 
     char* buffer = new char[buffer_size];
-    if (buffer != nullptr)
+    if (buffer == nullptr)
     {
-        try
-        {
-            m_pMap = new SonicMap(2, map_width, map_height);
-
-            for (uint32_t row_index = 0; row_index < row_count_fg; row_index++)
-            {
-                streamoff row_ptr = m_rom.read16BitAddr(ptr_table + row_index * 4) - 0x8000;
-
-                file.seekg(row_ptr + ptr_table);
-                file.read(buffer, buffer_size);
-
-                for (uint32_t col_index = 0; col_index < row_size_fg; col_index++)
-                {
-                    m_pMap->setValue(0, col_index, row_index, buffer[col_index]);
-                }
-            }
-
-            result = true;
-        }
-        catch (...)
-        {
-            REPORT_ERROR("An error occured while reading the level map", "Map reader");
-        }
-
-        delete[] buffer;
-        buffer = NULL;
+        REPORT_ERROR("Failed to allocate memory for buffer", "Map reader");
+        return false;
     }
+
+    bool result = false;
+
+    try
+    {
+        m_map = new SonicMap(2, map_width, map_height);
+
+        for (uint32_t row_index = 0; row_index < row_count_fg; row_index++)
+        {
+            streamoff row_ptr = m_rom.read16BitAddr(ptr_table + row_index * 4) - 0x8000;
+
+            file.seekg(row_ptr + ptr_table);
+            file.read(buffer, buffer_size);
+
+            for (uint32_t col_index = 0; col_index < row_size_fg; col_index++)
+            {
+                m_map->setValue(0, col_index, row_index, buffer[col_index]);
+            }
+        }
+
+        result = true;
+    }
+    catch (...)
+    {
+        REPORT_ERROR("An error occured while reading the level map", "Map reader");
+    }
+
+    delete[] buffer;
+    buffer = NULL;
 
     return result;
 }
@@ -372,7 +373,8 @@ bool Level_Sonic3::bufferPatterns()
     HWND hwnd = getWindow();
     HDC hdc = GetDC(hwnd);
 
-    m_pBufferPatterns = new Buffer_Patterns(getPalettes(), getPaletteCount(), getPatterns(), getPatternCount(), hdc);
+    m_buffer_patterns = new Buffer_Patterns(
+        getPalettes(), getPaletteCount(), getPatterns(), getPatternCount(), hdc);
 
     ReleaseDC(hwnd, hdc);
 
@@ -384,7 +386,8 @@ bool Level_Sonic3::bufferBlocks()
     HWND hwnd = getWindow();
     HDC hdc = GetDC(hwnd);
 
-    m_pBufferBlocks = new Buffer_Blocks(this, getBlocks(), getBlockCount(), getChunks(), getChunkCount(), &(getPatternBuffer()), hdc);
+    m_buffer_blocks = new Buffer_Blocks(this,
+        getBlocks(), getBlockCount(), getChunks(), getChunkCount(), &(getPatternBuffer()), hdc);
 
     ReleaseDC(hwnd, hdc);
 
@@ -419,7 +422,8 @@ void Level_Sonic3::unloadPalettes()
 {
     if (m_palettes)
     {
-        delete[] m_palettes; m_palettes = NULL;
+        delete[] m_palettes;
+        m_palettes = NULL;
     }
 
     m_palette_count = 0;
@@ -429,7 +433,8 @@ void Level_Sonic3::unloadPatterns()
 {
     if (m_patterns)
     {
-        delete[] m_patterns; m_patterns = NULL;
+        delete[] m_patterns;
+        m_patterns = NULL;
     }
 
     m_pattern_count = 0;
@@ -439,7 +444,8 @@ void Level_Sonic3::unloadChunks()
 {
     if (m_chunks)
     {
-        delete[] m_chunks; m_chunks = NULL;
+        delete[] m_chunks;
+        m_chunks = NULL;
     }
 
     m_chunk_count = 0;
@@ -447,21 +453,24 @@ void Level_Sonic3::unloadChunks()
 
 void Level_Sonic3::unloadBlocks()
 {
-    for (unsigned int i = 0; i < m_blockCount; i++)
+    for (unsigned int i = 0; i < m_block_count; i++)
     {
-        delete m_blockPtrs[i]; m_blockPtrs[i] = NULL;
+        delete m_block_ptrs[i];
+        m_block_ptrs[i] = NULL;
     }
 
-    delete[] m_blockPtrs; m_blockPtrs = NULL;
+    delete[] m_block_ptrs;
+    m_block_ptrs = NULL;
 
-    m_blockCount = 0;
+    m_block_count = 0;
 }
 
 void Level_Sonic3::unloadMap()
 {
-    if (m_pMap)
+    if (m_map)
     {
-        delete m_pMap; m_pMap = 0;
+        delete m_map;
+        m_map = 0;
     }
 }
 
@@ -517,17 +526,17 @@ unsigned int Level_Sonic3::getPatternCount() const
 
 const SonicBlock& Level_Sonic3::getBlock(unsigned int index) const
 {
-    return *m_blockPtrs[index];
+    return *m_block_ptrs[index];
 }
 
 const SonicBlock** Level_Sonic3::getBlocks() const
 {
-    return const_cast<const SonicBlock**>(m_blockPtrs);
+    return const_cast<const SonicBlock**>(m_block_ptrs);
 }
 
 unsigned int Level_Sonic3::getBlockCount() const
 {
-    return m_blockCount;
+    return m_block_count;
 }
 
 unsigned int Level_Sonic3::getBlockHeight() const
@@ -542,17 +551,17 @@ unsigned int Level_Sonic3::getBlockWidth() const
 
 const SonicMap& Level_Sonic3::getMap() const
 {
-    return *m_pMap;
+    return *m_map;
 }
 
 const Buffer_Blocks& Level_Sonic3::getBlockBuffer() const
 {
-    return *m_pBufferBlocks;
+    return *m_buffer_blocks;
 }
 
 const Buffer_Patterns& Level_Sonic3::getPatternBuffer() const
 {
-    return *m_pBufferPatterns;
+    return *m_buffer_patterns;
 }
 
 const SonicChunk& Level_Sonic3::getChunk(unsigned int index) const

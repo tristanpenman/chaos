@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Windows.h>
+#include <windows.h>
 
 class SegaPalette;
 class SegaPattern;
@@ -16,7 +16,8 @@ class Level
 {
 public:
     Level();
-    virtual ~Level() = default;
+
+    virtual ~Level();
 
     void setWindow(HWND hwnd);
     HWND getWindow() const;
@@ -43,21 +44,26 @@ public:
     virtual const Buffer_Blocks& getBlockBuffer() const = 0;
 
 protected:
-    HWND m_hWnd;
+    HWND m_hwnd;
 };
 
 inline Level::Level()
-  : m_hWnd(0)
+  : m_hwnd(0)
 {
 
 }
 
-inline void Level::setWindow(HWND hWnd)
+inline Level::~Level()
 {
-    m_hWnd = hWnd;
+
+}
+
+inline void Level::setWindow(HWND hwnd)
+{
+    m_hwnd = hwnd;
 }
 
 inline HWND Level::getWindow() const
 {
-    return m_hWnd;
+    return m_hwnd;
 }

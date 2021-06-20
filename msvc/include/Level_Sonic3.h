@@ -4,10 +4,6 @@
 
 class ChaosRom_Sonic3;
 
-/**
- * Implementation of the Instance_Level abstract interface for ROMs based on
- * the Sonic The Hedgehog 3 engine.
- */
 class Level_Sonic3 : public Level
 {
 public:
@@ -64,20 +60,20 @@ private:
     ChaosRom_Sonic3& m_rom;
 
     unsigned int m_level_index;
-    bool m_level_loaded;
+    bool         m_level_loaded;
 
     SegaPalette* m_palettes;
     SegaPattern* m_patterns;
-    SonicChunk* m_chunks;
-    SonicBlock** m_blockPtrs;
+    SonicChunk*  m_chunks;
+    SonicBlock** m_block_ptrs;
 
-    SonicMap* m_pMap;
+    SonicMap*    m_map;
 
     unsigned int m_palette_count;
     unsigned int m_pattern_count;
     unsigned int m_chunk_count;
-    unsigned int m_blockCount;
+    unsigned int m_block_count;
 
-    Buffer_Patterns* m_pBufferPatterns;
-    Buffer_Blocks* m_pBufferBlocks;
+    Buffer_Patterns* m_buffer_patterns;
+    Buffer_Blocks*   m_buffer_blocks;
 };
