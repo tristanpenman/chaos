@@ -20,10 +20,8 @@ class SonicChunk
 {
 public:
     SonicChunk();
-    SonicChunk(const SonicChunk&) = delete;
-    virtual ~SonicChunk() = default;
 
-    SonicChunk& operator=(const SonicChunk&) = delete;
+    virtual ~SonicChunk() {}
 
     void loadFromBuffer(unsigned char buffer[CHUNK_SIZE_IN_ROM]);
 
@@ -34,6 +32,9 @@ public:
     static unsigned int getChunkSize();
 
 private:
+    SonicChunk(const SonicChunk&) DELETED;
+    SonicChunk& operator=(const SonicChunk&) DELETED;
+
     SegaPatternDescriptor m_pattern_indices[PATTERNS_PER_CHUNK];
 };
 

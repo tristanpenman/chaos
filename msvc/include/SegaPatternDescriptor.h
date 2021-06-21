@@ -21,7 +21,8 @@ public:
     SegaPatternDescriptor();
     explicit SegaPatternDescriptor(const SegaPatternDescriptor& desc);
     SegaPatternDescriptor(unsigned short patternIndex, unsigned short paletteIndex);
-    virtual ~SegaPatternDescriptor() = default;
+
+    virtual ~SegaPatternDescriptor() {}
 
     SegaPatternDescriptor& operator=(const SegaPatternDescriptor&);
 

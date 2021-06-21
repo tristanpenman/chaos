@@ -20,10 +20,8 @@ class SegaPalette
 {
 public:
     SegaPalette();
-    SegaPalette(const SegaPalette&) = delete;
-    virtual ~SegaPalette() = default;
 
-    SegaPalette& operator=(const SegaPalette&) = delete;
+    virtual ~SegaPalette() {}
 
     const NativeColor& getNativeColor(unsigned char index) const;
 
@@ -37,6 +35,9 @@ public:
     static unsigned int getPaletteSize();
 
 private:
+    SegaPalette(const SegaPalette&) DELETED;
+    SegaPalette& operator=(const SegaPalette&) DELETED;
+
     NativeColor m_colors[PALETTE_SIZE];
 };
 

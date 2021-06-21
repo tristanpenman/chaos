@@ -10,7 +10,8 @@ class ChaosRom_Sonic2: public ChaosRom
 {
 public:
     explicit ChaosRom_Sonic2(std::fstream& rom);
-    virtual ~ChaosRom_Sonic2() = default;
+
+    virtual ~ChaosRom_Sonic2() {}
 
     virtual bool validateROM();
     virtual LevelNames_t getLevelNames();

@@ -17,6 +17,7 @@ public:
     typedef std::map<unsigned int, std::string> LevelNames_t;
 
     explicit ChaosRom(std::fstream& rom);
+
     virtual ~ChaosRom();
 
     std::fstream& getFile();

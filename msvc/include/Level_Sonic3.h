@@ -8,6 +8,7 @@ class Level_Sonic3 : public Level
 {
 public:
     explicit Level_Sonic3(ChaosRom_Sonic3& rom);
+
     virtual ~Level_Sonic3();
 
     virtual bool loadLevel(unsigned int level_index);

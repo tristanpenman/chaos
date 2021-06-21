@@ -9,6 +9,7 @@ class ChaosApplication
 {
 public:
     ChaosApplication();
+
     virtual ~ChaosApplication();
 
     int run(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow);

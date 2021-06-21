@@ -38,12 +38,37 @@ void SonicMap::cleanup()
 {
     if (m_data)
     {
-        delete[] m_data; m_data = NULL;
+        delete[] m_data;
+        m_data = NULL;
     }
 
     m_width = 0;
     m_height = 0;
     m_layers = 0;
+}
+
+unsigned char SonicMap::getValue(unsigned int layer, unsigned int x, unsigned int y) const
+{
+    if (layer >= m_layers)
+    {
+        throw std::runtime_error("Invalid map layer index");
+    }
+
+    if (x >= m_width || y >= m_height)
+    {
+        throw std::runtime_error("Invalid map tile index");
+    }
+
+    return m_data[y * m_width * m_layers + layer * m_width + x];
+}
+
+unsigned char SonicMap::setValue(unsigned int layer, unsigned int x, unsigned int y, unsigned char value)
+{
+    unsigned char old_value = getValue(layer, x, y);
+
+    m_data[y * m_width * m_layers + layer * m_width + x] = value;
+
+    return old_value;
 }
 
 void SonicMap::reset(unsigned int layers, unsigned int width, unsigned int height)
@@ -58,7 +83,7 @@ void SonicMap::reset(unsigned int layers, unsigned int width, unsigned int heigh
         throw std::runtime_error("Failed to allocate memory for level map");
     }
 
-    memset(m_data, 0, sizeof(data_size));
+    memset(m_data, 0, data_size);
 
     m_layers = layers;
     m_width = width;

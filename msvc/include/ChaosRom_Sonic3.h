@@ -10,7 +10,8 @@ class ChaosRom_Sonic3: public ChaosRom
 {
 public:
     explicit ChaosRom_Sonic3(std::fstream& rom);
-    virtual ~ChaosRom_Sonic3() = default;
+
+    virtual ~ChaosRom_Sonic3() {}
 
     // Implementation of ChaosRom abstract interface
     virtual bool validateROM();

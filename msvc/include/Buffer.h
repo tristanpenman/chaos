@@ -11,8 +11,9 @@
 class Buffer
 {
 public:
-    explicit Buffer();
+    Buffer();
     explicit Buffer(HDC compatible_with, int w, int h);
+
     virtual ~Buffer();
 
 protected:

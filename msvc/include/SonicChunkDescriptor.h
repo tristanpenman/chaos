@@ -17,9 +17,6 @@ class SonicChunkDescriptor
 {
 public:
     SonicChunkDescriptor();
-    SonicChunkDescriptor(const SonicChunkDescriptor&) = delete;
-
-    SonicChunkDescriptor& operator=(const SonicChunkDescriptor&) = delete;
 
     unsigned short get() const;
     unsigned short getChunkIndex() const;
@@ -33,6 +30,9 @@ public:
     static size_t getIndexSize();
 
 private:
+    SonicChunkDescriptor(const SonicChunkDescriptor&) DELETED;
+    SonicChunkDescriptor& operator=(const SonicChunkDescriptor&) DELETED;
+
     unsigned short m_index;
 };
 
