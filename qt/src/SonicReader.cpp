@@ -61,7 +61,7 @@ SonicReader::Result SonicReader::decompress(uint8_t buffer[], size_t bufferSize,
       writePos++;
 
       // Don't write any more bytes if the buffer is full.
-      if (writePos >= 0 && writePos >= bufferSize) {
+      if (writePos >= bufferSize) {
         overflow = true;
       }
 
@@ -120,14 +120,10 @@ SonicReader::Result SonicReader::decompress(uint8_t buffer[], size_t bufferSize,
       count--;
 
       // Don't write any more bytes if the buffer is full.
-      if (writePos >= 0 && writePos >= bufferSize) {
+      if (writePos >= bufferSize) {
         overflow = true;
       }
     }
-  }
-
-  if (writePos < 0) {
-    writePos = 0;
   }
 
   return Result(!overflow, writePos);
