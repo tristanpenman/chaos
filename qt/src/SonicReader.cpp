@@ -12,9 +12,9 @@ SonicReader::SonicReader(istream& rom)
 
 }
 
-unsigned char SonicReader::getBit()
+uint8_t SonicReader::getBit()
 {
-  unsigned char bit = ((unsigned char)(m_bitfield)) & 1;
+  const uint8_t bit = static_cast<uint8_t>(m_bitfield) & 1;
 
   m_bitfield >>= 1;
   m_bitcount--;
@@ -32,14 +32,14 @@ unsigned char SonicReader::getBit()
 
 void SonicReader::loadBitfield()
 {
-  m_bitfield  = m_rom.get();
-  m_bitfield |= m_rom.get() << 8;
+  m_bitfield  = static_cast<uint16_t>(m_rom.get());
+  m_bitfield |= static_cast<uint16_t>(m_rom.get()) << 8;
 
   m_bitcount = 16;
 }
 
 
-SonicReader::Result SonicReader::decompress(unsigned char buffer[], size_t bufferSize, streamoff romOffset)
+SonicReader::Result SonicReader::decompress(uint8_t buffer[], size_t bufferSize, streamoff romOffset)
 {
   bool overflow = false;
 
@@ -55,7 +55,7 @@ SonicReader::Result SonicReader::decompress(unsigned char buffer[], size_t buffe
     if (getBit() == 1) {
       // Don't write this byte if the buffer is full.
       if (!overflow) {
-        buffer[writePos] = m_rom.get();
+        buffer[writePos] = static_cast<uint8_t>(m_rom.get());
       }
 
       writePos++;
@@ -69,8 +69,8 @@ SonicReader::Result SonicReader::decompress(unsigned char buffer[], size_t buffe
     }
 
     if (getBit() == 1) {
-      const unsigned int lo = m_rom.get();
-      const unsigned int hi = m_rom.get();
+      const uint8_t lo = static_cast<uint8_t>(m_rom.get());
+      const uint8_t hi = static_cast<uint8_t>(m_rom.get());
 
       // ---hi--- ---lo---
       // OOOOOCCC OOOOOOOO [CCCCCCCC]<- optional

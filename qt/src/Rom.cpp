@@ -53,7 +53,7 @@ uint8_t Rom::readByte(streamoff offset)
   streamoff bookmark = m_file.tellg();
 
   m_file.seekg(offset);
-  uint8_t value = m_file.get();
+  uint8_t value = static_cast<uint8_t>(m_file.get());
 
   m_file.seekg(bookmark);
 
@@ -66,8 +66,8 @@ uint16_t Rom::read16BitAddr(streamoff offset)
 
   m_file.seekg(offset);
 
-  uint16_t addr = m_file.get() << 8;
-  addr |= m_file.get();
+  uint16_t addr = static_cast<uint16_t>(m_file.get()) << 8;
+  addr |= static_cast<uint16_t>(m_file.get());
 
   m_file.seekg(bookmark);
 
@@ -80,10 +80,10 @@ uint32_t Rom::read32BitAddr(streamoff offset)
 
   m_file.seekg(offset);
 
-  uint32_t addr = m_file.get() << 24;
-  addr |= m_file.get() << 16;
-  addr |= m_file.get() << 8;
-  addr |= m_file.get();
+  uint32_t addr = static_cast<uint32_t>(m_file.get()) << 24;
+  addr |= static_cast<uint32_t>(m_file.get()) << 16;
+  addr |= static_cast<uint32_t>(m_file.get()) << 8;
+  addr |= static_cast<uint32_t>(m_file.get());
 
   m_file.seekg(bookmark);
 
@@ -95,8 +95,8 @@ void Rom::write16BitAddr(uint16_t addr, streamoff offset)
   streamoff bookmark = m_file.tellp();
 
   m_file.seekp(offset);
-  m_file.put((char)((addr >> 8) & 0xFF));
-  m_file.put((char)((addr) & 0xFF));
+  m_file.put(static_cast<char>((addr >> 8) & 0xFF));
+  m_file.put(static_cast<char>((addr) & 0xFF));
 
   m_file.seekp(bookmark);
 }
@@ -106,10 +106,10 @@ void Rom::write32BitAddr(uint32_t addr, streamoff offset)
   streamoff bookmark = m_file.tellp();
 
   m_file.seekp(offset);
-  m_file.put((char)((addr >> 24) & 0xFF));
-  m_file.put((char)((addr >> 16) & 0xFF));
-  m_file.put((char)((addr >> 8) & 0xFF));
-  m_file.put((char)((addr) & 0xFF));
+  m_file.put(static_cast<char>((addr >> 24) & 0xFF));
+  m_file.put(static_cast<char>((addr >> 16) & 0xFF));
+  m_file.put(static_cast<char>((addr >> 8) & 0xFF));
+  m_file.put(static_cast<char>((addr) & 0xFF));
 
   m_file.seekp(bookmark);
 }

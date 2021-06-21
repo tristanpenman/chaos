@@ -15,14 +15,14 @@ public:
 
   explicit SonicReader(std::istream& rom);
 
-  Result decompress(unsigned char buffer[], size_t bufferSize, std::streamoff readFrom);
+  Result decompress(uint8_t buffer[], size_t bufferSize, std::streamoff readFrom);
 
 private:
   void loadBitfield();
-  unsigned char getBit();
+  uint8_t getBit();
 
-  unsigned int m_bitfield;
-  unsigned char m_bitcount;
+  uint16_t m_bitfield;
+  uint16_t m_bitcount;
 
   std::istream& m_rom;
 };
