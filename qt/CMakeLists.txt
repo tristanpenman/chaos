@@ -1,22 +1,15 @@
-cmake_minimum_required(VERSION 3.0)
-
-# Add folder where are supportive functions
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-# Include Qt basic functions
-include(QtCommon)
-
-# Basic information about project
-
+cmake_minimum_required(VERSION 3.16)
 project(Chaos VERSION 1.0)
 
-# Set PROJECT_VERSION_PATCH and PROJECT_VERSION_TWEAK to 0 if not present, needed by add_project_meta
-fix_project_version()
-
-# Set additional project information
 set(COPYRIGHT "Copyright (c) 2021 Tristan Penman")
 set(IDENTIFIER "com.tristanpenman.chaos")
+
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(SOURCE_FILES
     src/main.cpp
@@ -29,14 +22,27 @@ set(SOURCE_FILES
     src/games/Sonic3.cpp
 )
 
-include_directories(SYSTEM)
-
-add_project_meta(META_FILES_TO_INCLUDE)
-
+find_package(Qt6 COMPONENTS Core REQUIRED)
 find_package(Qt6 COMPONENTS Widgets REQUIRED)
 
-add_executable(${PROJECT_NAME} ${OS_BUNDLE} # Expands to WIN32 or MACOS_BUNDLE depending on OS
-    ${SOURCE_FILES} ${META_FILES_TO_INCLUDE} ${RESOURCE_FILES}
-)
+if (WIN32)
+    qt_add_executable(${PROJECT_NAME} ${SOURCE_FILES} "${CMAKE_CURRENT_SOURCE_DIR}/res/Chaos.rc")
+elseif (APPLE)
+    set(MACOSX_BUNDLE_ICON_FILE "Chaos.icns")
 
-target_link_libraries(${PROJECT_NAME} Qt6::Widgets)
+    set(APP_ICON_MACOS "${CMAKE_CURRENT_SOURCE_DIR}/res/Chaos.icns")
+    set_source_files_properties(${APP_ICON_MACOS} PROPERTIES
+        MACOSX_PACKAGE_LOCATION "Resources")
+
+    qt_add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SOURCE_FILES} ${APP_ICON_MACOS})
+else()
+    qt_add_executable(${PROJECT_NAME} ${SOURCE_FILES})
+endif()
+
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Widgets)
+
+if(MSVC)
+    target_compile_options(${PROJECT_NAME} PRIVATE /W3 /WX)
+else()
+    target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -pedantic -Werror)
+endif()

@@ -69,17 +69,17 @@ uint32_t Sonic2::getTilesAddr(unsigned int levelIdx)
   return levelLayoutDirAddr + levelOffset;
 }
 
-optional<uint32_t> Sonic2::getExtendedBlocksAddr(unsigned int levelIdx)
+optional<uint32_t> Sonic2::getExtendedBlocksAddr(unsigned int)
 {
   return {};
 }
 
-optional<uint32_t> Sonic2::getExtendedChunksAddr(unsigned int levelIdx)
+optional<uint32_t> Sonic2::getExtendedChunksAddr(unsigned int)
 {
   return {};
 }
 
-optional<uint32_t> Sonic2::getExtendedPatternsAddr(unsigned int levelIdx)
+optional<uint32_t> Sonic2::getExtendedPatternsAddr(unsigned int)
 {
   return {};
 }

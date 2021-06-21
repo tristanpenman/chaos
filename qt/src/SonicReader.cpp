@@ -5,9 +5,9 @@
 using namespace std;
 
 SonicReader::SonicReader(istream& rom)
-  : m_rom(rom)
+  : m_bitfield(0)
   , m_bitcount(0)
-  , m_bitfield(0)
+  , m_rom(rom)
 {
 
 }
