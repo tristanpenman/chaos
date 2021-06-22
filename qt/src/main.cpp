@@ -19,21 +19,25 @@ int main(int argc, char *argv[])
 
   parser.process(app);
 
-  Window window;
+  Window window(parser.isSet(debugOpt));
 
-  if (parser.isSet(debugOpt)) {
-    window.setDebug(true);
-  }
-
-  bool okay = true;
-
+  // attempt to load a rom if a positional argument is provided
+  bool romLoaded = false;
+  bool skipLevel = false;
   if (!parser.positionalArguments().empty()) {
     const QString filename = parser.positionalArguments().at(0);
-    okay = window.openRom(filename);
+    romLoaded = window.openRom(filename);
+    if (!romLoaded) {
+      skipLevel = true;
+    }
   }
 
-  if (okay && parser.isSet(levelOpt)) {
+  // only parse level option if rom was loaded, or no positional argument provided
+  // this is to prevent multiple error messages being shown
+  if (parser.isSet(levelOpt) && !skipLevel) {
     window.openLevel(parser.value(levelOpt));
+  } else if (romLoaded) {
+    window.showLevelSelectDialog();
   }
 
   window.show();

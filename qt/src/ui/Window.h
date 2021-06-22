@@ -14,13 +14,10 @@ class Window : public QMainWindow
   Q_OBJECT
 
 public:
-  Window(QWidget* parent = 0);
-
-  void setDebug(bool debug);
+  Window(bool debug);
 
   bool openRom(const QString& path);
 
-  void openLevel(int levelIdx);
   void openLevel(const QString& level);
 
 public slots:
@@ -41,4 +38,6 @@ private:
   std::shared_ptr<Game> m_game;
 
   LevelSelect* m_levelSelect;
+
+  QAction* m_levelSelectAction;
 };

@@ -1,7 +1,9 @@
 #include <iostream>
 
+#include <QEvent>
 #include <QHBoxLayout>
 #include <QListView>
+#include <QMouseEvent>
 #include <QPushButton>
 #include <QStringListModel>
 #include <QVBoxLayout>
@@ -10,11 +12,12 @@
 
 #include "LevelSelect.h"
 
-LevelSelect::LevelSelect(std::shared_ptr<Game>& game)
-  : QDialog()
+LevelSelect::LevelSelect(QWidget *parent, std::shared_ptr<Game>& game)
+  : QDialog(parent)
   , m_game(game)
 {
   setModal(true);
+  setWindowTitle(tr("Level Select"));
 
   QStringList stringList;
   auto titleCards = game->getTitleCards();
@@ -35,6 +38,8 @@ LevelSelect::LevelSelect(std::shared_ptr<Game>& game)
   connect(m_listView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
         this, SLOT(selectionChanged(QItemSelection)));
 
+  m_listView->viewport()->installEventFilter(this);
+
   m_okButton = new QPushButton(tr("OK"));
   m_okButton->setDisabled(true);
   connect(m_okButton, SIGNAL(clicked(bool)), this, SLOT(ok(bool)));
@@ -49,6 +54,8 @@ LevelSelect::LevelSelect(std::shared_ptr<Game>& game)
   auto vbox = new QVBoxLayout();
   vbox->addWidget(m_listView);
   vbox->addLayout(hbox);
+  vbox->setContentsMargins(20, 20, 20, 15);
+  vbox->setSizeConstraint(QLayout::SetFixedSize);
 
   setLayout(vbox);
 }
@@ -70,4 +77,14 @@ void LevelSelect::cancel(bool)
 void LevelSelect::selectionChanged(QItemSelection selection)
 {
   m_okButton->setDisabled(selection.length() == 0);
+}
+
+bool LevelSelect::eventFilter(QObject *watched, QEvent *event)
+{
+  if (watched == m_listView->viewport() && event->type() == QEvent::MouseButtonDblClick) {
+    ok(true);
+    return true;
+  }
+
+  return QDialog::eventFilter(watched, event);
 }

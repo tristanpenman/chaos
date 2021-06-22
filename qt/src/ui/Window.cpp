@@ -3,9 +3,11 @@
 
 #include <QAction>
 #include <QFileDialog>
+#include <QGuiApplication>
 #include <QMainWindow>
 #include <QMenuBar>
 #include <QMessageBox>
+#include <QScreen>
 
 #include "../Game.h"
 #include "../GameFactory.h"
@@ -16,27 +18,33 @@
 
 using namespace std;
 
-Window::Window(QWidget * parent)
-  : QMainWindow(parent)
-  , m_debug(false)
+Window::Window(bool debug)
+  : QMainWindow(nullptr)
+  , m_debug(debug)
 {
   setWindowTitle("Chaos");
+  setMinimumSize(320, 240);
 
+  // choose a nice default width and height, and center the window
+  QRect geometry = QGuiApplication::primaryScreen()->geometry();
+  const int width = geometry.height() * 0.75;
+  const int height = geometry.height() * 0.5;
+  setGeometry(0, 0, width, height);
+  move(geometry.center() - rect().center());
+
+  // write up Open ROM action
   QAction *openRomAction = new QAction(tr("&Open ROM..."), this);
   openRomAction->setShortcuts(QKeySequence::Open);
   connect(openRomAction, SIGNAL(triggered()), this, SLOT(showOpenModelDialog()));
 
-  QAction* levelSelectAction = new QAction(tr("Level Select..."), this);
-  connect(levelSelectAction, SIGNAL(triggered()), this, SLOT(showLevelSelectDialog()));
+  // track Level Select action so we can enable it later
+  m_levelSelectAction = new QAction(tr("&Level Select..."), this);
+  m_levelSelectAction->setDisabled(true);
+  connect(m_levelSelectAction, SIGNAL(triggered()), this, SLOT(showLevelSelectDialog()));
 
   QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
   fileMenu->addAction(openRomAction);
-  fileMenu->addAction(levelSelectAction);
-}
-
-void Window::setDebug(bool debug)
-{
-  m_debug = debug;
+  fileMenu->addAction(m_levelSelectAction);
 }
 
 bool Window::openRom(const QString &path)
@@ -60,6 +68,8 @@ bool Window::openRom(const QString &path)
     cout << "[Window] Domestic name: '" << m_rom->readDomesticName() << "'" << endl;
   }
 
+  m_levelSelectAction->setDisabled(false);
+
   return true;
 }
 
@@ -68,13 +78,31 @@ void Window::openLevel(const QString& level)
   bool parsed = false;
   const unsigned int levelIdx = level.toUInt(&parsed);
   if (parsed) {
-    openLevel(levelIdx);
+    levelSelected(levelIdx);
   } else {
     showError(tr("Level Error"), tr("Failed to parse level index"));
   }
 }
 
-void Window::openLevel(int levelIdx)
+void Window::showOpenModelDialog()
+{
+  const QString fileName = QFileDialog::getOpenFileName(this, tr("Open ROM"), QString(), QString("*.bin"));
+  if (!fileName.isEmpty()) {
+    if (openRom(fileName)) {
+      showLevelSelectDialog();
+    }
+  }
+}
+
+void Window::showLevelSelectDialog()
+{
+  m_levelSelect = new LevelSelect(this, m_game);
+  connect(m_levelSelect, SIGNAL(levelSelected(int)), this, SLOT(levelSelected(int)));
+  connect(m_levelSelect, SIGNAL(finished(int)), this, SLOT(levelSelectFinished(int)));
+  m_levelSelect->show();
+}
+
+void Window::levelSelected(int levelIdx)
 {
   if (!m_rom) {
     showError(tr("Level Error"), tr("Cannot load level until ROM has been loaded"));
@@ -82,7 +110,7 @@ void Window::openLevel(int levelIdx)
   }
 
   if (m_debug) {
-    cout << "[Window] Loading level: " << levelIdx << endl;
+    cout << "[Window] Loading level: " << levelIdx << " (" << m_game->getTitleCards()[levelIdx] << ")" << endl;
   }
 
   uint32_t palettesAddr = m_game->getPalettesAddr(levelIdx);
@@ -100,31 +128,10 @@ void Window::openLevel(int levelIdx)
   }
 }
 
-void Window::showOpenModelDialog()
-{
-  const QString fileName = QFileDialog::getOpenFileName(this, tr("Open ROM"), QString(), QString("*.bin"));
-  if (!fileName.isEmpty()) {
-    openRom(fileName);
-  }
-}
-
-void Window::showLevelSelectDialog()
-{
-  m_levelSelect = new LevelSelect(m_game);
-  connect(m_levelSelect, SIGNAL(levelSelected(int)), this, SLOT(levelSelected(int)));
-  connect(m_levelSelect, SIGNAL(finished(int)), this, SLOT(levelSelectFinished(int)));
-  m_levelSelect->show();
-}
-
 void Window::levelSelectFinished(int)
 {
   delete m_levelSelect;
   m_levelSelect = nullptr;
-}
-
-void Window::levelSelected(int levelIdx)
-{
-  openLevel(levelIdx);
 }
 
 void Window::showError(const QString& title, const QString& text)
