@@ -27,13 +27,13 @@ HWND WndFrame::createWindow(HINSTANCE hInstance, HWND hParent)
         wc.cbSize        = sizeof(WNDCLASSEX);
         wc.style         = 0;
         wc.lpfnWndProc   = frameWndProc;
-        wc.cbClsExtra    = 0 ;
-        wc.cbWndExtra    = 0 ;
-        wc.hInstance     = hInstance ;
-        wc.hIcon         = LoadIcon(NULL, MAKEINTRESOURCE(ID_ICON_CHAOS)) ;
+        wc.cbClsExtra    = 0;
+        wc.cbWndExtra    = 0;
+        wc.hInstance     = hInstance;
+        wc.hIcon         = LoadIcon(NULL, MAKEINTRESOURCE(ID_ICON_CHAOS));
         wc.hIconSm       = LoadIcon(hInstance, MAKEINTRESOURCE(ID_ICON_CHAOS));
-        wc.hCursor       = LoadCursor(NULL, IDC_ARROW) ;
-        wc.hbrBackground = (HBRUSH) GetStockObject(GRAY_BRUSH) ;
+        wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
+        wc.hbrBackground = (HBRUSH) GetStockObject(GRAY_BRUSH);
         wc.lpszMenuName  = NULL;
         wc.lpszClassName = TEXT("ChaosFrame");
 
@@ -42,7 +42,7 @@ HWND WndFrame::createWindow(HINSTANCE hInstance, HWND hParent)
 
         if (!ms_class)
         {
-            MessageBox(NULL, TEXT("Could not register the Chaos main window class."), NULL, MB_ICONERROR) ;
+            MessageBox(NULL, TEXT("Could not register the Chaos main window class."), NULL, MB_ICONERROR);
             return 0;
         }
     }
@@ -58,7 +58,7 @@ HWND WndFrame::createWindow(HINSTANCE hInstance, HWND hParent)
         hParent,                             // parent window handle
         g_menuChaos,                         // window menu handle
         hInstance,                           // program instance handle
-        NULL) ;                              // creation parameters
+        NULL);                              // creation parameters
 
     return hWnd;
 }
@@ -66,39 +66,35 @@ HWND WndFrame::createWindow(HINSTANCE hInstance, HWND hParent)
 bool WndFrame::openFile()
 {
     DialogOpen dialog;
-    if (dialog.showDialog())
-    {
-        return g_application.openROM(dialog.getFileName());
-    }
 
-    return false;
+    return dialog.showDialog() && g_application.openROM(dialog.getFileName());
 }
 
 HWND WndFrame::createLevelWindow(HWND hClient)
 {
     int level = DialogLoadLevel::showDialog(ms_hInstance, g_application.getMainWindow());
 
-    if (level >= 0)
+    if (level < 0)
     {
-        HWND                hwndChild = 0;
-        MDICREATESTRUCT     mdicreate;
-
-        mdicreate.szClass = (LPCTSTR) MAKELONG(WndLevel::getClass(ms_hInstance), 0);
-        mdicreate.szTitle = "Level Editor";
-        mdicreate.hOwner  = ms_hInstance;
-        mdicreate.x       = CW_USEDEFAULT;
-        mdicreate.y       = CW_USEDEFAULT;
-        mdicreate.cx      = CW_USEDEFAULT;
-        mdicreate.cy      = CW_USEDEFAULT;
-        mdicreate.style   = 0;
-        mdicreate.lParam  = (LPARAM) level;
-
-        hwndChild = (HWND) SendMessage(hClient, WM_MDICREATE, 0, (LPARAM) (LPMDICREATESTRUCT) &mdicreate) ;
-
-        return hwndChild;
+        return 0;
     }
 
-    return 0;
+    HWND                hwndChild = 0;
+    MDICREATESTRUCT     mdicreate;
+
+    mdicreate.szClass = (LPCTSTR) MAKELONG(WndLevel::getClass(ms_hInstance), 0);
+    mdicreate.szTitle = "Level Editor";
+    mdicreate.hOwner  = ms_hInstance;
+    mdicreate.x       = CW_USEDEFAULT;
+    mdicreate.y       = CW_USEDEFAULT;
+    mdicreate.cx      = CW_USEDEFAULT;
+    mdicreate.cy      = CW_USEDEFAULT;
+    mdicreate.style   = 0;
+    mdicreate.lParam  = (LPARAM) level;
+
+    hwndChild = (HWND) SendMessage(hClient, WM_MDICREATE, 0, (LPARAM) (LPMDICREATESTRUCT) &mdicreate);
+
+    return hwndChild;
 }
 
 void WndFrame::enableMenuItems(HWND hwnd)
@@ -127,7 +123,7 @@ LRESULT CALLBACK WndFrame::frameWndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPA
             0, // y
             0, // w
             0, // h
-            hwnd, (HMENU) 1, ms_hInstance, (LPSTR) &clientcreate) ;
+            hwnd, (HMENU) 1, ms_hInstance, (LPSTR) &clientcreate);
 
         return 0;
 
@@ -140,6 +136,7 @@ LRESULT CALLBACK WndFrame::frameWndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPA
             if (openFile())
             {
                 enableMenuItems(hwnd);
+                createLevelWindow(hwndClient);
             }
             return 0;
 
@@ -160,17 +157,17 @@ LRESULT CALLBACK WndFrame::frameWndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPA
             return 0;
 
         case ID_WINDOW_CLOSEALL:
-            EnumChildWindows(hwndClient, &closeEnumProc, 0) ;
+            EnumChildWindows(hwndClient, &closeEnumProc, 0);
             return 0;
 
         case ID_FILE_EXIT:
-            SendMessage(hwnd, WM_CLOSE, 0, 0) ;
+            SendMessage(hwnd, WM_CLOSE, 0, 0);
             return 0;
         }
         break;
 
-    case WM_QUERYENDSESSION :
-    case WM_CLOSE :
+    case WM_QUERYENDSESSION:
+    case WM_CLOSE:
         SendMessage(hwnd, WM_COMMAND, ID_WINDOW_CLOSEALL, 0);
         // Don't close if there is an open child
         if (NULL != GetWindow(hwndClient, GW_CHILD))
@@ -187,7 +184,7 @@ LRESULT CALLBACK WndFrame::frameWndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPA
     }
 
     // Pass unprocessed messages to DefFrameProc (not DefWindowProc)
-    return DefFrameProc(hwnd, hwndClient, iMsg, wParam, lParam) ;
+    return DefFrameProc(hwnd, hwndClient, iMsg, wParam, lParam);
 
 }
 
@@ -203,12 +200,12 @@ BOOL CALLBACK WndFrame::closeEnumProc(HWND hwnd, LPARAM lParam)
 
     if (!SendMessage(hwnd, WM_QUERYENDSESSION, 0, 0))
     {
-        return 1 ;
+        return 1;
     }
 
     SendMessage(GetParent (hwnd), WM_MDIDESTROY, (WPARAM) hwnd, 0);
 
-    return 1 ;
+    return 1;
 }
 
 void WndFrame::destroyClass()
