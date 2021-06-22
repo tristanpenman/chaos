@@ -30,6 +30,10 @@ set(PROJECT_SOURCES
     src/games/Sonic3.h
     src/ui/LevelSelect.cpp
     src/ui/LevelSelect.h
+    src/ui/PaletteInspector.cpp
+    src/ui/PaletteInspector.h
+    src/ui/PatternInspector.cpp
+    src/ui/PatternInspector.h
     src/ui/Window.cpp
     src/ui/Window.h
 )

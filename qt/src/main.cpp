@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
   if (parser.isSet(levelOpt) && !skipLevel) {
     window.openLevel(parser.value(levelOpt));
   } else if (romLoaded) {
-    window.showLevelSelectDialog();
+    window.showLevelSelect();
   }
 
   window.show();

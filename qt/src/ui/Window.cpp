@@ -9,11 +9,15 @@
 #include <QMessageBox>
 #include <QScreen>
 
+// base
 #include "../Game.h"
 #include "../GameFactory.h"
 #include "../Rom.h"
 
+// ui
 #include "LevelSelect.h"
+#include "PaletteInspector.h"
+#include "PatternInspector.h"
 #include "Window.h"
 
 using namespace std;
@@ -32,19 +36,49 @@ Window::Window(bool debug)
   setGeometry(0, 0, width, height);
   move(geometry.center() - rect().center());
 
+  createFileMenu();
+  createViewMenu();
+}
+
+void Window::createFileMenu()
+{
   // write up Open ROM action
-  QAction *openRomAction = new QAction(tr("&Open ROM..."), this);
+  QAction* openRomAction = new QAction(tr("&Open ROM..."));
   openRomAction->setShortcuts(QKeySequence::Open);
-  connect(openRomAction, SIGNAL(triggered()), this, SLOT(showOpenModelDialog()));
+  connect(openRomAction, SIGNAL(triggered()), this, SLOT(showOpenRomDialog()));
 
   // track Level Select action so we can enable it later
-  m_levelSelectAction = new QAction(tr("&Level Select..."), this);
+  m_levelSelectAction = new QAction(tr("&Level Select..."));
   m_levelSelectAction->setDisabled(true);
-  connect(m_levelSelectAction, SIGNAL(triggered()), this, SLOT(showLevelSelectDialog()));
+  connect(m_levelSelectAction, SIGNAL(triggered()), this, SLOT(showLevelSelect()));
 
-  QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
+  // build file menu
+  QMenu* fileMenu = menuBar()->addMenu(tr("&File"));
   fileMenu->addAction(openRomAction);
+  fileMenu->addSeparator();
   fileMenu->addAction(m_levelSelectAction);
+}
+
+void Window::createViewMenu()
+{
+  // wire up inspectors
+  QAction* inspectPalettesAction = new QAction(tr("&Palettes"), this);
+  connect(inspectPalettesAction, SIGNAL(triggered()), this, SLOT(showPaletteInspector()));
+  QAction* inspectPatternsAction = new QAction(tr("P&atterns"), this);
+  QAction* inspectChunksAction = new QAction(tr("&Chunks"), this);
+  inspectChunksAction->setDisabled(true);
+  QAction* inspectBlocksAction = new QAction(tr("&Blocks"), this);
+  inspectBlocksAction->setDisabled(true);
+
+  // build view menu
+  QMenu* viewMenu = menuBar()->addMenu(tr("&View"));
+  m_inspectorsMenu = viewMenu->addMenu(tr("&Inspectors"));
+  m_inspectorsMenu->setDisabled(true);
+  m_inspectorsMenu->addAction(inspectPalettesAction);
+  m_inspectorsMenu->addAction(inspectPatternsAction);
+  m_inspectorsMenu->addSeparator();
+  m_inspectorsMenu->addAction(inspectChunksAction);
+  m_inspectorsMenu->addAction(inspectBlocksAction);
 }
 
 bool Window::openRom(const QString &path)
@@ -84,17 +118,17 @@ void Window::openLevel(const QString& level)
   }
 }
 
-void Window::showOpenModelDialog()
+void Window::showOpenRomDialog()
 {
   const QString fileName = QFileDialog::getOpenFileName(this, tr("Open ROM"), QString(), QString("*.bin"));
   if (!fileName.isEmpty()) {
     if (openRom(fileName)) {
-      showLevelSelectDialog();
+      showLevelSelect();
     }
   }
 }
 
-void Window::showLevelSelectDialog()
+void Window::showLevelSelect()
 {
   m_levelSelect = new LevelSelect(this, m_game);
   connect(m_levelSelect, SIGNAL(levelSelected(int)), this, SLOT(levelSelected(int)));
@@ -126,12 +160,26 @@ void Window::levelSelected(int levelIdx)
     cout << "[Window]  - Blocks: 0x" << hex << blocksAddr << " (" << dec << blocksAddr << ")" << endl;
     cout << "[Window]  - Tiles: 0x" << hex << tilesAddr << " (" << dec << tilesAddr << ")" << endl;
   }
+
+  m_inspectorsMenu->setEnabled(true);
 }
 
 void Window::levelSelectFinished(int)
 {
   delete m_levelSelect;
   m_levelSelect = nullptr;
+}
+
+void Window::showPaletteInspector()
+{
+  m_paletteInspector = new PaletteInspector(this);
+  m_paletteInspector->show();
+}
+
+void Window::showPatternInspector()
+{
+  m_patternInspector = new PatternInspector(this);
+  m_patternInspector->show();
 }
 
 void Window::showError(const QString& title, const QString& text)
