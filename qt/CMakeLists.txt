@@ -16,6 +16,10 @@ set(PROJECT_SOURCES
     src/GameFactory.cpp
     src/GameFactory.h
     src/Level.h
+    src/Palette.cpp
+    src/Palette.h
+    src/Pattern.cpp
+    src/Pattern.h
     src/Rom.cpp
     src/Rom.h
     src/SonicReader.cpp
