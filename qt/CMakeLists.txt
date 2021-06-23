@@ -38,6 +38,13 @@ set(PROJECT_SOURCES
     src/ui/Window.h
 )
 
+if (APPLE)
+  list(APPEND PROJECT_SOURCES
+    src/os/macos.h
+    src/os/macos.mm
+  )
+endif()
+
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Widgets REQUIRED)
 

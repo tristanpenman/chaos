@@ -1,10 +1,18 @@
 #include <QApplication>
 #include <QCommandLineParser>
 
+#ifdef Q_OS_MAC
+#include "os/macos.h"
+#endif
+
 #include "ui/Window.h"
 
 int main(int argc, char *argv[])
 {
+#ifdef Q_OS_MAC
+  removeMacosSpecificMenuItems();
+#endif
+
   QApplication app(argc, argv);
 
   QCommandLineParser parser;
