@@ -1,13 +1,13 @@
-#include <iostream>
+#include <fstream>
 
 #include "SonicReader.h"
 
 using namespace std;
 
-SonicReader::SonicReader(istream& rom)
+SonicReader::SonicReader(fstream& file)
   : m_bitfield(0)
   , m_bitcount(0)
-  , m_rom(rom)
+  , m_file(file)
 {
 
 }
@@ -22,7 +22,7 @@ uint8_t SonicReader::getBit()
   // Ensure that there are more bits to read
   if (m_bitcount == 0) {
     loadBitfield();
-    if (m_rom.eof()) {
+    if (m_file.eof()) {
       throw std::runtime_error("Unexpected end of file");
     }
   }
@@ -32,14 +32,14 @@ uint8_t SonicReader::getBit()
 
 void SonicReader::loadBitfield()
 {
-  m_bitfield  = static_cast<uint16_t>(m_rom.get());
-  m_bitfield |= static_cast<uint16_t>(m_rom.get()) << 8;
+  m_bitfield  = static_cast<uint16_t>(m_file.get());
+  m_bitfield |= static_cast<uint16_t>(m_file.get()) << 8;
 
   m_bitcount = 16;
 }
 
 
-SonicReader::Result SonicReader::decompress(uint8_t buffer[], size_t bufferSize, streamoff romOffset)
+SonicReader::Result SonicReader::decompress(uint8_t buffer[], size_t bufferSize)
 {
   bool overflow = false;
 
@@ -47,15 +47,13 @@ SonicReader::Result SonicReader::decompress(uint8_t buffer[], size_t bufferSize,
   size_t offset = 0;
   size_t writePos = 0;
 
-  m_rom.seekg(romOffset);
-
   loadBitfield();
 
   while (1) {
     if (getBit() == 1) {
       // Don't write this byte if the buffer is full.
       if (!overflow) {
-        buffer[writePos] = static_cast<uint8_t>(m_rom.get());
+        buffer[writePos] = static_cast<uint8_t>(m_file.get());
       }
 
       writePos++;
@@ -69,8 +67,8 @@ SonicReader::Result SonicReader::decompress(uint8_t buffer[], size_t bufferSize,
     }
 
     if (getBit() == 1) {
-      const uint8_t lo = static_cast<uint8_t>(m_rom.get());
-      const uint8_t hi = static_cast<uint8_t>(m_rom.get());
+      const uint8_t lo = static_cast<uint8_t>(m_file.get());
+      const uint8_t hi = static_cast<uint8_t>(m_file.get());
 
       // ---hi--- ---lo---
       // OOOOOCCC OOOOOOOO [CCCCCCCC]<- optional
@@ -87,7 +85,7 @@ SonicReader::Result SonicReader::decompress(uint8_t buffer[], size_t bufferSize,
       count = hi & 0x7;
 
       if (count == 0) {
-        count = m_rom.get();
+        count = m_file.get();
 
         if (count == 0) {
           break;
@@ -104,7 +102,7 @@ SonicReader::Result SonicReader::decompress(uint8_t buffer[], size_t bufferSize,
       count++;
 
       // Convert 8-bit two's complement representation to 32-bit representation
-      offset = m_rom.get() | 0xFFFFFF00;
+      offset = m_file.get() | 0xFFFFFF00;
     }
 
     count++;

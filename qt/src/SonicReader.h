@@ -13,9 +13,9 @@ class SonicReader
 public:
   typedef std::pair<bool, size_t> Result;
 
-  explicit SonicReader(std::istream& rom);
+  explicit SonicReader(std::fstream& rom);
 
-  Result decompress(uint8_t buffer[], size_t bufferSize, std::streamoff readFrom);
+  Result decompress(uint8_t buffer[], size_t bufferSize);
 
 private:
   void loadBitfield();
@@ -24,5 +24,5 @@ private:
   uint16_t m_bitfield;
   uint16_t m_bitcount;
 
-  std::istream& m_rom;
+  std::fstream& m_file;
 };
