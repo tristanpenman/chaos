@@ -24,6 +24,11 @@ bool Rom::open(const std::string& path)
   return m_file.good();
 }
 
+fstream& Rom::getFile()
+{
+  return m_file;
+}
+
 string Rom::readDomesticName()
 {
   char buffer[DOMESTIC_NAME_LEN + 1];

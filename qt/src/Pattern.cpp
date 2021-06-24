@@ -6,7 +6,7 @@ using namespace std;
 
 Pattern::Pattern()
 {
-  memset(m_pixels, 0, PIXELS_PER_PATTERN);
+  memset(m_pixels, 0, PATTERN_SIZE_IN_MEM);
 }
 
 void Pattern::fromSegaFormat(uint8_t buffer[PATTERN_SIZE_IN_ROM])

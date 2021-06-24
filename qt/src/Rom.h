@@ -10,6 +10,8 @@ class Rom
 public:
   bool open(const std::string& path);
 
+  std::fstream& getFile();
+
   std::string readDomesticName();
   std::string readInternationalName();
 

@@ -20,8 +20,8 @@ public:
   static constexpr uint8_t PATTERN_WIDTH = 8;
   static constexpr uint8_t PATTERN_HEIGHT = 8;
   static constexpr uint8_t PIXELS_PER_BYTE = 2;
-  static constexpr uint8_t PIXELS_PER_PATTERN = PATTERN_WIDTH * PATTERN_HEIGHT;
-  static constexpr uint8_t PATTERN_SIZE_IN_ROM = PIXELS_PER_PATTERN / PIXELS_PER_BYTE;
+  static constexpr uint8_t PATTERN_SIZE_IN_MEM = PATTERN_WIDTH * PATTERN_HEIGHT;
+  static constexpr uint8_t PATTERN_SIZE_IN_ROM = PATTERN_SIZE_IN_MEM / PIXELS_PER_BYTE;
 
   Pattern();
 
@@ -34,5 +34,5 @@ private:
   Pattern(const Pattern&) = delete;
   Pattern& operator=(const Pattern&) = delete;
 
-  uint8_t m_pixels[PIXELS_PER_PATTERN];
+  uint8_t m_pixels[PATTERN_SIZE_IN_MEM];
 };
