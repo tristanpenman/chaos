@@ -2,6 +2,6 @@
 
 class Level
 {
-public:
-  virtual bool loadLevel(unsigned int levelIdx) = 0;
+protected:
+  virtual ~Level() {}
 };

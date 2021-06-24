@@ -1,6 +1,7 @@
 #include "../Rom.h"
 
 #include "Sonic2.h"
+#include "Sonic2Level.h"
 
 using namespace std;
 
@@ -50,6 +51,26 @@ vector<string> Sonic2::getTitleCards()
   };
 }
 
+std::shared_ptr<Level> Sonic2::loadLevel(unsigned int levelIdx)
+{
+  const uint32_t palettesAddr = getPalettesAddr(levelIdx);
+  const uint32_t patternsAddr = getPatternsAddr(levelIdx);
+
+  return std::make_shared<Sonic2Level>(*m_rom, palettesAddr, patternsAddr);
+}
+
+uint32_t Sonic2::getDataAddress(unsigned int levelIdx, unsigned int entryOffset)
+{
+  const uint32_t levelDataIdxLoc = levelSelectIndex + levelIdx * 2;
+  const uint8_t levelDataIdx = m_rom->readByte(levelDataIdxLoc);
+
+  const uint32_t dataAddrLoc = levelDataDir +
+      levelDataIdx * levelDataDirEntrySize +
+      entryOffset;
+
+  return m_rom->read32BitAddr(dataAddrLoc);
+}
+
 uint32_t Sonic2::getBlocksAddr(unsigned int levelIdx)
 {
   return getDataAddress(levelIdx, 8) & 0xFFFFFF;
@@ -87,31 +108,4 @@ uint32_t Sonic2::getTilesAddr(unsigned int levelIdx)
   const uint16_t levelOffset = m_rom->read16BitAddr(levelOffsetLoc);
 
   return levelLayoutDirAddr + levelOffset;
-}
-
-optional<uint32_t> Sonic2::getExtendedBlocksAddr(unsigned int)
-{
-  return {};
-}
-
-optional<uint32_t> Sonic2::getExtendedChunksAddr(unsigned int)
-{
-  return {};
-}
-
-optional<uint32_t> Sonic2::getExtendedPatternsAddr(unsigned int)
-{
-  return {};
-}
-
-uint32_t Sonic2::getDataAddress(unsigned int levelIdx, unsigned int entryOffset)
-{
-  const uint32_t levelDataIdxLoc = levelSelectIndex + levelIdx * 2;
-  const uint8_t levelDataIdx = m_rom->readByte(levelDataIdxLoc);
-
-  const uint32_t dataAddrLoc = levelDataDir +
-      levelDataIdx * levelDataDirEntrySize +
-      entryOffset;
-
-  return m_rom->read32BitAddr(dataAddrLoc);
 }

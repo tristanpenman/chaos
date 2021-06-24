@@ -13,6 +13,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(PROJECT_SOURCES
     src/main.cpp
+    src/Game.h
     src/GameFactory.cpp
     src/GameFactory.h
     src/Level.h
@@ -26,8 +27,12 @@ set(PROJECT_SOURCES
     src/SonicReader.h
     src/games/Sonic2.cpp
     src/games/Sonic2.h
+    src/games/Sonic2Level.cpp
+    src/games/Sonic2Level.h
     src/games/Sonic3.cpp
     src/games/Sonic3.h
+    src/games/Sonic3Level.cpp
+    src/games/Sonic3Level.h
     src/ui/LevelSelect.cpp
     src/ui/LevelSelect.h
     src/ui/PaletteInspector.cpp

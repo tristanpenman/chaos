@@ -24,7 +24,12 @@ using namespace std;
 
 Window::Window(bool debug)
   : QMainWindow(nullptr)
+  , m_paletteInspector(nullptr)
+  , m_patternInspector(nullptr)
   , m_debug(debug)
+  , m_rom(nullptr)
+  , m_game(nullptr)
+  , m_level(nullptr)
 {
   setWindowTitle("Chaos");
   setMinimumSize(320, 240);
@@ -61,6 +66,8 @@ void Window::createFileMenu()
 
 void Window::createViewMenu()
 {
+  QMenu* viewMenu = menuBar()->addMenu(tr("&View"));
+
   // wire up inspectors
   QAction* inspectPalettesAction = new QAction(tr("&Palettes"), this);
   connect(inspectPalettesAction, SIGNAL(triggered()), this, SLOT(showPaletteInspector()));
@@ -70,8 +77,7 @@ void Window::createViewMenu()
   QAction* inspectBlocksAction = new QAction(tr("&Blocks"), this);
   inspectBlocksAction->setDisabled(true);
 
-  // build view menu
-  QMenu* viewMenu = menuBar()->addMenu(tr("&View"));
+  // build inspectors sub-menu
   m_inspectorsMenu = viewMenu->addMenu(tr("&Inspectors"));
   m_inspectorsMenu->setDisabled(true);
   m_inspectorsMenu->addAction(inspectPalettesAction);
@@ -130,6 +136,16 @@ void Window::showOpenRomDialog()
 
 void Window::showLevelSelect()
 {
+  if (m_level) {
+    const QMessageBox::StandardButton reply = QMessageBox::question(this,
+          tr("Close Level"),
+          tr("Are you sure you want to close the current level?"),
+          QMessageBox::Yes | QMessageBox::No);
+    if (reply == QMessageBox::No) {
+      return;
+    }
+  }
+
   m_levelSelect = new LevelSelect(this, m_game);
   connect(m_levelSelect, SIGNAL(levelSelected(int)), this, SLOT(levelSelected(int)));
   connect(m_levelSelect, SIGNAL(finished(int)), this, SLOT(levelSelectFinished(int)));
@@ -138,6 +154,18 @@ void Window::showLevelSelect()
 
 void Window::levelSelected(int levelIdx)
 {
+  if (m_level) {
+    m_inspectorsMenu->setEnabled(false);
+
+    delete m_paletteInspector;
+    m_paletteInspector = nullptr;
+
+    delete m_patternInspector;
+    m_patternInspector = nullptr;
+  }
+
+  m_level.reset();
+
   if (!m_rom) {
     showError(tr("Level Error"), tr("Cannot load level until ROM has been loaded"));
     return;
@@ -147,21 +175,13 @@ void Window::levelSelected(int levelIdx)
     cout << "[Window] Loading level: " << levelIdx << " (" << m_game->getTitleCards()[levelIdx] << ")" << endl;
   }
 
-  uint32_t palettesAddr = m_game->getPalettesAddr(levelIdx);
-  uint32_t patternsAddr = m_game->getPatternsAddr(levelIdx);
-  uint32_t chunksAddr = m_game->getChunksAddr(levelIdx);
-  uint32_t blocksAddr = m_game->getBlocksAddr(levelIdx);
-  uint32_t tilesAddr = m_game->getTilesAddr(levelIdx);
+  m_level = m_game->loadLevel(levelIdx);
 
-  if (m_debug) {
-    cout << "[Window]  - Palettes: 0x" << hex << palettesAddr << " (" << dec << palettesAddr << ")" << endl;
-    cout << "[Window]  - Patterns: 0x" << hex << patternsAddr << " (" << dec << patternsAddr << ")" << endl;
-    cout << "[Window]  - Chunks: 0x" << hex << chunksAddr << " (" << dec << chunksAddr << ")" << endl;
-    cout << "[Window]  - Blocks: 0x" << hex << blocksAddr << " (" << dec << blocksAddr << ")" << endl;
-    cout << "[Window]  - Tiles: 0x" << hex << tilesAddr << " (" << dec << tilesAddr << ")" << endl;
+  if (m_level) {
+    m_inspectorsMenu->setEnabled(true);
+  } else {
+    showError(tr("Level Error"), tr("Failed to load level"));
   }
-
-  m_inspectorsMenu->setEnabled(true);
 }
 
 void Window::levelSelectFinished(int)
@@ -172,13 +192,19 @@ void Window::levelSelectFinished(int)
 
 void Window::showPaletteInspector()
 {
-  m_paletteInspector = new PaletteInspector(this);
+  if (!m_paletteInspector) {
+    m_paletteInspector = new PaletteInspector(this, m_level);
+  }
+
   m_paletteInspector->show();
 }
 
 void Window::showPatternInspector()
 {
-  m_patternInspector = new PatternInspector(this);
+  if (!m_patternInspector) {
+    m_patternInspector = new PatternInspector(this, m_level);
+  }
+
   m_patternInspector->show();
 }
 

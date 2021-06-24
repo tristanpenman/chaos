@@ -18,7 +18,7 @@ void Palette::fromSegaFormat(char bytes[PALETTE_SIZE_IN_ROM])
   }
 }
 
-inline Palette::Color Palette::getColor(uint8_t index) const
+Palette::Color Palette::getColor(uint8_t index) const
 {
   if (index >= PALETTE_SIZE)
   {
@@ -28,7 +28,7 @@ inline Palette::Color Palette::getColor(uint8_t index) const
   return m_colors[index];
 }
 
-inline void Palette::setColor(uint8_t index, Color& color)
+void Palette::setColor(uint8_t index, Color& color)
 {
   if (index >= PALETTE_SIZE)
   {
@@ -38,7 +38,7 @@ inline void Palette::setColor(uint8_t index, Color& color)
   memcpy(&m_colors[index], &color, sizeof(Color));
 }
 
-inline void Palette::Color::fromSegaFormat(char bytes[BYTES_PER_COLOR])
+void Palette::Color::fromSegaFormat(char bytes[BYTES_PER_COLOR])
 {
   r = static_cast<uint8_t>((bytes[1] & 0x0F) * 0x10);
   g = static_cast<uint8_t>(bytes[1] & 0xF0);

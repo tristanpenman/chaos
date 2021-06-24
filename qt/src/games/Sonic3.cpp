@@ -41,6 +41,27 @@ vector<string> Sonic3::getTitleCards()
   };
 }
 
+shared_ptr<Level> Sonic3::loadLevel(unsigned int)
+{
+  return {};
+}
+
+uint32_t Sonic3::getDataAddress(unsigned int levelIdx, unsigned int entryOffset)
+{
+  const uint32_t zoneIndexLoc = levelSelectIndex + levelIdx * 2;
+  const uint32_t zoneIndex = m_rom->readByte(zoneIndexLoc);
+
+  const uint32_t actIndexLoc = zoneIndexLoc + 1;
+  const uint32_t actIndex = m_rom->readByte(actIndexLoc);
+
+  const uint32_t dataAddrLoc = levelDataDir +
+      zoneIndex * levelDataDirEntrySize * 2 +
+      actIndex * levelDataDirEntrySize +
+      entryOffset;
+
+  return m_rom->read32BitAddr(dataAddrLoc);
+}
+
 uint32_t Sonic3::getBlocksAddr(unsigned int levelIdx)
 {
   return getDataAddress(levelIdx, 16) & 0xFFFFFF;
@@ -85,20 +106,4 @@ optional<uint32_t> Sonic3::getExtendedChunksAddr(unsigned int levelIdx)
 optional<uint32_t> Sonic3::getExtendedPatternsAddr(unsigned int levelIdx)
 {
   return getDataAddress(levelIdx, 4) & 0xFFFFFF;
-}
-
-uint32_t Sonic3::getDataAddress(unsigned int levelIdx, unsigned int entryOffset)
-{
-  const uint32_t zoneIndexLoc = levelSelectIndex + levelIdx * 2;
-  const uint32_t zoneIndex = m_rom->readByte(zoneIndexLoc);
-
-  const uint32_t actIndexLoc = zoneIndexLoc + 1;
-  const uint32_t actIndex = m_rom->readByte(actIndexLoc);
-
-  const uint32_t dataAddrLoc = levelDataDir +
-      zoneIndex * levelDataDirEntrySize * 2 +
-      actIndex * levelDataDirEntrySize +
-      entryOffset;
-
-  return m_rom->read32BitAddr(dataAddrLoc);
 }

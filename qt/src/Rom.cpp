@@ -58,12 +58,12 @@ uint8_t Rom::readByte(streamoff offset)
 
 std::vector<char> Rom::readBytes(streamoff offset, size_t count)
 {
-  std::vector<char> buffer;
-  buffer.reserve(count);
+  std::vector<char> buffer(count);
 
   m_file.seekg(offset);
 
-  m_file.get(buffer.data(), count);
+  m_file.read(buffer.data(), count);
+  buffer.resize(m_file.gcount());
 
   return buffer;
 }

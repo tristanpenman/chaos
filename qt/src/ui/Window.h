@@ -6,6 +6,7 @@
 #include <QMainWindow>
 
 class Game;
+class Level;
 class LevelSelect;
 class PaletteInspector;
 class PatternInspector;
@@ -52,6 +53,8 @@ private:
   QMenu *m_inspectorsMenu;
 
   bool m_debug;
+
   std::shared_ptr<Rom> m_rom;
   std::shared_ptr<Game> m_game;
+  std::shared_ptr<Level> m_level;
 };

@@ -16,11 +16,11 @@
  */
 class Palette
 {
+public:
   static constexpr uint8_t BYTES_PER_COLOR = 2;
   static constexpr uint8_t PALETTE_SIZE = 16;
   static constexpr uint8_t PALETTE_SIZE_IN_ROM = BYTES_PER_COLOR * PALETTE_SIZE;
 
-public:
   struct Color {
     uint8_t r;
     uint8_t g;
