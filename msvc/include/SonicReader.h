@@ -12,7 +12,7 @@ public:
 
     explicit SonicReader(std::fstream& rom);
 
-    result_t decompress(unsigned char buffer[], size_t buffer_size, std::streamoff offset = 0);
+    result_t decompress(unsigned char buffer[], size_t buffer_size, std::streamoff rom_offset);
 
 protected:
     void loadBitfield();

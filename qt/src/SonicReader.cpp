@@ -43,9 +43,9 @@ SonicReader::Result SonicReader::decompress(uint8_t buffer[], size_t bufferSize)
 {
   bool overflow = false;
 
-  size_t count = 0;
-  size_t offset = 0;
-  size_t writePos = 0;
+  uint16_t pos = 0;
+  uint16_t count = 0;
+  int16_t offset = 0;
 
   loadBitfield();
 
@@ -53,13 +53,13 @@ SonicReader::Result SonicReader::decompress(uint8_t buffer[], size_t bufferSize)
     if (getBit() == 1) {
       // Don't write this byte if the buffer is full.
       if (!overflow) {
-        buffer[writePos] = static_cast<uint8_t>(m_file.get());
+        buffer[pos] = static_cast<uint8_t>(m_file.get());
       }
 
-      writePos++;
+      pos++;
 
       // Don't write any more bytes if the buffer is full.
-      if (writePos >= bufferSize) {
+      if (pos >= bufferSize) {
         overflow = true;
       }
 
@@ -76,16 +76,16 @@ SonicReader::Result SonicReader::decompress(uint8_t buffer[], size_t bufferSize)
       // C - Count bit
 
       // Offsets are negative numbers stored using a 13-bit two's complement representation. Before the offset
-      // can be applied to a 32-bit offset, we have to convert it to 32-bit two's complement representation.
+      // can be applied to a 16-bit offset, we have to convert it to 16-bit two's complement representation.
       // Positive numbers are not used, so a naive conversion is okay.
-      offset = (0xFFFFFF00 | hi) << 5;
-      offset = (offset & 0xFFFFFF00) | lo;
+      offset = (0xFF00 | hi) << 5;
+      offset = (offset & 0xFF00) | lo;
 
       // Mask off the count bits
       count = hi & 0x7;
 
       if (count == 0) {
-        count = m_file.get();
+        count = static_cast<uint16_t>(m_file.get());
 
         if (count == 0) {
           break;
@@ -101,8 +101,8 @@ SonicReader::Result SonicReader::decompress(uint8_t buffer[], size_t bufferSize)
       count = (getBit() << 1) | getBit();
       count++;
 
-      // Convert 8-bit two's complement representation to 32-bit representation
-      offset = m_file.get() | 0xFFFFFF00;
+      // Convert 8-bit two's complement representation to 16-bit representation
+      offset = static_cast<int16_t>(m_file.get()) | 0xFF00;
     }
 
     count++;
@@ -111,18 +111,18 @@ SonicReader::Result SonicReader::decompress(uint8_t buffer[], size_t bufferSize)
     while (count > 0) {
       // Don't write if the buffer is full.
       if (!overflow) {
-        buffer[writePos] = buffer[writePos + offset];
+        buffer[pos] = buffer[pos + offset];
       }
 
-      writePos++;
+      pos++;
       count--;
 
       // Don't write any more bytes if the buffer is full.
-      if (writePos >= bufferSize) {
+      if (pos >= bufferSize) {
         overflow = true;
       }
     }
   }
 
-  return Result(!overflow, writePos);
+  return Result(!overflow, pos);
 }

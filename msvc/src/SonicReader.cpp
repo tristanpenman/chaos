@@ -45,9 +45,9 @@ SonicReader::result_t SonicReader::decompress(unsigned char buffer[], size_t buf
 {
     bool overflow = false;
 
-    size_t count = 0;
-    size_t offset = 0;
-    size_t write_pos = 0;
+    uint16_t pos = 0;
+    uint16_t count = 0;
+    int16_t offset = 0;
 
     m_rom.seekg(rom_offset);
 
@@ -60,24 +60,24 @@ SonicReader::result_t SonicReader::decompress(unsigned char buffer[], size_t buf
             // Don't write this byte if the buffer is full.
             if (!overflow)
             {
-                buffer[write_pos] = m_rom.get();
+                buffer[pos] = m_rom.get();
             }
 
-            write_pos++;
+            pos++;
 
             // Don't write any more bytes if the buffer is full.
-            if (write_pos >= 0 && write_pos >= buffer_size)
+            if (pos >= buffer_size)
             {
                 overflow = true;
             }
 
             continue;
         }
-        
+
         if (getBit() == 1)
         {
-            const unsigned int lo = m_rom.get();
-            const unsigned int hi = m_rom.get();
+            const uint8_t lo = m_rom.get();
+            const uint8_t hi = m_rom.get();
 
             // ---hi--- ---lo---
             // OOOOOCCC OOOOOOOO [CCCCCCCC]<- optional
@@ -85,10 +85,10 @@ SonicReader::result_t SonicReader::decompress(unsigned char buffer[], size_t buf
             // C - Count bit
 
             // Offsets are negative numbers stored using a 13-bit two's complement representation. Before the offset
-            // can be applied to a 32-bit offset, we have to convert it to 32-bit two's complement representation.
+            // can be applied to a 16-bit offset, we have to convert it to 16-bit two's complement representation.
             // Positive numbers are not used, so a naive conversion is okay.
-            offset = (0xFFFFFF00 | hi) << 5;
-            offset = (offset & 0xFFFFFF00) | lo;
+            offset = (0xFF00 | hi) << 5;
+            offset = (offset & 0xFF00) | lo;
 
             // Mask off the count bits
             count = hi & 0x7;
@@ -117,8 +117,8 @@ SonicReader::result_t SonicReader::decompress(unsigned char buffer[], size_t buf
             count = (getBit() << 1) | getBit();
             count++;
 
-            // Convert 8-bit two's complement representation to 32-bit representation
-            offset = m_rom.get() | 0xFFFFFF00;
+            // Convert 8-bit two's complement representation to 16-bit representation
+            offset = m_rom.get() | 0xFF00;
         }
 
         count++;
@@ -129,24 +129,19 @@ SonicReader::result_t SonicReader::decompress(unsigned char buffer[], size_t buf
             // Don't write if the buffer is full.
             if (!overflow)
             {
-                buffer[write_pos] = buffer[write_pos + offset];
+                buffer[pos] = buffer[pos + offset];
             }
 
-            write_pos++;
+            pos++;
             count--;
 
             // Don't write any more bytes if the buffer is full.
-            if (write_pos >= 0 && write_pos >= buffer_size)
+            if (pos >= buffer_size)
             {
                 overflow = true;
             }
         }
     }
 
-    if (write_pos < 0)
-    {
-        write_pos = 0;
-    }
-
-    return result_t(!overflow, write_pos);
+    return result_t(!overflow, pos);
 }
