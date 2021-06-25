@@ -33,7 +33,8 @@ public:
 
   void fromSegaFormat(char bytes[PALETTE_SIZE_IN_ROM]);
 
-  Color getColor(uint8_t index) const;
+  size_t getColorCount() const;
+  const Color& getColor(uint8_t index) const;
   void setColor(uint8_t index, Color& color);
 
 private:
@@ -42,3 +43,8 @@ private:
 
   Color m_colors[PALETTE_SIZE];
 };
+
+inline size_t Palette::getColorCount() const
+{
+  return PALETTE_SIZE;
+}

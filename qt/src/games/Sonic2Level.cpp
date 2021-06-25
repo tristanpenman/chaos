@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <iostream>
 #include <vector>
 
 #include "../Palette.h"
@@ -22,6 +23,16 @@ Sonic2Level::Sonic2Level(Rom& rom,
 {
   loadPalettes(rom, palettesAddr);
   loadPatterns(rom, patternsAddr);
+}
+
+const Palette& Sonic2Level::getPalette(size_t index) const
+{
+  return m_palettes[index];
+}
+
+const Pattern& Sonic2Level::getPattern(size_t index) const
+{
+  return m_patterns[index];
 }
 
 void Sonic2Level::loadPalettes(Rom& rom, uint32_t palettesAddr)
@@ -58,4 +69,6 @@ void Sonic2Level::loadPatterns(Rom& rom, uint32_t patternsAddr)
   for (size_t i = 0; i < m_numPatterns; i++) {
     m_patterns[i].fromSegaFormat(&buffer[i * Pattern::PATTERN_SIZE_IN_ROM]);
   }
+
+  cout << "[Sonic2Level] pattern count: " << m_numPatterns << " (" << result.second << " bytes)" << endl;
 }

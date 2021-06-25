@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "../Rom.h"
 
 #include "Sonic2.h"
@@ -55,6 +57,9 @@ std::shared_ptr<Level> Sonic2::loadLevel(unsigned int levelIdx)
 {
   const uint32_t palettesAddr = getPalettesAddr(levelIdx);
   const uint32_t patternsAddr = getPatternsAddr(levelIdx);
+
+  cout << "[Sonic2] Palettes addr: 0x" << hex << palettesAddr << dec << endl;
+  cout << "[Sonic2] Patterns addr: 0x" << hex << patternsAddr << dec << endl;
 
   return std::make_shared<Sonic2Level>(*m_rom, palettesAddr, patternsAddr);
 }
