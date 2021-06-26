@@ -13,6 +13,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(PROJECT_SOURCES
     src/main.cpp
+    src/Chunk.cpp
+    src/Chunk.h
     src/Game.h
     src/GameFactory.cpp
     src/GameFactory.h
@@ -21,6 +23,7 @@ set(PROJECT_SOURCES
     src/Palette.h
     src/Pattern.cpp
     src/Pattern.h
+    src/PatternDesc.h
     src/Rom.cpp
     src/Rom.h
     src/SonicReader.cpp
