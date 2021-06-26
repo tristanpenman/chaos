@@ -72,6 +72,7 @@ void Window::createViewMenu()
   QAction* inspectPalettesAction = new QAction(tr("&Palettes"), this);
   connect(inspectPalettesAction, SIGNAL(triggered()), this, SLOT(showPaletteInspector()));
   QAction* inspectPatternsAction = new QAction(tr("P&atterns"), this);
+  connect(inspectPatternsAction, SIGNAL(triggered()), this, SLOT(showPatternInspector()));
   QAction* inspectChunksAction = new QAction(tr("&Chunks"), this);
   inspectChunksAction->setDisabled(true);
   QAction* inspectBlocksAction = new QAction(tr("&Blocks"), this);

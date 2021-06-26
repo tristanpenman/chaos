@@ -1,5 +1,4 @@
 #include <QHBoxLayout>
-#include <QPixmap>
 #include <QVBoxLayout>
 
 #include "PaletteInspector.h"
@@ -25,8 +24,7 @@ PaletteInspector::PaletteInspector(QWidget* parent, std::shared_ptr<Level>& leve
 
     for (size_t c = 0; c < palette.getColorCount(); c++) {
       const Palette::Color& color = palette.getColor(c);
-
-      QString stylesheet = QString("background: rgb(%1,%2,%3)")
+      const QString stylesheet = QString("background: rgb(%1,%2,%3)")
           .arg(color.r)
           .arg(color.g)
           .arg(color.b);
