@@ -23,7 +23,7 @@ PatternInspector::PatternInspector(QWidget* parent, std::shared_ptr<Level>& leve
   , m_pixmap(nullptr)
 {
   const auto patternCount = level->getPatternCount();
-  const int pixmapHeight = ceilf(static_cast<float>(patternCount) / PATTERNS_PER_ROW) * 8;
+  const int pixmapHeight = ceilf(static_cast<float>(patternCount) / PATTERNS_PER_ROW) * Pattern::PATTERN_HEIGHT;
 
   // main layout
   QVBoxLayout* vbox = new QVBoxLayout();
@@ -71,22 +71,23 @@ void PatternInspector::drawPatterns(size_t paletteIndex)
 {
   std::cout << "[PatternInspector] Drawing patterns using palette " << paletteIndex << std::endl;
 
+  const Palette& palette = m_level->getPalette(paletteIndex);
+
   // image to draw to
-  auto image = std::make_shared<QImage>(m_pixmap->width(), m_pixmap->height(), QImage::Format_RGB888);
-  image->fill(qRgb(0, 0, 0));
+  QImage image(m_pixmap->width(), m_pixmap->height(), QImage::Format_RGB888);
+  image.fill(qRgb(0, 0, 0));
 
   // draw individual patterns
-  const Palette& palette = m_level->getPalette(paletteIndex);
   for (size_t i = 0; i < m_level->getPatternCount(); i++) {
     const auto row = i / PATTERNS_PER_ROW;
     const auto col = i % PATTERNS_PER_ROW;
 
-    drawPattern(*image, m_level->getPattern(i), palette, col * Pattern::PATTERN_WIDTH, row * Pattern::PATTERN_HEIGHT);
+    drawPattern(image, m_level->getPattern(i), palette, col * Pattern::PATTERN_WIDTH, row * Pattern::PATTERN_HEIGHT);
   }
 
   // copy to pixmap
   std::cout << "[PatternInspector] Copying pattern image to pixmap" << std::endl;
-  if (m_pixmap->convertFromImage(*image)) {
+  if (m_pixmap->convertFromImage(image)) {
     m_label->setPixmap(*m_pixmap);
   } else {
     std::cout << "[PatternInspector] Failed to copy image to pixmap" << std::endl;

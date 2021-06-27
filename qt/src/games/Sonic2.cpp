@@ -12,13 +12,13 @@ constexpr uint32_t levelSelectIndex = 0x9454;       // Level select order
 constexpr uint32_t levelDataDir = 0x42594;          // Level data pointers (patterns, chunks, blocks)
 constexpr uint32_t levelDataDirEntrySize = 12;      // Each pointer is 4 bytes, total of 3 pointers
 constexpr uint32_t levelPaletteDir = 0x2782;        // Directory of palette pointers
+constexpr uint32_t sonicTailsPaletteAddr = 0x29E2;  // Default palette used for Sonic and Tails
 
 Sonic2::Sonic2(std::shared_ptr<Rom>& rom)
   : m_rom(rom)
 {
 
 }
-
 
 bool Sonic2::isCompatible()
 {
@@ -55,15 +55,17 @@ vector<string> Sonic2::getTitleCards()
 
 std::shared_ptr<Level> Sonic2::loadLevel(unsigned int levelIdx)
 {
-  const uint32_t palettesAddr = getPalettesAddr(levelIdx);
+  const uint32_t characterPaletteAddr = getCharacterPaletteAddr();
+  const uint32_t levelPalettesAddr = getLevelPalettesAddr(levelIdx);
   const uint32_t patternsAddr = getPatternsAddr(levelIdx);
   const uint32_t chunksAddr = getChunksAddr(levelIdx);
 
-  cout << "[Sonic2] Palettes addr: 0x" << hex << palettesAddr << dec << endl;
+  cout << "[Sonic2] Character palette addr: 0x" << hex << characterPaletteAddr << dec << endl;
+  cout << "[Sonic2] Level palettes addr: 0x" << hex << levelPalettesAddr << dec << endl;
   cout << "[Sonic2] Patterns addr: 0x" << hex << patternsAddr << dec << endl;
   cout << "[Sonic2] Chunks addr: 0x" << hex << chunksAddr << dec << endl;
 
-  return std::make_shared<Sonic2Level>(*m_rom, palettesAddr, patternsAddr, chunksAddr);
+  return std::make_shared<Sonic2Level>(*m_rom, characterPaletteAddr, levelPalettesAddr, patternsAddr, chunksAddr);
 }
 
 uint32_t Sonic2::getDataAddress(unsigned int levelIdx, unsigned int entryOffset)
@@ -78,6 +80,20 @@ uint32_t Sonic2::getDataAddress(unsigned int levelIdx, unsigned int entryOffset)
   return m_rom->read32BitAddr(dataAddrLoc);
 }
 
+uint32_t Sonic2::getCharacterPaletteAddr()
+{
+  return sonicTailsPaletteAddr;
+}
+
+uint32_t Sonic2::getLevelPalettesAddr(unsigned int levelIdx)
+{
+  const uint32_t dataAddr = getDataAddress(levelIdx, 8);
+  const uint32_t paletteIndex = dataAddr >> 24;
+  const uint32_t paletteAddrLoc = levelPaletteDir + paletteIndex * 8;
+
+  return m_rom->read32BitAddr(paletteAddrLoc);
+}
+
 uint32_t Sonic2::getBlocksAddr(unsigned int levelIdx)
 {
   return getDataAddress(levelIdx, 8) & 0xFFFFFF;
@@ -86,15 +102,6 @@ uint32_t Sonic2::getBlocksAddr(unsigned int levelIdx)
 uint32_t Sonic2::getChunksAddr(unsigned int levelIdx)
 {
   return getDataAddress(levelIdx, 4) & 0xFFFFFF;
-}
-
-uint32_t Sonic2::getPalettesAddr(unsigned int levelIdx)
-{
-  const uint32_t dataAddr = getDataAddress(levelIdx, 8);
-  const uint32_t paletteIndex = dataAddr >> 24;
-  const uint32_t paletteAddrLoc = levelPaletteDir + paletteIndex * 8;
-
-  return m_rom->read32BitAddr(paletteAddrLoc);
 }
 
 uint32_t Sonic2::getPatternsAddr(unsigned int levelIdx)

@@ -2,6 +2,7 @@
 
 #include <cstddef>
 
+class Chunk;
 class Palette;
 class Pattern;
 
@@ -15,4 +16,7 @@ public:
 
   virtual size_t getPatternCount() const = 0;
   virtual const Pattern& getPattern(size_t index) const = 0;
+
+  virtual size_t getChunkCount() const = 0;
+  virtual const Chunk& getChunk(size_t index) const = 0;
 };

@@ -15,7 +15,8 @@ class Sonic2Level : public Level
 
 public:
   Sonic2Level(Rom& rom,
-              uint32_t palettesAddr,
+              uint32_t characterPaletteAddr,
+              uint32_t levelPalettesAddr,
               uint32_t patternsAddr,
               uint32_t chunksAddr);
 
@@ -32,7 +33,7 @@ private:
   Sonic2Level(const Sonic2Level&) = delete;
   Sonic2Level& operator=(const Sonic2Level&) = delete;
 
-  void loadPalettes(Rom& rom, uint32_t palettesAddr);
+  void loadPalettes(Rom& rom, uint32_t characterPaletteAddr, uint32_t levelPalettesAddr);
   void loadPatterns(Rom& rom, uint32_t patternsAddr);
   void loadChunks(Rom& rom, uint32_t chunksAddr);
 

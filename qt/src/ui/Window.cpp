@@ -9,12 +9,11 @@
 #include <QMessageBox>
 #include <QScreen>
 
-// base
 #include "../Game.h"
 #include "../GameFactory.h"
 #include "../Rom.h"
 
-// ui
+#include "ChunkInspector.h"
 #include "LevelSelect.h"
 #include "PaletteInspector.h"
 #include "PatternInspector.h"
@@ -24,8 +23,10 @@ using namespace std;
 
 Window::Window(bool debug)
   : QMainWindow(nullptr)
+  , m_levelSelect(nullptr)
   , m_paletteInspector(nullptr)
   , m_patternInspector(nullptr)
+  , m_chunkInspector(nullptr)
   , m_debug(debug)
   , m_rom(nullptr)
   , m_game(nullptr)
@@ -69,21 +70,21 @@ void Window::createViewMenu()
   QMenu* viewMenu = menuBar()->addMenu(tr("&View"));
 
   // wire up inspectors
-  QAction* inspectPalettesAction = new QAction(tr("&Palettes"), this);
+  QAction* inspectPalettesAction = new QAction(tr("Palettes"), this);
   connect(inspectPalettesAction, SIGNAL(triggered()), this, SLOT(showPaletteInspector()));
-  QAction* inspectPatternsAction = new QAction(tr("P&atterns"), this);
+  QAction* inspectPatternsAction = new QAction(tr("Patterns (8x8)"), this);
   connect(inspectPatternsAction, SIGNAL(triggered()), this, SLOT(showPatternInspector()));
-  QAction* inspectChunksAction = new QAction(tr("&Chunks"), this);
-  inspectChunksAction->setDisabled(true);
-  QAction* inspectBlocksAction = new QAction(tr("&Blocks"), this);
+  QAction* inspectChunksAction = new QAction(tr("Chunks (16x16)"), this);
+  connect(inspectChunksAction, SIGNAL(triggered()), this, SLOT(showChunkInspector()));
+  QAction* inspectBlocksAction = new QAction(tr("Blocks (128x128)"), this);
   inspectBlocksAction->setDisabled(true);
 
   // build inspectors sub-menu
   m_inspectorsMenu = viewMenu->addMenu(tr("&Inspectors"));
   m_inspectorsMenu->setDisabled(true);
   m_inspectorsMenu->addAction(inspectPalettesAction);
-  m_inspectorsMenu->addAction(inspectPatternsAction);
   m_inspectorsMenu->addSeparator();
+  m_inspectorsMenu->addAction(inspectPatternsAction);
   m_inspectorsMenu->addAction(inspectChunksAction);
   m_inspectorsMenu->addAction(inspectBlocksAction);
 }
@@ -147,9 +148,14 @@ void Window::showLevelSelect()
     }
   }
 
+  if (m_levelSelect) {
+    delete m_levelSelect;
+    m_levelSelect = nullptr;
+  }
+
   m_levelSelect = new LevelSelect(this, m_game);
   connect(m_levelSelect, SIGNAL(levelSelected(int)), this, SLOT(levelSelected(int)));
-  connect(m_levelSelect, SIGNAL(finished(int)), this, SLOT(levelSelectFinished(int)));
+
   m_levelSelect->show();
 }
 
@@ -163,6 +169,9 @@ void Window::levelSelected(int levelIdx)
 
     delete m_patternInspector;
     m_patternInspector = nullptr;
+
+    delete m_chunkInspector;
+    m_chunkInspector = nullptr;
   }
 
   m_level.reset();
@@ -185,12 +194,6 @@ void Window::levelSelected(int levelIdx)
   }
 }
 
-void Window::levelSelectFinished(int)
-{
-  delete m_levelSelect;
-  m_levelSelect = nullptr;
-}
-
 void Window::showPaletteInspector()
 {
   if (!m_paletteInspector) {
@@ -207,6 +210,15 @@ void Window::showPatternInspector()
   }
 
   m_patternInspector->show();
+}
+
+void Window::showChunkInspector()
+{
+  if (!m_chunkInspector) {
+    m_chunkInspector = new ChunkInspector(this, m_level);
+  }
+
+  m_chunkInspector->show();
 }
 
 void Window::showError(const QString& title, const QString& text)

@@ -11,13 +11,11 @@
 #include "Sonic2.h"
 #include "Sonic2Level.h"
 
-#define CHUNK_BUFFER_SIZE 0xFFFF
-#define PATTERN_BUFFER_SIZE 0xFFFF  // 64KB
-
 using namespace std;
 
 Sonic2Level::Sonic2Level(Rom& rom,
-                         uint32_t palettesAddr,
+                         uint32_t sonicPaletteAddr,
+                         uint32_t levelPalettesAddr,
                          uint32_t patternsAddr,
                          uint32_t chunksAddr)
   : m_palettes(nullptr)
@@ -26,7 +24,7 @@ Sonic2Level::Sonic2Level(Rom& rom,
   , m_patternCount(0)
   , m_chunkCount(0)
 {
-  loadPalettes(rom, palettesAddr);
+  loadPalettes(rom, sonicPaletteAddr, levelPalettesAddr);
   loadPatterns(rom, patternsAddr);
   loadChunks(rom, chunksAddr);
 }
@@ -46,19 +44,27 @@ const Chunk& Sonic2Level::getChunk(size_t index) const
   return m_chunks[index];
 }
 
-void Sonic2Level::loadPalettes(Rom& rom, uint32_t palettesAddr)
+void Sonic2Level::loadPalettes(Rom& rom, uint32_t characterPaletteAddr, uint32_t levelPalettesAddr)
 {
   m_palettes = new Palette[4];
 
-  auto buffer = rom.readBytes(palettesAddr, Palette::PALETTE_SIZE_IN_ROM * 4);
+  {
+    auto buffer = rom.readBytes(characterPaletteAddr, Palette::PALETTE_SIZE_IN_ROM);
+    m_palettes[0].fromSegaFormat(buffer.data());
+  }
 
-  for (int i = 0; i < 4; i++) {
-    m_palettes[i].fromSegaFormat(&buffer[Palette::PALETTE_SIZE_IN_ROM * i]);
+  {
+    auto buffer = rom.readBytes(levelPalettesAddr, Palette::PALETTE_SIZE_IN_ROM * 3);
+    for (int i = 0; i < 3; i++) {
+      m_palettes[i + 1].fromSegaFormat(&buffer[Palette::PALETTE_SIZE_IN_ROM * i]);
+    }
   }
 }
 
 void Sonic2Level::loadPatterns(Rom& rom, uint32_t patternsAddr)
 {
+  static constexpr size_t PATTERN_BUFFER_SIZE = 0xFFFF; // 64KB
+
   // decompress patterns
   auto& file = rom.getFile();
   file.seekg(patternsAddr);
@@ -81,11 +87,13 @@ void Sonic2Level::loadPatterns(Rom& rom, uint32_t patternsAddr)
     m_patterns[i].fromSegaFormat(&buffer[i * Pattern::PATTERN_SIZE_IN_ROM]);
   }
 
-  cout << "[Sonic2Level] pattern count: " << m_patternCount << " (" << result.second << " bytes)" << endl;
+  cout << "[Sonic2Level] Pattern count: " << m_patternCount << " (" << result.second << " bytes)" << endl;
 }
 
 void Sonic2Level::loadChunks(Rom &rom, uint32_t chunksAddr)
 {
+  static constexpr size_t CHUNK_BUFFER_SIZE = 0xFFFF; // 64KB
+
   // decompress chunks
   auto& file = rom.getFile();
   file.seekg(chunksAddr);
@@ -108,5 +116,5 @@ void Sonic2Level::loadChunks(Rom &rom, uint32_t chunksAddr)
     m_chunks[i].fromSegaFormat(&buffer[i * Chunk::CHUNK_SIZE_IN_ROM]);
   }
 
-  cout << "[Sonic2Level] chunk count: " << m_chunkCount << " (" << result.second << " bytes)" << endl;
+  cout << "[Sonic2Level] Chunk count: " << m_chunkCount << " (" << result.second << " bytes)" << endl;
 }

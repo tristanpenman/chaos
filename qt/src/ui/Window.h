@@ -5,6 +5,7 @@
 
 #include <QMainWindow>
 
+class ChunkInspector;
 class Game;
 class Level;
 class LevelSelect;
@@ -23,17 +24,14 @@ public:
   void openLevel(const QString& level);
 
 public slots:
-  // open rom
-  void showOpenRomDialog();
-
-  // level select
   void showLevelSelect();
   void levelSelected(int levelIdx);
-  void levelSelectFinished(int);
 
-  // inspectors
+private slots:
+  void showOpenRomDialog();
   void showPaletteInspector();
   void showPatternInspector();
+  void showChunkInspector();
 
 private:
   // menus
@@ -47,6 +45,7 @@ private:
   LevelSelect* m_levelSelect;
   PaletteInspector* m_paletteInspector;
   PatternInspector* m_patternInspector;
+  ChunkInspector* m_chunkInspector;
 
   // menus
   QAction* m_levelSelectAction;
