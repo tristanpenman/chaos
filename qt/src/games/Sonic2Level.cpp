@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 
+#include "../Block.h"
 #include "../Chunk.h"
 #include "../Palette.h"
 #include "../Pattern.h"
@@ -17,31 +18,55 @@ Sonic2Level::Sonic2Level(Rom& rom,
                          uint32_t sonicPaletteAddr,
                          uint32_t levelPalettesAddr,
                          uint32_t patternsAddr,
-                         uint32_t chunksAddr)
+                         uint32_t chunksAddr,
+                         uint32_t blocksAddr)
   : m_palettes(nullptr)
   , m_patterns(nullptr)
   , m_chunks(nullptr)
   , m_patternCount(0)
   , m_chunkCount(0)
+  , m_blockCount(0)
 {
   loadPalettes(rom, sonicPaletteAddr, levelPalettesAddr);
   loadPatterns(rom, patternsAddr);
   loadChunks(rom, chunksAddr);
+  loadBlocks(rom, blocksAddr);
 }
 
 const Palette& Sonic2Level::getPalette(size_t index) const
 {
+  if (index >= PALETTE_COUNT) {
+    throw std::runtime_error("Invalid palette index");
+  }
+
   return m_palettes[index];
 }
 
 const Pattern& Sonic2Level::getPattern(size_t index) const
 {
+  if (index >= m_patternCount) {
+    throw std::runtime_error("Invalid pattern index");
+  }
+
   return m_patterns[index];
 }
 
 const Chunk& Sonic2Level::getChunk(size_t index) const
 {
+  if (index >= m_chunkCount) {
+    throw std::runtime_error("Invalid chunk index");
+  }
+
   return m_chunks[index];
+}
+
+const Block& Sonic2Level::getBlock(size_t index) const
+{
+  if (index >= m_blockCount) {
+    throw std::runtime_error("Invalid block index");
+  }
+
+  return m_blocks[index];
 }
 
 void Sonic2Level::loadPalettes(Rom& rom, uint32_t characterPaletteAddr, uint32_t levelPalettesAddr)
@@ -90,7 +115,7 @@ void Sonic2Level::loadPatterns(Rom& rom, uint32_t patternsAddr)
   cout << "[Sonic2Level] Pattern count: " << m_patternCount << " (" << result.second << " bytes)" << endl;
 }
 
-void Sonic2Level::loadChunks(Rom &rom, uint32_t chunksAddr)
+void Sonic2Level::loadChunks(Rom& rom, uint32_t chunksAddr)
 {
   static constexpr size_t CHUNK_BUFFER_SIZE = 0xFFFF; // 64KB
 
@@ -117,4 +142,32 @@ void Sonic2Level::loadChunks(Rom &rom, uint32_t chunksAddr)
   }
 
   cout << "[Sonic2Level] Chunk count: " << m_chunkCount << " (" << result.second << " bytes)" << endl;
+}
+
+void Sonic2Level::loadBlocks(Rom& rom, uint32_t blocksAddr)
+{
+  static constexpr size_t BLOCK_BUFFER_SIZE = 0xFFFF; // 64KB
+
+  // decompress blocks
+  auto& file = rom.getFile();
+  file.seekg(blocksAddr);
+  SonicReader sr(file);
+  vector<uint8_t> buffer(BLOCK_BUFFER_SIZE);
+  SonicReader::Result result = sr.decompress(buffer.data(), BLOCK_BUFFER_SIZE);
+  if (!result.first) {
+    throw std::runtime_error("Block decompression error");
+  }
+
+  // check data
+  m_blockCount = result.second / Block::BLOCK_SIZE_IN_ROM;
+  if (result.second % Block::BLOCK_SIZE_IN_ROM != 0) {
+    throw std::runtime_error("Inconsistent block data");
+  }
+
+  m_blocks = new Block[m_blockCount];
+  for (size_t i = 0; i < m_blockCount; i++) {
+    m_blocks[i].fromSegaFormat(&buffer[i * Block::BLOCK_SIZE_IN_ROM]);
+  }
+
+  cout << "[Sonic2Level] Block count: " << m_blockCount << " (" << result.second << " bytes)" << endl;
 }

@@ -13,8 +13,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(PROJECT_SOURCES
     src/main.cpp
+    src/Block.cpp
+    src/Block.h
     src/Chunk.cpp
     src/Chunk.h
+    src/ChunkDesc.h
     src/Game.h
     src/GameFactory.cpp
     src/GameFactory.h
