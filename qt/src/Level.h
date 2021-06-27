@@ -2,6 +2,7 @@
 
 #include <cstddef>
 
+class Block;
 class Chunk;
 class Palette;
 class Pattern;
@@ -19,4 +20,7 @@ public:
 
   virtual size_t getChunkCount() const = 0;
   virtual const Chunk& getChunk(size_t index) const = 0;
+
+  virtual size_t getBlockCount() const = 0;
+  virtual const Block& getBlock(size_t index) const = 0;
 };

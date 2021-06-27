@@ -5,6 +5,7 @@
 
 #include <QMainWindow>
 
+class BlockInspector;
 class ChunkInspector;
 class Game;
 class Level;
@@ -24,7 +25,7 @@ public:
   void openLevel(const QString& level);
 
 public slots:
-  void showLevelSelect();
+  void levelSelect();
   void levelSelected(int levelIdx);
 
 private slots:
@@ -32,13 +33,12 @@ private slots:
   void showPaletteInspector();
   void showPatternInspector();
   void showChunkInspector();
+  void showBlockInspector();
 
 private:
-  // menus
+  // helpers
   void createFileMenu();
   void createViewMenu();
-
-  // helpers
   void showError(const QString& title, const QString& text);
 
   // dialogs
@@ -46,6 +46,7 @@ private:
   PaletteInspector* m_paletteInspector;
   PatternInspector* m_patternInspector;
   ChunkInspector* m_chunkInspector;
+  BlockInspector* m_blockInspector;
 
   // menus
   QAction* m_levelSelectAction;

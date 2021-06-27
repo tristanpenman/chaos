@@ -13,6 +13,7 @@
 #include "../GameFactory.h"
 #include "../Rom.h"
 
+#include "BlockInspector.h"
 #include "ChunkInspector.h"
 #include "LevelSelect.h"
 #include "PaletteInspector.h"
@@ -27,6 +28,7 @@ Window::Window(bool debug)
   , m_paletteInspector(nullptr)
   , m_patternInspector(nullptr)
   , m_chunkInspector(nullptr)
+  , m_blockInspector(nullptr)
   , m_debug(debug)
   , m_rom(nullptr)
   , m_game(nullptr)
@@ -77,7 +79,7 @@ void Window::createViewMenu()
   QAction* inspectChunksAction = new QAction(tr("Chunks (16x16)"), this);
   connect(inspectChunksAction, SIGNAL(triggered()), this, SLOT(showChunkInspector()));
   QAction* inspectBlocksAction = new QAction(tr("Blocks (128x128)"), this);
-  inspectBlocksAction->setDisabled(true);
+  connect(inspectBlocksAction, SIGNAL(triggered()), this, SLOT(showBlockInspector()));
 
   // build inspectors sub-menu
   m_inspectorsMenu = viewMenu->addMenu(tr("&Inspectors"));
@@ -131,12 +133,12 @@ void Window::showOpenRomDialog()
   const QString fileName = QFileDialog::getOpenFileName(this, tr("Open ROM"), QString(), QString("*.bin"));
   if (!fileName.isEmpty()) {
     if (openRom(fileName)) {
-      showLevelSelect();
+      levelSelect();
     }
   }
 }
 
-void Window::showLevelSelect()
+void Window::levelSelect()
 {
   if (m_level) {
     const QMessageBox::StandardButton reply = QMessageBox::question(this,
@@ -172,6 +174,9 @@ void Window::levelSelected(int levelIdx)
 
     delete m_chunkInspector;
     m_chunkInspector = nullptr;
+
+    delete m_blockInspector;
+    m_blockInspector = nullptr;
   }
 
   m_level.reset();
@@ -219,6 +224,15 @@ void Window::showChunkInspector()
   }
 
   m_chunkInspector->show();
+}
+
+void Window::showBlockInspector()
+{
+  if (!m_blockInspector) {
+    m_blockInspector = new BlockInspector(this, m_level);
+  }
+
+  m_blockInspector->show();
 }
 
 void Window::showError(const QString& title, const QString& text)

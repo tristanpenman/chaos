@@ -39,6 +39,8 @@ set(PROJECT_SOURCES
     src/games/Sonic3.h
     src/games/Sonic3Level.cpp
     src/games/Sonic3Level.h
+    src/ui/BlockInspector.cpp
+    src/ui/BlockInspector.h
     src/ui/ChunkInspector.cpp
     src/ui/ChunkInspector.h
     src/ui/LevelSelect.cpp

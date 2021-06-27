@@ -22,17 +22,17 @@ public:
               uint32_t chunksAddr,
               uint32_t blocksAddr);
 
-  virtual size_t getPaletteCount() const;
-  virtual const Palette& getPalette(size_t index) const;
+  size_t getPaletteCount() const override;
+  const Palette& getPalette(size_t index) const override;
 
-  virtual size_t getPatternCount() const;
-  virtual const Pattern& getPattern(size_t index) const;
+  size_t getPatternCount() const override;
+  const Pattern& getPattern(size_t index) const override;
 
-  virtual size_t getChunkCount() const;
-  virtual const Chunk& getChunk(size_t index) const;
+  size_t getChunkCount() const override;
+  const Chunk& getChunk(size_t index) const override;
 
-  virtual size_t getBlockCount() const;
-  virtual const Block& getBlock(size_t index) const;
+  size_t getBlockCount() const override;
+  const Block& getBlock(size_t index) const override;
 
 private:
   Sonic2Level(const Sonic2Level&) = delete;
