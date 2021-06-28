@@ -6,6 +6,7 @@
 
 class Block;
 class Chunk;
+class Map;
 class Palette;
 class Pattern;
 class Rom;
@@ -20,7 +21,8 @@ public:
               uint32_t levelPalettesAddr,
               uint32_t patternsAddr,
               uint32_t chunksAddr,
-              uint32_t blocksAddr);
+              uint32_t blocksAddr,
+              uint32_t mapAddr);
 
   size_t getPaletteCount() const override;
   const Palette& getPalette(size_t index) const override;
@@ -34,6 +36,8 @@ public:
   size_t getBlockCount() const override;
   const Block& getBlock(size_t index) const override;
 
+  const Map& getMap() const override;
+
 private:
   Sonic2Level(const Sonic2Level&) = delete;
   Sonic2Level& operator=(const Sonic2Level&) = delete;
@@ -42,11 +46,13 @@ private:
   void loadPatterns(Rom& rom, uint32_t patternsAddr);
   void loadChunks(Rom& rom, uint32_t chunksAddr);
   void loadBlocks(Rom& rom, uint32_t blocksAddr);
+  void loadMap(Rom& rom, uint32_t mapAddr);
 
   Palette* m_palettes;
   Pattern* m_patterns;
   Chunk* m_chunks;
   Block* m_blocks;
+  Map* m_map;
 
   size_t m_patternCount;
   size_t m_chunkCount;

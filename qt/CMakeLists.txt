@@ -22,6 +22,8 @@ set(PROJECT_SOURCES
     src/GameFactory.cpp
     src/GameFactory.h
     src/Level.h
+    src/Map.cpp
+    src/Map.h
     src/Palette.cpp
     src/Palette.h
     src/Pattern.cpp

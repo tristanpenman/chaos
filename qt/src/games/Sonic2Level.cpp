@@ -4,6 +4,7 @@
 
 #include "../Block.h"
 #include "../Chunk.h"
+#include "../Map.h"
 #include "../Palette.h"
 #include "../Pattern.h"
 #include "../Rom.h"
@@ -19,10 +20,12 @@ Sonic2Level::Sonic2Level(Rom& rom,
                          uint32_t levelPalettesAddr,
                          uint32_t patternsAddr,
                          uint32_t chunksAddr,
-                         uint32_t blocksAddr)
+                         uint32_t blocksAddr,
+                         uint32_t mapAddr)
   : m_palettes(nullptr)
   , m_patterns(nullptr)
   , m_chunks(nullptr)
+  , m_map(nullptr)
   , m_patternCount(0)
   , m_chunkCount(0)
   , m_blockCount(0)
@@ -31,6 +34,7 @@ Sonic2Level::Sonic2Level(Rom& rom,
   loadPatterns(rom, patternsAddr);
   loadChunks(rom, chunksAddr);
   loadBlocks(rom, blocksAddr);
+  loadMap(rom, mapAddr);
 }
 
 const Palette& Sonic2Level::getPalette(size_t index) const
@@ -67,6 +71,11 @@ const Block& Sonic2Level::getBlock(size_t index) const
   }
 
   return m_blocks[index];
+}
+
+const Map& Sonic2Level::getMap() const
+{
+  return *m_map;
 }
 
 void Sonic2Level::loadPalettes(Rom& rom, uint32_t characterPaletteAddr, uint32_t levelPalettesAddr)
@@ -170,4 +179,26 @@ void Sonic2Level::loadBlocks(Rom& rom, uint32_t blocksAddr)
   }
 
   cout << "[Sonic2Level] Block count: " << m_blockCount << " (" << result.second << " bytes)" << endl;
+}
+
+void Sonic2Level::loadMap(Rom& rom, uint32_t mapAddr)
+{
+  static constexpr size_t MAP_BUFFER_SIZE = 0xFFFF; // 64KB
+
+  auto& file = rom.getFile();
+  file.seekg(mapAddr);
+  vector<unsigned char> buffer(MAP_BUFFER_SIZE);
+
+  SonicReader reader(file);
+  SonicReader::Result result = reader.decompress(buffer.data(), MAP_BUFFER_SIZE);
+  if (!result.first) {
+    throw std::runtime_error("Map decompression error");
+  }
+
+  // check data
+  if (result.second != 2 * 16 * 128) {
+    throw std::runtime_error("Inconsistent map data");
+  }
+
+  m_map = new Map(2, 128, 16, buffer.data());
 }

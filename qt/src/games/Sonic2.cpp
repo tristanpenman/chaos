@@ -60,19 +60,22 @@ std::shared_ptr<Level> Sonic2::loadLevel(unsigned int levelIdx)
   const uint32_t patternsAddr = getPatternsAddr(levelIdx);
   const uint32_t chunksAddr = getChunksAddr(levelIdx);
   const uint32_t blocksAddr = getBlocksAddr(levelIdx);
+  const uint32_t mapAddr = getTilesAddr(levelIdx);
 
   cout << "[Sonic2] Character palette addr: 0x" << hex << characterPaletteAddr << dec << endl;
   cout << "[Sonic2] Level palettes addr: 0x" << hex << levelPalettesAddr << dec << endl;
   cout << "[Sonic2] Patterns addr: 0x" << hex << patternsAddr << dec << endl;
   cout << "[Sonic2] Chunks addr: 0x" << hex << chunksAddr << dec << endl;
   cout << "[Sonic2] Blocks addr: 0x" << hex << blocksAddr << dec << endl;
+  cout << "[Sonic2] Map addr: 0x" << hex << mapAddr << dec << endl;
 
   return std::make_shared<Sonic2Level>(*m_rom,
                                        characterPaletteAddr,
                                        levelPalettesAddr,
                                        patternsAddr,
                                        chunksAddr,
-                                       blocksAddr);
+                                       blocksAddr,
+                                       mapAddr);
 }
 
 uint32_t Sonic2::getDataAddress(unsigned int levelIdx, unsigned int entryOffset)
