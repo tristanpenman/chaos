@@ -5,11 +5,14 @@
 
 #include <QMainWindow>
 
+class QVBoxLayout;
+
 class BlockInspector;
 class ChunkInspector;
 class Game;
 class Level;
 class LevelSelect;
+class MapEditor;
 class PaletteInspector;
 class PatternInspector;
 class Rom;
@@ -48,9 +51,15 @@ private:
   ChunkInspector* m_chunkInspector;
   BlockInspector* m_blockInspector;
 
+  // editor
+  MapEditor* m_mapEditor;
+
   // menus
   QAction* m_levelSelectAction;
   QMenu *m_inspectorsMenu;
+
+  // layouts
+  QVBoxLayout *m_vbox;
 
   bool m_debug;
 

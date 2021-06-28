@@ -7,6 +7,7 @@
 #include <QMainWindow>
 #include <QMenuBar>
 #include <QMessageBox>
+#include <QVBoxLayout>
 #include <QScreen>
 
 #include "../Game.h"
@@ -16,6 +17,7 @@
 #include "BlockInspector.h"
 #include "ChunkInspector.h"
 #include "LevelSelect.h"
+#include "MapEditor.h"
 #include "PaletteInspector.h"
 #include "PatternInspector.h"
 #include "Window.h"
@@ -29,6 +31,10 @@ Window::Window(bool debug)
   , m_patternInspector(nullptr)
   , m_chunkInspector(nullptr)
   , m_blockInspector(nullptr)
+  , m_mapEditor(nullptr)
+  , m_levelSelectAction(nullptr)
+  , m_inspectorsMenu(nullptr)
+  , m_vbox(nullptr)
   , m_debug(debug)
   , m_rom(nullptr)
   , m_game(nullptr)
@@ -43,6 +49,13 @@ Window::Window(bool debug)
   const int height = geometry.height() * 0.5;
   setGeometry(0, 0, width, height);
   move(geometry.center() - rect().center());
+
+  // layout
+  QWidget* centralWidget = new QWidget(this);
+  setCentralWidget(centralWidget);
+  m_vbox = new QVBoxLayout();
+  m_vbox->setContentsMargins(0, 0, 0, 0);
+  centralWidget->setLayout(m_vbox);
 
   createFileMenu();
   createViewMenu();
@@ -177,6 +190,9 @@ void Window::levelSelected(int levelIdx)
 
     delete m_blockInspector;
     m_blockInspector = nullptr;
+
+    delete m_mapEditor;
+    m_mapEditor = nullptr;
   }
 
   m_level.reset();
@@ -194,6 +210,9 @@ void Window::levelSelected(int levelIdx)
 
   if (m_level) {
     m_inspectorsMenu->setEnabled(true);
+    m_mapEditor = new MapEditor(this, m_level);
+    m_mapEditor->setVisible(true);
+    m_vbox->addWidget(m_mapEditor);
   } else {
     showError(tr("Level Error"), tr("Failed to load level"));
   }

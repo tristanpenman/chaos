@@ -47,6 +47,8 @@ set(PROJECT_SOURCES
     src/ui/ChunkInspector.h
     src/ui/LevelSelect.cpp
     src/ui/LevelSelect.h
+    src/ui/MapEditor.cpp
+    src/ui/MapEditor.h
     src/ui/PaletteInspector.cpp
     src/ui/PaletteInspector.h
     src/ui/PatternInspector.cpp
