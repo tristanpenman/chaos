@@ -5,12 +5,19 @@
   + ~~warnings~~
   + remove unnecessary classes/interfaces
   + cleaner separation of core and WinAPI classes
-  * normalise variable naming
-  * cleaner use of exceptions
-  * ROM details in Level Select
-- Figure out how to read level names and locations from ROM files
-- Port simplified editor to Mac and Linux using Qt
-- Palette/Pattern/Chunk/Block inspectors in level editor
+  + normalise variable naming
+  + cleaner use of exceptions
+  + ROM details in Level Select
+- Port simple editor interface to Mac and Linux using Qt (in progress)
+  + ~~Palette inspector~~
+  + ~~Pattern inspector~~
+  + ~~Chunk inspector~~
+  + ~~Block inspector~~
+  + Read-only map editor
+  + ROM details in Level Select
+- General improvements
+  + Figure out how to read level names and locations from ROM files
+  + Support for loading levels from decompilations
 - Level modification support
   + pencil
   + selection rectangle
@@ -22,4 +29,4 @@
 - Sonic Mania support
 - Pattern editing
 - Live preview for pattern and chunk editing
-- Audio extracting ?
+- Audio extraction (maybe)
