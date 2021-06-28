@@ -58,7 +58,7 @@ void Window::createFileMenu()
   // track Level Select action so we can enable it later
   m_levelSelectAction = new QAction(tr("&Level Select..."));
   m_levelSelectAction->setDisabled(true);
-  connect(m_levelSelectAction, SIGNAL(triggered()), this, SLOT(showLevelSelect()));
+  connect(m_levelSelectAction, SIGNAL(triggered()), this, SLOT(levelSelect()));
 
   // build file menu
   QMenu* fileMenu = menuBar()->addMenu(tr("&File"));

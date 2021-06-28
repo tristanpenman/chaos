@@ -17,6 +17,7 @@ BlockInspector::BlockInspector(QWidget* parent, std::shared_ptr<Level>& level)
   , m_level(level)
 {
   QVBoxLayout* vbox = new QVBoxLayout();
+  vbox->setContentsMargins(8, 8, 8, 8);
   setLayout(vbox);
 
   // block selector
@@ -34,7 +35,6 @@ BlockInspector::BlockInspector(QWidget* parent, std::shared_ptr<Level>& level)
   vbox->addWidget(m_label);
 
   // create pixmap
-  std::cout << "[BlockInspector] Creating pixmap of size " << Block::BLOCK_WIDTH << "x" << Block::BLOCK_HEIGHT << std::endl;
   m_pixmap = new QPixmap(Block::BLOCK_WIDTH, Block::BLOCK_HEIGHT);
   m_label->setPixmap(*m_pixmap);
   drawBlock(0);
@@ -99,11 +99,12 @@ void BlockInspector::drawBlock(size_t index)
   for (int dy = 0; dy < 8; dy++) {
     for (int dx = 0; dx < 8; dx++) {
       const auto& chunkDesc = block.getChunkDesc(dx, dy);
+      const auto chunkIndex = chunkDesc.getChunkIndex();
       try {
-        const auto& chunk = m_level->getChunk(chunkDesc.getChunkIndex());
+        const auto& chunk = m_level->getChunk(chunkIndex);
         drawChunk(image, chunk, dx * 16, dy * 16, chunkDesc.getHFlip(), chunkDesc.getVFlip());
       } catch (const std::exception& e) {
-        std::cout << "[BlockInspector] Not drawing chunk: " << e.what() << std::endl;
+        std::cout << "[BlockInspector] Failed to draw chunk " << chunkIndex << ": " << e.what() << std::endl;
       }
     }
   }

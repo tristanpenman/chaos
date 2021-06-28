@@ -46,7 +46,6 @@ PatternInspector::PatternInspector(QWidget* parent, std::shared_ptr<Level>& leve
   vbox->addWidget(m_label);
 
   // create pixmap
-  std::cout << "[PatternInspector] Creating pixmap of size " << PIXMAP_WIDTH << "x" << pixmapHeight << std::endl;
   m_pixmap = new QPixmap(PIXMAP_WIDTH, pixmapHeight);
   m_label->setPixmap(*m_pixmap);
   drawPatterns(0);
