@@ -13,6 +13,10 @@
 #include "Sonic2.h"
 #include "Sonic2Level.h"
 
+static constexpr uint8_t MAP_LAYERS = 2;
+static constexpr uint8_t MAP_HEIGHT = 16;
+static constexpr uint8_t MAP_WIDTH = 128;
+
 using namespace std;
 
 Sonic2Level::Sonic2Level(Rom& rom,
@@ -196,9 +200,9 @@ void Sonic2Level::loadMap(Rom& rom, uint32_t mapAddr)
   }
 
   // check data
-  if (result.second != 2 * 16 * 128) {
+  if (result.second != MAP_LAYERS * MAP_HEIGHT * MAP_WIDTH) {
     throw std::runtime_error("Inconsistent map data");
   }
 
-  m_map = new Map(2, 128, 16, buffer.data());
+  m_map = new Map(MAP_LAYERS, MAP_WIDTH, MAP_HEIGHT, buffer.data());
 }

@@ -3,48 +3,41 @@
 
 #include "Map.h"
 
-Map::Map()
-  : m_layers(0)
-  , m_height(0)
-  , m_width(0)
-  , m_data(nullptr)
-{
-
-}
-
 Map::Map(uint8_t layers, uint8_t width, uint8_t height)
-  : m_layers(0)
-  , m_height(0)
-  , m_width(0)
-  , m_data(nullptr)
+  : Map(layers, width, height, nullptr)
 {
-  reset(layers, width, height);
+
 }
 
 Map::Map(uint8_t layers, uint8_t width, uint8_t height, uint8_t* data)
-  : m_layers(0)
-  , m_height(0)
-  , m_width(0)
-  , m_data(nullptr)
+  : m_layers(layers)
+  , m_height(height)
+  , m_width(width)
 {
-  reset(layers, width, height, data);
+  const size_t size = sizeof(uint8_t) * layers * width * height;
+
+  m_data = new uint8_t[size];
+  if (!m_data) {
+    throw std::runtime_error("Failed to allocate memory for level map");
+  }
+
+  if (data) {
+    memcpy(m_data, data, size);
+  } else {
+    memset(m_data, 0, size);
+  }
+
+  m_layers = layers;
+  m_width = width;
+  m_height = height;
 }
 
 Map::~Map()
-{
-  cleanup();
-}
-
-void Map::cleanup()
 {
   if (m_data) {
     delete[] m_data;
     m_data = nullptr;
   }
-
-  m_width = 0;
-  m_height = 0;
-  m_layers = 0;
 }
 
 uint8_t Map::getValue(uint8_t layer, uint8_t x, uint8_t y) const
@@ -60,47 +53,15 @@ uint8_t Map::getValue(uint8_t layer, uint8_t x, uint8_t y) const
   return m_data[y * m_width * m_layers + layer * m_width + x];
 }
 
-uint8_t Map::setValue(uint8_t layer, uint8_t x, uint8_t y, uint8_t value)
+void Map::setValue(uint8_t layer, uint8_t x, uint8_t y, uint8_t value)
 {
-  uint8_t old_value = getValue(layer, x, y);
+  if (layer >= m_layers) {
+    throw std::runtime_error("Invalid map layer index");
+  }
+
+  if (x >= m_width || y >= m_height) {
+    throw std::runtime_error("Invalid map tile index");
+  }
 
   m_data[y * m_width * m_layers + layer * m_width + x] = value;
-
-  return old_value;
-}
-
-void Map::reset(uint8_t layers, uint8_t width, uint8_t height)
-{
-  cleanup();
-
-  size_t data_size = sizeof(uint8_t) * layers * width * height;
-
-  m_data = new uint8_t[data_size];
-  if (!m_data) {
-    throw std::runtime_error("Failed to allocate memory for level map");
-  }
-
-  memset(m_data, 0, data_size);
-
-  m_layers = layers;
-  m_width = width;
-  m_height = height;
-}
-
-void Map::reset(uint8_t layers, uint8_t width, uint8_t height, uint8_t* data)
-{
-  cleanup();
-
-  size_t data_size = sizeof(uint8_t) * layers * width * height;
-
-  m_data = new uint8_t[data_size];
-  if (!m_data) {
-    throw std::runtime_error("Failed to allocate memory for level map");
-  }
-
-  memcpy(m_data, data, data_size);
-
-  m_layers = layers;
-  m_width = width;
-  m_height = height;
 }

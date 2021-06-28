@@ -13,7 +13,7 @@ PaletteInspector::PaletteInspector(QWidget* parent, std::shared_ptr<Level>& leve
   setWindowFlag(Qt::WindowStaysOnTopHint);
 
   QVBoxLayout* vbox = new QVBoxLayout();
-  vbox->setContentsMargins(0, 0, 0, 0);
+  vbox->setContentsMargins(8, 8, 8, 8);
   vbox->setSpacing(0);
 
   for (size_t r = 0; r < m_level->getPaletteCount(); r++) {
