@@ -42,6 +42,7 @@ Window::Window(bool debug)
 {
   setWindowTitle("Chaos");
   setMinimumSize(320, 240);
+  setAttribute(Qt::WA_AcceptTouchEvents, false);
 
   // choose a nice default width and height, and center the window
   QRect geometry = QGuiApplication::primaryScreen()->geometry();
@@ -53,8 +54,8 @@ Window::Window(bool debug)
   // layout
   QWidget* centralWidget = new QWidget(this);
   setCentralWidget(centralWidget);
-  m_vbox = new QVBoxLayout();
-  m_vbox->setContentsMargins(0, 0, 0, 0);
+  m_vbox = new QVBoxLayout(this);
+  m_vbox->setContentsMargins(8, 8, 8, 8);
   centralWidget->setLayout(m_vbox);
 
   createFileMenu();
@@ -211,7 +212,6 @@ void Window::levelSelected(int levelIdx)
   if (m_level) {
     m_inspectorsMenu->setEnabled(true);
     m_mapEditor = new MapEditor(this, m_level);
-    m_mapEditor->setVisible(true);
     m_vbox->addWidget(m_mapEditor);
   } else {
     showError(tr("Level Error"), tr("Failed to load level"));

@@ -1,12 +1,15 @@
 #include <iostream>
 
+#include <QApplication>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QHBoxLayout>
 #include <QImage>
 #include <QPixmap>
+#include <QScrollBar>
 
+#include "BlockSelector.h"
 #include "MapEditor.h"
 
 #include "../Block.h"
@@ -21,19 +24,21 @@ MapEditor::MapEditor(QWidget *parent, std::shared_ptr<Level>& level)
   , m_level(level)
 {
   // layout
-  QHBoxLayout* hbox = new QHBoxLayout();
+  QHBoxLayout* hbox = new QHBoxLayout(this);
   hbox->setContentsMargins(0, 0, 0, 0);
+  hbox->setSpacing(8);
   setLayout(hbox);
 
   // render block artwork into pixmaps
-  m_blocks = new QPixmap*[m_level->getBlockCount()];
-  for (size_t i = 0; i < m_level->getBlockCount(); i++) {
+  const size_t blockCount = m_level->getBlockCount();
+  m_blocks = new QPixmap*[blockCount];
+  for (size_t i = 0; i < blockCount; i++) {
     m_blocks[i] = new QPixmap();
     drawBlock(*m_blocks[i], i);
   }
 
   // populate scene
-  m_scene = new QGraphicsScene();
+  m_scene = new QGraphicsScene(this);
   const auto& map = m_level->getMap();
   for (int y = 0; y < map.getHeight(); y++) {
     for (int x = 0; x < map.getWidth(); x++) {
@@ -47,7 +52,13 @@ MapEditor::MapEditor(QWidget *parent, std::shared_ptr<Level>& level)
   m_view = new QGraphicsView(this);
   m_view->setScene(m_scene);
   m_view->setFrameStyle(QFrame::NoFrame);
+  m_view->centerOn(-m_scene->width() / 2, -m_scene->height() / 2);
+  m_view->setDragMode(QGraphicsView::DragMode::NoDrag);
   hbox->addWidget(m_view);
+
+  // selector
+  auto blockSelector = new BlockSelector(this, m_blocks, blockCount);
+  hbox->addWidget(blockSelector);
 }
 
 void MapEditor::drawPattern(QImage& image,
@@ -96,7 +107,7 @@ void MapEditor::drawChunk(QImage& image, const Chunk& chunk, int dx, int dy, boo
 
 void MapEditor::drawBlock(QPixmap& pixmap, size_t index)
 {
-  std::cout << "[BlockInspector] Drawing block " << index << std::endl;
+  std::cout << "[MapEditor] Drawing block " << index << std::endl;
 
   const Block& block = m_level->getBlock(index);
 
@@ -111,7 +122,7 @@ void MapEditor::drawBlock(QPixmap& pixmap, size_t index)
         const auto& chunk = m_level->getChunk(chunkIndex);
         drawChunk(image, chunk, dx * 16, dy * 16, chunkDesc.getHFlip(), chunkDesc.getVFlip());
       } catch (const std::exception& e) {
-        std::cout << "[BlockInspector] Failed to draw chunk " << chunkIndex << ": " << e.what() << std::endl;
+        std::cout << "[MapEditor] Failed to draw chunk " << chunkIndex << ": " << e.what() << std::endl;
       }
     }
   }
