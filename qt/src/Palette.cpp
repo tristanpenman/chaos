@@ -18,7 +18,7 @@ void Palette::fromSegaFormat(char bytes[PALETTE_SIZE_IN_ROM])
   }
 }
 
-const Palette::Color& Palette::getColor(uint8_t index) const
+const Palette::Color& Palette::getColor(size_t index) const
 {
   if (index >= PALETTE_SIZE)
   {
@@ -28,7 +28,7 @@ const Palette::Color& Palette::getColor(uint8_t index) const
   return m_colors[index];
 }
 
-void Palette::setColor(uint8_t index, Color& color)
+void Palette::setColor(size_t index, Color& color)
 {
   if (index >= PALETTE_SIZE)
   {

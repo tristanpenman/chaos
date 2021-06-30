@@ -38,6 +38,7 @@ MapEditor::MapEditor(QWidget *parent, std::shared_ptr<Level>& level)
   for (int y = 0; y < map.getHeight(); y++) {
     for (int x = 0; x < map.getWidth(); x++) {
       auto item = m_scene->addPixmap(*m_blocks[map.getValue(0, x, y)]);
+      item->setTransformationMode(Qt::SmoothTransformation);
       item->setPos(x * 128, y * 128);
     }
   }

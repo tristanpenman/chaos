@@ -78,8 +78,8 @@ void PatternInspector::drawPatterns(size_t paletteIndex)
 
   // draw individual patterns
   for (size_t i = 0; i < m_level->getPatternCount(); i++) {
-    const auto row = i / PATTERNS_PER_ROW;
-    const auto col = i % PATTERNS_PER_ROW;
+    const auto row = static_cast<int>(i / PATTERNS_PER_ROW);
+    const auto col = static_cast<int>(i % PATTERNS_PER_ROW);
 
     drawPattern(image, m_level->getPattern(i), palette, col * Pattern::PATTERN_WIDTH, row * Pattern::PATTERN_HEIGHT);
   }

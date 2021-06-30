@@ -97,8 +97,8 @@ void ChunkInspector::drawChunks()
 
   // draw individual chunks
   for (size_t i = 0; i < m_level->getChunkCount(); i++) {
-    const auto row = i / CHUNKS_PER_ROW;
-    const auto col = i % CHUNKS_PER_ROW;
+    const auto row = static_cast<int>(i / CHUNKS_PER_ROW);
+    const auto col = static_cast<int>(i % CHUNKS_PER_ROW);
 
     drawChunk(image, m_level->getChunk(i), col * Chunk::CHUNK_WIDTH, row * Chunk::CHUNK_HEIGHT);
   }
