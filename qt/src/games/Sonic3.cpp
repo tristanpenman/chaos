@@ -1,6 +1,9 @@
+#include <iostream>
+
 #include "../Rom.h"
 
 #include "Sonic3.h"
+#include "Sonic3Level.h"
 
 const uint32_t levelLayoutDirAddr = 0x81360;  // Layout pointers are found here
 const uint32_t levelSelectIndex = 0x6A8E;     // Level select order
@@ -34,6 +37,8 @@ vector<string> Sonic3::getTitleCards()
     "Marble Garden Zone - Act 2",
     "Carnival Night Zone - Act 1",
     "Carnival Night Zone - Act 1",
+    "--",
+    "--",
     "Ice Cap Zone - Act 1",
     "Ice Cap Zone - Act 2",
     "Launch Base Zone - Act 1",
@@ -41,9 +46,38 @@ vector<string> Sonic3::getTitleCards()
   };
 }
 
-shared_ptr<Level> Sonic3::loadLevel(unsigned int)
+shared_ptr<Level> Sonic3::loadLevel(unsigned int levelIdx)
 {
-  return {};
+  const uint32_t characterPaletteAddr = getCharacterPaletteAddr();
+  const uint32_t levelPalettesAddr = getLevelPalettesAddr(levelIdx);
+  const uint32_t patternsAddr = getPatternsAddr(levelIdx);
+  const uint32_t extendedPatternsAddr = getExtendedPatternsAddr(levelIdx);
+  const uint32_t chunksAddr = getChunksAddr(levelIdx);
+  const uint32_t extendedChunksAddr = getExtendedChunksAddr(levelIdx);
+  const uint32_t blocksAddr = getBlocksAddr(levelIdx);
+  const uint32_t extendedBlocksAddr = getExtendedBlocksAddr(levelIdx);
+  const uint32_t mapAddr = getTilesAddr(levelIdx);
+
+  cout << "[Sonic3] Character palette addr: 0x" << hex << characterPaletteAddr << dec << endl;
+  cout << "[Sonic3] Level palettes addr: 0x" << hex << levelPalettesAddr << dec << endl;
+  cout << "[Sonic3] Patterns addr: 0x" << hex << patternsAddr << dec << endl;
+  cout << "[Sonic3] Extended patterns addr: 0x" << hex << extendedPatternsAddr << dec << endl;
+  cout << "[Sonic3] Chunks addr: 0x" << hex << chunksAddr << dec << endl;
+  cout << "[Sonic3] Extended chunks addr: 0x" << hex << extendedChunksAddr << dec << endl;
+  cout << "[Sonic3] Blocks addr: 0x" << hex << blocksAddr << dec << endl;
+  cout << "[Sonic3] Extended blocks addr: 0x" << hex << extendedBlocksAddr << dec << endl;
+  cout << "[Sonic3] Map addr: 0x" << hex << mapAddr << dec << endl;
+
+  return std::make_shared<Sonic3Level>(*m_rom,
+                                       characterPaletteAddr,
+                                       levelPalettesAddr,
+                                       patternsAddr,
+                                       extendedPatternsAddr,
+                                       chunksAddr,
+                                       extendedChunksAddr,
+                                       blocksAddr,
+                                       extendedBlocksAddr,
+                                       mapAddr);
 }
 
 uint32_t Sonic3::getDataAddress(unsigned int levelIdx, unsigned int entryOffset)
@@ -62,6 +96,20 @@ uint32_t Sonic3::getDataAddress(unsigned int levelIdx, unsigned int entryOffset)
   return m_rom->read32BitAddr(dataAddrLoc);
 }
 
+uint32_t Sonic3::getCharacterPaletteAddr()
+{
+  return 0x8C234;
+}
+
+uint32_t Sonic3::getLevelPalettesAddr(unsigned int levelIdx)
+{
+  const uint32_t dataAddr = getDataAddress(levelIdx, 8);
+  const uint32_t paletteIdx = dataAddr >> 24;
+  const uint32_t paletteAddrLoc = levelPaletteDir + paletteIdx * 8;
+
+  return m_rom->read32BitAddr(paletteAddrLoc);
+}
+
 uint32_t Sonic3::getBlocksAddr(unsigned int levelIdx)
 {
   return getDataAddress(levelIdx, 16) & 0xFFFFFF;
@@ -70,15 +118,6 @@ uint32_t Sonic3::getBlocksAddr(unsigned int levelIdx)
 uint32_t Sonic3::getChunksAddr(unsigned int levelIdx)
 {
   return getDataAddress(levelIdx, 8) & 0xFFFFFF;
-}
-
-uint32_t Sonic3::getPalettesAddr(unsigned int levelIdx)
-{
-  const uint32_t dataAddr = getDataAddress(levelIdx, 8);
-  const uint32_t paletteIdx = dataAddr >> 24;
-  const uint32_t paletteAddrLoc = levelPaletteDir + paletteIdx * 8;
-
-  return m_rom->read32BitAddr(paletteAddrLoc);
 }
 
 uint32_t Sonic3::getPatternsAddr(unsigned int levelIdx)
@@ -93,17 +132,17 @@ uint32_t Sonic3::getTilesAddr(unsigned int levelIdx)
   return m_rom->read32BitAddr(tilesAddrLoc);
 }
 
-optional<uint32_t> Sonic3::getExtendedBlocksAddr(unsigned int levelIdx)
+uint32_t Sonic3::getExtendedBlocksAddr(unsigned int levelIdx)
 {
   return getDataAddress(levelIdx, 20) & 0xFFFFFF;
 }
 
-optional<uint32_t> Sonic3::getExtendedChunksAddr(unsigned int levelIdx)
+uint32_t Sonic3::getExtendedChunksAddr(unsigned int levelIdx)
 {
   return getDataAddress(levelIdx, 12) & 0xFFFFFF;
 }
 
-optional<uint32_t> Sonic3::getExtendedPatternsAddr(unsigned int levelIdx)
+uint32_t Sonic3::getExtendedPatternsAddr(unsigned int levelIdx)
 {
   return getDataAddress(levelIdx, 4) & 0xFFFFFF;
 }

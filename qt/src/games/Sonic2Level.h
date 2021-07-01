@@ -61,7 +61,7 @@ private:
 
 inline size_t Sonic2Level::getPaletteCount() const
 {
-  return Sonic2Level::PALETTE_COUNT;
+  return PALETTE_COUNT;
 }
 
 inline size_t Sonic2Level::getPatternCount() const

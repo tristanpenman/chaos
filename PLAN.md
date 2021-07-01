@@ -16,7 +16,7 @@
   + ~~Block inspector~~
   + ~~Read-only map editor~~
   + ROM details in Level Select (in progress)
-  + Read Sonic 3 levels (in progress)
+  + ~~Read Sonic 3 levels~~
   + Move module reading code to SonicReader/Kosinski
   + Implement nemesis compression
 - Level modification support
