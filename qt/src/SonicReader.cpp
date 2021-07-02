@@ -38,11 +38,8 @@ void SonicReader::loadBitfield()
   m_bitcount = 16;
 }
 
-
 SonicReader::Result SonicReader::decompress(uint8_t buffer[], size_t bufferSize)
 {
-  bool overflow = false;
-
   uint16_t pos = 0;
   uint16_t count = 0;
   int16_t offset = 0;
@@ -51,16 +48,11 @@ SonicReader::Result SonicReader::decompress(uint8_t buffer[], size_t bufferSize)
 
   while (1) {
     if (getBit() == 1) {
-      // Don't write this byte if the buffer is full.
-      if (!overflow) {
-        buffer[pos] = static_cast<uint8_t>(m_file.get());
-      }
+      buffer[pos++] = static_cast<uint8_t>(m_file.get());
 
-      pos++;
-
-      // Don't write any more bytes if the buffer is full.
+      // Don't write any more bytes if the buffer is full
       if (pos >= bufferSize) {
-        overflow = true;
+        return Result(false, pos);
       }
 
       continue;
@@ -109,20 +101,16 @@ SonicReader::Result SonicReader::decompress(uint8_t buffer[], size_t bufferSize)
 
     // Copy 'count' bytes from the specified 'offset', relative to the current buffer position
     while (count > 0) {
-      // Don't write if the buffer is full.
-      if (!overflow) {
-        buffer[pos] = buffer[pos + offset];
-      }
-
+      buffer[pos] = buffer[pos + offset];
       pos++;
       count--;
 
-      // Don't write any more bytes if the buffer is full.
+      // Don't write any more bytes if the buffer is full
       if (pos >= bufferSize) {
-        overflow = true;
+        return Result(false, pos);
       }
     }
   }
 
-  return Result(!overflow, pos);
+  return Result(true, pos);
 }
