@@ -39,7 +39,6 @@ private slots:
   void showBlockInspector();
 
 private:
-  // helpers
   void createFileMenu();
   void createViewMenu();
   void showError(const QString& title, const QString& text);

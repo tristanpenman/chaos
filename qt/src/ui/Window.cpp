@@ -7,7 +7,6 @@
 #include <QMainWindow>
 #include <QMenuBar>
 #include <QMessageBox>
-#include <QVBoxLayout>
 #include <QScreen>
 
 #include "../Game.h"
@@ -50,13 +49,6 @@ Window::Window(bool debug)
   const int height = geometry.height() * 0.5;
   setGeometry(0, 0, width, height);
   move(geometry.center() - rect().center());
-
-  // layout
-  QWidget* centralWidget = new QWidget(this);
-  setCentralWidget(centralWidget);
-  m_vbox = new QVBoxLayout(this);
-  m_vbox->setContentsMargins(8, 8, 8, 8);
-  centralWidget->setLayout(m_vbox);
 
   createFileMenu();
   createViewMenu();
@@ -212,7 +204,7 @@ void Window::levelSelected(int levelIdx)
   if (m_level) {
     m_inspectorsMenu->setEnabled(true);
     m_mapEditor = new MapEditor(this, m_level);
-    m_vbox->addWidget(m_mapEditor);
+    this->setCentralWidget(m_mapEditor);
   } else {
     showError(tr("Level Error"), tr("Failed to load level"));
   }

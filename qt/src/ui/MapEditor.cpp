@@ -23,9 +23,11 @@ MapEditor::MapEditor(QWidget *parent, std::shared_ptr<Level>& level)
   : QWidget(parent)
   , m_level(level)
 {
+  setStyleSheet("background: #ccc");
+
   // layout
   QHBoxLayout* hbox = new QHBoxLayout(this);
-  hbox->setContentsMargins(0, 0, 0, 0);
+  hbox->setContentsMargins(8, 8, 8, 8);
   hbox->setSpacing(8);
   setLayout(hbox);
 
@@ -59,6 +61,10 @@ MapEditor::MapEditor(QWidget *parent, std::shared_ptr<Level>& level)
   // selector
   auto blockSelector = new BlockSelector(this, m_blocks, blockCount);
   hbox->addWidget(blockSelector);
+
+  // allow map to grow but block selector remains the same size
+  hbox->setStretch(0, 1);
+  hbox->setStretch(1, 0);
 }
 
 void MapEditor::drawPattern(QImage& image,
