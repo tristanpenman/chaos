@@ -21,8 +21,8 @@ public:
     unsigned short get() const;
     unsigned short getChunkIndex() const;
 
-    bool getFlag_HFlip() const;
-    bool getFlag_VFlip() const;
+    bool getHFlip() const;
+    bool getVFlip() const;
 
     void set(unsigned short);
     void set(SonicChunkDescriptor& desc);
@@ -52,12 +52,12 @@ inline unsigned short SonicChunkDescriptor::getChunkIndex() const
     return m_index & 0x3FF;
 }
 
-inline bool SonicChunkDescriptor::getFlag_HFlip() const
+inline bool SonicChunkDescriptor::getHFlip() const
 {
     return (m_index & 0x400) != 0;
 }
 
-inline bool SonicChunkDescriptor::getFlag_VFlip() const
+inline bool SonicChunkDescriptor::getVFlip() const
 {
     return (m_index & 0x800) != 0;
 }

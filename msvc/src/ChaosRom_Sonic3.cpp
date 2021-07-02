@@ -37,22 +37,22 @@ ChaosRom::LevelNames_t ChaosRom_Sonic3::getLevelNames()
     // TODO: Level names and locations could be read from the ROM, to be more 'pure'.
     //
 
-    LevelNames_t levelNames;
+    LevelNames_t level_names;
 
-    levelNames[0]  = "Angel Island Zone - Act 1";
-    levelNames[1]  = "Angel Island Zone - Act 2";
-    levelNames[2]  = "Hydrocity Zone - Act 1";
-    levelNames[3]  = "Hydrocity Zone - Act 2";
-    levelNames[4]  = "Marble Garden Zone - Act 1";
-    levelNames[5]  = "Marble Garden Zone - Act 2";
-    levelNames[6]  = "Carnival Night Zone - Act 1";
-    levelNames[7]  = "Carnival Night Zone - Act 1";
-    levelNames[10] = "Ice Cap Zone - Act 1";
-    levelNames[11] = "Ice Cap Zone - Act 2";
-    levelNames[12] = "Launch Base Zone - Act 1";
-    levelNames[13] = "Launch Base Zone - Act 2";
+    level_names[0]  = "Angel Island Zone - Act 1";
+    level_names[1]  = "Angel Island Zone - Act 2";
+    level_names[2]  = "Hydrocity Zone - Act 1";
+    level_names[3]  = "Hydrocity Zone - Act 2";
+    level_names[4]  = "Marble Garden Zone - Act 1";
+    level_names[5]  = "Marble Garden Zone - Act 2";
+    level_names[6]  = "Carnival Night Zone - Act 1";
+    level_names[7]  = "Carnival Night Zone - Act 1";
+    level_names[10] = "Ice Cap Zone - Act 1";
+    level_names[11] = "Ice Cap Zone - Act 2";
+    level_names[12] = "Launch Base Zone - Act 1";
+    level_names[13] = "Launch Base Zone - Act 2";
 
-    return levelNames;
+    return level_names;
 }
 
 Level* ChaosRom_Sonic3::instantiateLevel()

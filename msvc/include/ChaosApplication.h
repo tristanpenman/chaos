@@ -36,11 +36,11 @@ protected:
 private:
     HWND m_hMain;
     HINSTANCE m_hInstance;
-    ChaosRom* m_pROM;
+    ChaosRom* m_rom;
     std::fstream m_file;
 };
 
 inline ChaosRom* ChaosApplication::getROM()
 {
-    return m_pROM;
+    return m_rom;
 }

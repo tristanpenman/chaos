@@ -73,8 +73,8 @@ void Buffer_Blocks::renderBlockIntoBuffer(const SonicBlock& block, HDC hdc, int 
                     x + chunk_x * chunkWidth,
                     y + chunk_y * chunkHeight,
                     chunk,
-                    desc.getFlag_HFlip(),
-                    desc.getFlag_VFlip(),
+                    desc.getHFlip(),
+                    desc.getVFlip(),
                     pPatternBuffer);
         }
     }

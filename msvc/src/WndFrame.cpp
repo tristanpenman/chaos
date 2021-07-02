@@ -16,7 +16,7 @@ ATOM      WndFrame::ms_class = 0;
 
 extern ChaosApplication g_application;
 
-extern HMENU g_menuChaos;
+extern HMENU g_menu_chaos;
 
 HWND WndFrame::createWindow(HINSTANCE hInstance, HWND hParent)
 {
@@ -56,9 +56,9 @@ HWND WndFrame::createWindow(HINSTANCE hInstance, HWND hParent)
         CW_USEDEFAULT,                       // initial x size
         CW_USEDEFAULT,                       // initial y size
         hParent,                             // parent window handle
-        g_menuChaos,                         // window menu handle
+        g_menu_chaos,                        // window menu handle
         hInstance,                           // program instance handle
-        NULL);                              // creation parameters
+        NULL);                               // creation parameters
 
     return hWnd;
 }
@@ -113,7 +113,7 @@ LRESULT CALLBACK WndFrame::frameWndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPA
     {
     case WM_CREATE:
 
-        hMenuWindow = GetSubMenu(g_menuChaos, 2);
+        hMenuWindow = GetSubMenu(g_menu_chaos, 2);
 
         clientcreate.hWindowMenu  = hMenuWindow;
         clientcreate.idFirstChild = IDM_FIRSTCHILD;

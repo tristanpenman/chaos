@@ -19,8 +19,8 @@
 
 extern ChaosApplication g_application;
 
-extern HMENU g_menuChaos;
-extern HMENU g_menuLevel;
+extern HMENU g_menu_chaos;
+extern HMENU g_menu_level;
 
 ATOM      WndLevel::ms_class = 0;
 HINSTANCE WndLevel::ms_hInstance = 0;
@@ -109,11 +109,11 @@ int WndLevel::messageMDIActivate(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
 
     if (lParam == (LPARAM) hwnd)
     {
-        SendMessage(hClient, WM_MDISETMENU, (WPARAM) g_menuLevel, (LPARAM) GetSubMenu(g_menuLevel, 3));
+        SendMessage(hClient, WM_MDISETMENU, (WPARAM) g_menu_level, (LPARAM) GetSubMenu(g_menu_level, 3));
     }
     else
     {
-        SendMessage(hClient, WM_MDISETMENU, (WPARAM) g_menuChaos, (LPARAM) GetSubMenu(g_menuChaos, 2));
+        SendMessage(hClient, WM_MDISETMENU, (WPARAM) g_menu_chaos, (LPARAM) GetSubMenu(g_menu_chaos, 2));
     }
 
     DrawMenuBar(hMain);

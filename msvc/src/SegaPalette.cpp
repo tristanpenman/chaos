@@ -22,14 +22,14 @@ bool SegaPalette::readFromFile(fstream& file)
     }
 
     unsigned char color_index = 0;
-    unsigned char bufferPos = 0;
+    unsigned char buffer_pos = 0;
 
     while (color_index < PALETTE_SIZE)
     {
-        convertSegaToNativeColor(&buffer[bufferPos], m_colors[color_index]);
+        convertSegaToNativeColor(&buffer[buffer_pos], m_colors[color_index]);
 
         color_index++;
-        bufferPos += 2;
+        buffer_pos += 2;
     }
 
     return true;

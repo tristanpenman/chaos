@@ -327,14 +327,9 @@ bool Level_Sonic3::loadMap()
     const size_t map_width = max(row_size_bg, row_size_fg);
     const size_t map_height = max(row_count_bg, row_count_fg);
 
-    const size_t buffer_size = sizeof(char) * map_width;
+    const size_t buffer_size = sizeof(unsigned char) * map_width;
 
-    char* buffer = new char[buffer_size];
-    if (buffer == nullptr)
-    {
-        REPORT_ERROR("Failed to allocate memory for buffer", "Map reader");
-        return false;
-    }
+    std::vector<char> buffer(buffer_size);
 
     bool result = false;
 
@@ -347,11 +342,11 @@ bool Level_Sonic3::loadMap()
             streamoff row_ptr = m_rom.read16BitAddr(ptr_table + row_index * 4) - 0x8000;
 
             file.seekg(row_ptr + ptr_table);
-            file.read(buffer, buffer_size);
+            file.read(buffer.data(), buffer_size);
 
             for (uint32_t col_index = 0; col_index < row_size_fg; col_index++)
             {
-                m_map->setValue(0, col_index, row_index, buffer[col_index]);
+                m_map->setValue(0, col_index, row_index, buffer.at(col_index));
             }
         }
 
@@ -361,9 +356,6 @@ bool Level_Sonic3::loadMap()
     {
         REPORT_ERROR("An error occured while reading the level map", "Map reader");
     }
-
-    delete[] buffer;
-    buffer = NULL;
 
     return result;
 }

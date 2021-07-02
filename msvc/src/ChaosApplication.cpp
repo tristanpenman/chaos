@@ -22,7 +22,7 @@
 using namespace std;
 
 ChaosApplication::ChaosApplication()
-  : m_pROM(NULL)
+  : m_rom(NULL)
   , m_hMain(0)
   , m_hInstance(0)
   , m_file()
@@ -38,18 +38,18 @@ ChaosApplication::~ChaosApplication()
 
 Level* ChaosApplication::getLevelInstance(HWND hwnd)
 {
-    Level* pLevel = m_pROM->getLevelInstance(hwnd);
-    if (pLevel)
+    Level* level = m_rom->getLevelInstance(hwnd);
+    if (level)
     {
-        return pLevel;
+        return level;
     }
 
-    return dynamic_cast<Level*>(m_pROM->initLevelInstance(hwnd));
+    return dynamic_cast<Level*>(m_rom->initLevelInstance(hwnd));
 }
 
 bool ChaosApplication::destroyInstance(HWND hwnd)
 {
-    return m_pROM->destroyInstance(hwnd);
+    return m_rom->destroyInstance(hwnd);
 }
 
 int ChaosApplication::run(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow)
@@ -86,10 +86,10 @@ bool ChaosApplication::cleanup()
 {
     SendMessage(m_hMain, WM_COMMAND, ID_WINDOW_CLOSEALL, 0) ;
 
-    if (m_pROM)
+    if (m_rom)
     {
-        delete m_pROM;
-        m_pROM = NULL;
+        delete m_rom;
+        m_rom = NULL;
     }
 
     return true;
@@ -120,8 +120,8 @@ bool ChaosApplication::openROM(const string& path)
         return false;
     }
 
-    m_pROM = ChaosRomFactory::loadROM(m_file);
-    if (!m_pROM)
+    m_rom = ChaosRomFactory::loadROM(m_file);
+    if (!m_rom)
     {
         REPORT_ERROR("Failed to identify ROM", "Error loading ROM");
         m_file.close();
@@ -133,15 +133,15 @@ bool ChaosApplication::openROM(const string& path)
 
 bool ChaosApplication::closeROM()
 {
-    if (m_pROM)
+    if (m_rom)
     {
         if (!cleanup())
         {
             return false;
         }
 
-        delete m_pROM;
-        m_pROM = NULL;
+        delete m_rom;
+        m_rom = NULL;
 
         m_file.close();
     }

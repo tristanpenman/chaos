@@ -7,74 +7,74 @@
 #include "Buffer.h"
 #include "Buffer_Patterns.h"
 
-Buffer_Patterns::Buffer_Patterns(const SegaPalette* palettes, unsigned int palCount, const SegaPattern* patterns, unsigned int patternCount, HDC hdc)
+Buffer_Patterns::Buffer_Patterns(const SegaPalette* palettes, unsigned int palette_count, const SegaPattern* patterns, unsigned int pattern_count, HDC hdc)
 {
-    refresh(palettes, palCount, patterns, patternCount, hdc);
+    refresh(palettes, palette_count, patterns, pattern_count, hdc);
 }
 
-void Buffer_Patterns::drawPattern(unsigned int patternIndex, unsigned int palIndex, HDC dest, int x, int y, bool h_flip, bool v_flip) const
+void Buffer_Patterns::drawPattern(unsigned int pattern_idx, unsigned int palette_idx, HDC dest, int x, int y, bool h_flip, bool v_flip) const
 {
-    const unsigned int patternWidth = SegaPattern::getPatternWidth();
-    const unsigned int patternHeight = SegaPattern::getPatternHeight();
+    const unsigned int pattern_width = SegaPattern::getPatternWidth();
+    const unsigned int pattern_height = SegaPattern::getPatternHeight();
 
     draw(
         dest,
         x,
         y,
-        patternIndex * patternWidth,
-        palIndex * patternHeight,
-        patternWidth,
-        patternHeight,
+        pattern_idx * pattern_width,
+        palette_idx * pattern_height,
+        pattern_width,
+        pattern_height,
         h_flip,
         v_flip);
 }
 
 void Buffer_Patterns::drawPattern(const SegaPatternDescriptor& pattern_desc, HDC dest, int x, int y, bool h_flip_again, bool v_flip_again) const
 {
-    const unsigned int patternWidth = SegaPattern::getPatternWidth();
-    const unsigned int patternHeight = SegaPattern::getPatternHeight();
+    const unsigned int pattern_width = SegaPattern::getPatternWidth();
+    const unsigned int pattern_height = SegaPattern::getPatternHeight();
 
     draw(
         dest,
         x,
         y,
-        pattern_desc.getPatternIndex() * patternWidth,
-        pattern_desc.getPaletteIndex() * patternHeight,
-        patternWidth,
-        patternHeight,
-        pattern_desc.getFlag_HFlip() ^ h_flip_again,
-        pattern_desc.getFlag_VFlip() ^ v_flip_again);
+        pattern_desc.getPatternIndex() * pattern_width,
+        pattern_desc.getPaletteIndex() * pattern_height,
+        pattern_width,
+        pattern_height,
+        pattern_desc.getHFlip() ^ h_flip_again,
+        pattern_desc.getVFlip() ^ v_flip_again);
 }
 
-void Buffer_Patterns::refresh(const SegaPalette* palettes, unsigned int palCount,
-                              const SegaPattern* patterns, unsigned int patternCount, HDC hdc)
+void Buffer_Patterns::refresh(const SegaPalette* palettes, unsigned int palette_count,
+                              const SegaPattern* patterns, unsigned int pattern_count, HDC hdc)
 {
     COLORREF c;
 
-    const unsigned int patternWidth = SegaPattern::getPatternWidth();
-    const unsigned int patternHeight = SegaPattern::getPatternHeight();
+    const unsigned int pattern_width = SegaPattern::getPatternWidth();
+    const unsigned int pattern_height = SegaPattern::getPatternHeight();
 
-    const unsigned int bufferWidth = patternWidth * patternCount;
-    const unsigned int bufferHeight = patternHeight * palCount ;
+    const unsigned int buffer_width = pattern_width * pattern_count;
+    const unsigned int buffer_height = pattern_height * palette_count ;
 
-    reset(hdc, bufferWidth, bufferHeight);
+    reset(hdc, buffer_width, buffer_height);
     SelectObject(m_hDC, m_hBitmap);
 
-    for (unsigned int palIndex = 0; palIndex < palCount; palIndex++)
+    for (unsigned int palette_idx = 0; palette_idx < palette_count; palette_idx++)
     {
-        const SegaPalette& palette = palettes[palIndex];
+        const SegaPalette& palette = palettes[palette_idx];
 
-        for (unsigned int patternIndex = 0; patternIndex < patternCount; patternIndex++)
+        for (unsigned int pattern_idx = 0; pattern_idx < pattern_count; pattern_idx++)
         {
             for (unsigned int y = 0; y < SegaPattern::getPatternHeight(); y++)
             {
                 for (unsigned int x = 0; x < SegaPattern::getPatternWidth(); x++)
                 {
-                    unsigned char pixel = patterns[patternIndex].getPixel(x, y);
+                    unsigned char pixel = patterns[pattern_idx].getPixel(x, y);
                     memcpy(&c, &palette.getNativeColor(pixel), sizeof(DWORD));
                     SetPixel(m_hDC,
-                        x + patternIndex * patternWidth,
-                        y + palIndex * patternHeight,
+                        x + pattern_idx * pattern_width,
+                        y + palette_idx * pattern_height,
                         c);
                 }
             }

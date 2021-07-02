@@ -37,30 +37,30 @@ ChaosRom::LevelNames_t ChaosRom_Sonic2::getLevelNames()
     // TODO: Level names and locations could be read from the ROM, to be more 'pure'.
     //
 
-    LevelNames_t levelNames;
+    LevelNames_t level_names;
 
-    levelNames[0]  = "Emerald Hill Zone - Act 1";
-    levelNames[1]  = "Emerald Hill Zone - Act 2";
-    levelNames[2]  = "Chemical Plant Zone - Act 1";
-    levelNames[3]  = "Chemical Plant Zone - Act 2";
-    levelNames[4]  = "Aquatic Ruins Zone - Act 1";
-    levelNames[5]  = "Aquatic Ruins Zone - Act 2";
-    levelNames[6]  = "Casino Night Zone - Act 1";
-    levelNames[7]  = "Casino Night Zone - Act 1";
-    levelNames[8]  = "Hill Top Zone - Act 1";
-    levelNames[9]  = "Hill Top Zone - Act 2";
-    levelNames[10] = "Mystic Cave Zone - Act 1";
-    levelNames[11] = "Mystic Zone - Act 2";
-    levelNames[12] = "Oil Ocean Zone - Act 1";
-    levelNames[13] = "Oil Ocean Zone - Act 2";
-    levelNames[14] = "Metropolis Zone - Act 1";
-    levelNames[15] = "Metropolis Zone - Act 2";
-    levelNames[16] = "Metropolis Zone - Act 3";
-    levelNames[17] = "Sky Chase Zone - Act 1";
-    levelNames[18] = "Wing Fortress Zone - Act 1";
-    levelNames[19] = "Death Egg Zone - Act 1";
+    level_names[0]  = "Emerald Hill Zone - Act 1";
+    level_names[1]  = "Emerald Hill Zone - Act 2";
+    level_names[2]  = "Chemical Plant Zone - Act 1";
+    level_names[3]  = "Chemical Plant Zone - Act 2";
+    level_names[4]  = "Aquatic Ruins Zone - Act 1";
+    level_names[5]  = "Aquatic Ruins Zone - Act 2";
+    level_names[6]  = "Casino Night Zone - Act 1";
+    level_names[7]  = "Casino Night Zone - Act 1";
+    level_names[8]  = "Hill Top Zone - Act 1";
+    level_names[9]  = "Hill Top Zone - Act 2";
+    level_names[10] = "Mystic Cave Zone - Act 1";
+    level_names[11] = "Mystic Zone - Act 2";
+    level_names[12] = "Oil Ocean Zone - Act 1";
+    level_names[13] = "Oil Ocean Zone - Act 2";
+    level_names[14] = "Metropolis Zone - Act 1";
+    level_names[15] = "Metropolis Zone - Act 2";
+    level_names[16] = "Metropolis Zone - Act 3";
+    level_names[17] = "Sky Chase Zone - Act 1";
+    level_names[18] = "Wing Fortress Zone - Act 1";
+    level_names[19] = "Death Egg Zone - Act 1";
 
-    return levelNames;
+    return level_names;
 }
 
 Level* ChaosRom_Sonic2::instantiateLevel()

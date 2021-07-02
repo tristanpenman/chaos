@@ -216,8 +216,7 @@ bool Level_Sonic2::bufferPatterns()
     HWND hwnd = getWindow();
     HDC hdc = GetDC(hwnd);
 
-    m_buffer_patterns = new Buffer_Patterns(
-        getPalettes(), getPaletteCount(), getPatterns(), getPatternCount(), hdc);
+    m_buffer_patterns = new Buffer_Patterns(getPalettes(), getPaletteCount(), getPatterns(), getPatternCount(), hdc);
 
     ReleaseDC(hwnd, hdc);
 
@@ -229,8 +228,7 @@ bool Level_Sonic2::bufferBlocks()
     HWND hwnd = getWindow();
     HDC hdc = GetDC(hwnd);
 
-    m_buffer_blocks = new Buffer_Blocks(this,
-        getBlocks(), getBlockCount(), getChunks(), getChunkCount(), &(getPatternBuffer()), hdc);
+    m_buffer_blocks = new Buffer_Blocks(this, getBlocks(), getBlockCount(), getChunks(), getChunkCount(), &(getPatternBuffer()), hdc);
 
     ReleaseDC(hwnd, hdc);
 

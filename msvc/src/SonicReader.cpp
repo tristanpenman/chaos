@@ -43,8 +43,6 @@ void SonicReader::loadBitfield()
 
 SonicReader::result_t SonicReader::decompress(unsigned char buffer[], size_t buffer_size, streamoff rom_offset)
 {
-    bool overflow = false;
-
     uint16_t pos = 0;
     uint16_t count = 0;
     int16_t offset = 0;
@@ -57,18 +55,13 @@ SonicReader::result_t SonicReader::decompress(unsigned char buffer[], size_t buf
     {
         if (getBit() == 1)
         {
-            // Don't write this byte if the buffer is full.
-            if (!overflow)
-            {
-                buffer[pos] = m_rom.get();
-            }
-
+            buffer[pos] = m_rom.get();
             pos++;
 
-            // Don't write any more bytes if the buffer is full.
+            // Don't write any more bytes if the buffer is full
             if (pos >= buffer_size)
             {
-                overflow = true;
+                return result_t(false, pos);
             }
 
             continue;
@@ -126,22 +119,17 @@ SonicReader::result_t SonicReader::decompress(unsigned char buffer[], size_t buf
         // Copy 'count' bytes from the specified 'offset', relative to the current buffer position
         while (count > 0)
         {
-            // Don't write if the buffer is full.
-            if (!overflow)
-            {
-                buffer[pos] = buffer[pos + offset];
-            }
-
+            buffer[pos] = buffer[pos + offset];
             pos++;
             count--;
 
-            // Don't write any more bytes if the buffer is full.
+            // Don't write any more bytes if the buffer is full
             if (pos >= buffer_size)
             {
-                overflow = true;
+                return result_t(false, pos);
             }
         }
     }
 
-    return result_t(!overflow, pos);
+    return result_t(true, pos);
 }

@@ -15,7 +15,7 @@ using namespace std;
 
 ChaosRom::ChaosRom(fstream& file)
   : m_file(file)
-  , m_levelInstances()
+  , m_level_instances()
 {
 
 }
@@ -23,26 +23,26 @@ ChaosRom::ChaosRom(fstream& file)
 ChaosRom::~ChaosRom()
 {
     LevelInstances::iterator itr;
-    for (itr = m_levelInstances.begin(); itr != m_levelInstances.end(); ++itr)
+    for (itr = m_level_instances.begin(); itr != m_level_instances.end(); ++itr)
     {
         Level* pLevel = itr->second;
         delete pLevel;
     }
 
-    m_levelInstances.clear();
+    m_level_instances.clear();
 }
 
 Level* ChaosRom::initLevelInstance(HWND hwnd)
 {
     Level* pLevel = NULL;
-    LevelInstances::iterator itr = m_levelInstances.find(hwnd);
+    LevelInstances::iterator itr = m_level_instances.find(hwnd);
 
-    if (itr == m_levelInstances.end())
+    if (itr == m_level_instances.end())
     {
         pLevel = instantiateLevel();
         pLevel->setWindow(hwnd);
 
-        return (m_levelInstances[hwnd] = pLevel);
+        return (m_level_instances[hwnd] = pLevel);
     }
 
     return NULL;
@@ -50,8 +50,8 @@ Level* ChaosRom::initLevelInstance(HWND hwnd)
 
 Level* ChaosRom::getLevelInstance(HWND hwnd)
 {
-    LevelInstances::iterator itr = m_levelInstances.find(hwnd);
-    if (itr == m_levelInstances.end())
+    LevelInstances::iterator itr = m_level_instances.find(hwnd);
+    if (itr == m_level_instances.end())
     {
         return NULL;
     }
@@ -61,15 +61,16 @@ Level* ChaosRom::getLevelInstance(HWND hwnd)
 
 bool ChaosRom::destroyInstance(HWND hwnd)
 {
-    LevelInstances::iterator itr = m_levelInstances.find(hwnd);
-    if (itr == m_levelInstances.end())
+    LevelInstances::iterator itr = m_level_instances.find(hwnd);
+    if (itr == m_level_instances.end())
     {
         return false;
     }
 
-    Level* pLevel = itr->second;
-    m_levelInstances.erase(itr);
-    delete pLevel;
+    Level* level = itr->second;
+    m_level_instances.erase(itr);
+    delete level;
+
     return true;
 }
 

@@ -32,8 +32,8 @@ public:
     unsigned short getPatternIndex() const;
 
     bool getFlag_Priority() const;
-    bool getFlag_HFlip() const;
-    bool getFlag_VFlip() const;
+    bool getHFlip() const;
+    bool getVFlip() const;
 
     static size_t getIndexSize();
 
@@ -93,12 +93,12 @@ inline bool SegaPatternDescriptor::getFlag_Priority() const
     return (m_index & 0x8000) != 0;
 }
 
-inline bool SegaPatternDescriptor::getFlag_HFlip() const
+inline bool SegaPatternDescriptor::getHFlip() const
 {
     return (m_index & 0x800) != 0;
 }
 
-inline bool SegaPatternDescriptor::getFlag_VFlip() const
+inline bool SegaPatternDescriptor::getVFlip() const
 {
     return (m_index & 0x1000) != 0;
 }

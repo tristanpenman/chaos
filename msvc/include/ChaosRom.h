@@ -47,7 +47,7 @@ protected:
 protected:
     typedef std::map<HWND, Level*> LevelInstances;
 
-    LevelInstances m_levelInstances;
+    LevelInstances m_level_instances;
 };
 
 inline std::fstream& ChaosRom::getFile()
