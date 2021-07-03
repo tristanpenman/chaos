@@ -22,12 +22,9 @@ public:
 protected:
   bool eventFilter(QObject *object, QEvent *ev) override;
 
-signals:
-  void blockSelected(int);
-
 private:
   void handleClick(const QPoint& pos);
-  void handleHighlight(const QPoint& pos);
+  void handleMove(const QPoint& pos);
 
   QGraphicsScene* m_scene;
   QGraphicsView* m_view;
@@ -41,4 +38,7 @@ private:
 
   int m_selectedBlock;
   int m_highlightedBlock;
+
+signals:
+  void blockSelected(int);
 };

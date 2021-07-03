@@ -109,7 +109,7 @@ bool BlockSelector::eventFilter(QObject *object, QEvent *ev)
 
   case QEvent::MouseMove:
   case QEvent::Wheel:
-    handleHighlight(m_view->viewport()->mapFromGlobal(QCursor::pos()));
+    handleMove(m_view->viewport()->mapFromGlobal(QCursor::pos()));
     break;
 
   default:
@@ -133,7 +133,7 @@ void BlockSelector::handleClick(const QPoint& pos)
   }
 }
 
-void BlockSelector::handleHighlight(const QPoint &pos)
+void BlockSelector::handleMove(const QPoint &pos)
 {
   const int y = pos.y() - BLOCK_SPACING + m_view->verticalScrollBar()->value();
   const int tileOffset = y % (128 + BLOCK_SPACING);

@@ -78,7 +78,7 @@ const Block& Sonic2Level::getBlock(size_t index) const
   return m_blocks[index];
 }
 
-const Map& Sonic2Level::getMap() const
+Map& Sonic2Level::getMap()
 {
   return *m_map;
 }

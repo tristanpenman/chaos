@@ -4,6 +4,7 @@
 #include <QGraphicsView>
 #include <QHBoxLayout>
 #include <QImage>
+#include <QMouseEvent>
 #include <QPixmap>
 #include <QScrollBar>
 
@@ -16,6 +17,7 @@
 #include "../Pattern.h"
 
 #include "BlockSelector.h"
+#include "Rectangle.h"
 #include "ZoomSupport.h"
 
 #include "MapEditor.h"
@@ -27,6 +29,8 @@ using namespace std;
 MapEditor::MapEditor(QWidget *parent, shared_ptr<Level>& level)
   : QWidget(parent)
   , m_level(level)
+  , m_highlightX(-1)
+  , m_highlightY(-1)
   , m_selectedBlock(0)
 {
   setStyleSheet("background: #ccc");
@@ -47,13 +51,15 @@ MapEditor::MapEditor(QWidget *parent, shared_ptr<Level>& level)
   }
 
   // populate scene
-  m_scene = new QGraphicsScene(this);
   const auto& map = m_level->getMap();
+  m_tiles = new QGraphicsPixmapItem*[map.getWidth() * map.getHeight()];
+  m_scene = new QGraphicsScene(this);
   for (int y = 0; y < map.getHeight(); y++) {
     for (int x = 0; x < map.getWidth(); x++) {
-      auto item = m_scene->addPixmap(*m_blocks[map.getValue(0, x, y)]);
-      item->setTransformationMode(Qt::SmoothTransformation);
-      item->setPos(x * 128, y * 128);
+      auto& tile = m_tiles[y * map.getWidth() + x];
+      tile = m_scene->addPixmap(*m_blocks[map.getValue(0, x, y)]);
+      tile->setTransformationMode(Qt::SmoothTransformation);
+      tile->setPos(x * 128, y * 128);
     }
   }
 
@@ -64,6 +70,16 @@ MapEditor::MapEditor(QWidget *parent, shared_ptr<Level>& level)
   m_view->centerOn(-m_scene->width() / 2, -m_scene->height() / 2);
   m_view->setDragMode(QGraphicsView::DragMode::NoDrag);
   hbox->addWidget(m_view);
+
+  // highlight region
+  m_highlight = new Rectangle(128, 128, QColor(128, 192, 255, 64));
+  m_highlight->setPos(0, 0);
+  m_highlight->setVisible(false);
+  m_scene->addItem(m_highlight);
+
+  // track mouse events
+  m_view->viewport()->installEventFilter(this);
+  m_view->setMouseTracking(true);
 
   // zoom support
   new ZoomSupport(m_view);
@@ -76,6 +92,60 @@ MapEditor::MapEditor(QWidget *parent, shared_ptr<Level>& level)
   // allow map to grow but block selector remains the same size
   hbox->setStretch(0, 1);
   hbox->setStretch(1, 0);
+}
+
+bool MapEditor::eventFilter(QObject *object, QEvent *ev)
+{
+  if (object != m_view->viewport()) {
+    return false;
+  }
+
+  switch (ev->type()) {
+  case QEvent::Leave:
+    m_highlightX = -1;
+    m_highlightY = -1;
+    m_highlight->setVisible(false);
+    break;
+
+  case QEvent::MouseButtonPress:
+    return handleClick();
+
+  case QEvent::MouseMove:
+    {
+      auto mouseEvent = dynamic_cast<QMouseEvent*>(ev);
+      handleMove(m_view->mapToScene(mouseEvent->pos()));
+      break;
+    }
+
+  default:
+    break;
+  }
+
+  return false;
+}
+
+bool MapEditor::handleClick()
+{
+  if (m_highlightX < 0 || m_highlightY < 0) {
+    return false;
+  }
+
+  // update scene
+  const auto offset = m_highlightY * m_level->getMap().getWidth() + m_highlightX;
+  m_tiles[offset]->setPixmap(*m_blocks[m_selectedBlock]);
+
+  // modify map
+  m_level->getMap().setValue(0, m_highlightX, m_highlightY, m_selectedBlock);
+
+  return true;
+}
+
+void MapEditor::handleMove(const QPointF& pos)
+{
+  m_highlightX = (pos.x() / 128);
+  m_highlightY = (pos.y() / 128);
+  m_highlight->setPos(m_highlightX * 128, m_highlightY * 128);
+  m_highlight->setVisible(true);
 }
 
 void MapEditor::drawPattern(QImage& image,

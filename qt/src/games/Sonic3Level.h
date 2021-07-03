@@ -34,7 +34,7 @@ public:
   size_t getBlockCount() const override;
   const Block& getBlock(size_t index) const override;
 
-  const Map& getMap() const override;
+  Map& getMap() override;
 
 private:
   Sonic3Level(const Sonic3Level&) = delete;

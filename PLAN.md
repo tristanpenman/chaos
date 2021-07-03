@@ -20,8 +20,9 @@
   + ~~rename SonicReader to Kosinski~~
 - Level modification support
   + ~~Block selector~~
-  + Pencil mode (in progress)
+  + ~~Pencil mode~~
   + RLE compression implementation (in progress)
+  + Toolbar
   + Resize Sonic 2 ROM
   + Resize Sonic 3 ROM
   + Selection rectangle
