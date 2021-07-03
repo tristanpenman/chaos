@@ -1,10 +1,10 @@
 #include "Precompiled.h"
 
-#include "SonicReader.h"
+#include "Kosinski.h"
 
 using namespace std;
 
-SonicReader::SonicReader(fstream& rom)
+Kosinski::Kosinski(fstream& rom)
   : m_rom(rom)
   , m_bitcount(0)
   , m_bitfield(0)
@@ -12,7 +12,7 @@ SonicReader::SonicReader(fstream& rom)
 
 }
 
-unsigned char SonicReader::getBit()
+unsigned char Kosinski::getBit()
 {
     unsigned char bit = ((unsigned char)(m_bitfield)) & 1;
 
@@ -32,7 +32,7 @@ unsigned char SonicReader::getBit()
     return bit;
 }
 
-void SonicReader::loadBitfield()
+void Kosinski::loadBitfield()
 {
     m_bitfield  = m_rom.get();
     m_bitfield |= m_rom.get() << 8;
@@ -41,7 +41,7 @@ void SonicReader::loadBitfield()
 }
 
 
-SonicReader::result_t SonicReader::decompress(unsigned char buffer[], size_t buffer_size, streamoff rom_offset)
+Kosinski::result_t Kosinski::decompress(unsigned char buffer[], size_t buffer_size, streamoff rom_offset)
 {
     uint16_t pos = 0;
     uint16_t count = 0;

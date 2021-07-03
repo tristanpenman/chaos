@@ -10,7 +10,7 @@
 #include "PatternBuffer.h"
 #include "Rom.h"
 #include "Sonic3Rom.h"
-#include "SonicReader.h"
+#include "Kosinski.h"
 
 #include "Sonic3Level.h"
 
@@ -95,7 +95,7 @@ bool Sonic3Level::loadPatterns()
     // Main pattern reader loop
     //
 
-    SonicReader sr(file);
+    Kosinski kosinski(file);
 
     streamoff read_address = patterns_address_base + 2;
     streamoff read_size = data_length_base;
@@ -112,7 +112,7 @@ bool Sonic3Level::loadPatterns()
         {
             memset(buffer.data(), 0, PATTERN_BUFFER_SIZE);
 
-            SonicReader::result_t r = sr.decompress(buffer.data(), PATTERN_BUFFER_SIZE, read_address);
+            Kosinski::result_t r = kosinski.decompress(buffer.data(), PATTERN_BUFFER_SIZE, read_address);
             if (!r.first)
             {
                 error = true;
@@ -178,12 +178,12 @@ bool Sonic3Level::loadChunks()
     uint32_t chunks_address_base = m_rom.getChunksAddress(m_level_index);
     uint32_t chunks_address_ext  = m_rom.getChunksAddress_extended(m_level_index);
 
-    SonicReader sr(file);
-    SonicReader::result_t r;
+    Kosinski kosinski(file);
+    Kosinski::result_t r;
 
     uint32_t data_length = 0;
-    data_length += sr.decompress(buffer.data(), CHUNK_BUFFER_SIZE, chunks_address_base).second;
-    data_length += sr.decompress(buffer.data(), CHUNK_BUFFER_SIZE, chunks_address_ext).second;
+    data_length += kosinski.decompress(buffer.data(), CHUNK_BUFFER_SIZE, chunks_address_base).second;
+    data_length += kosinski.decompress(buffer.data(), CHUNK_BUFFER_SIZE, chunks_address_ext).second;
 
     const size_t chunk_size = Chunk::getChunkSize();
     const size_t chunk_count = data_length / chunk_size;
@@ -203,7 +203,7 @@ bool Sonic3Level::loadChunks()
 
     while (1)
     {
-        SonicReader::result_t r = sr.decompress(buffer.data(), CHUNK_BUFFER_SIZE, read_address);
+        Kosinski::result_t r = kosinski.decompress(buffer.data(), CHUNK_BUFFER_SIZE, read_address);
         if (!r.first)
         {
             error = true;
@@ -247,12 +247,12 @@ bool Sonic3Level::loadBlocks()
     uint32_t blocks_address_base = m_rom.getBlocksAddress(m_level_index);
     uint32_t blocks_address_ext  = m_rom.getBlocksAddress_extended(m_level_index);
 
-    SonicReader sr(file);
-    SonicReader::result_t r;
+    Kosinski kosinski(file);
+    Kosinski::result_t r;
 
     uint32_t data_length = 0;
-    data_length += sr.decompress(buffer.data(), BLOCK_BUFFER_SIZE, blocks_address_base).second;
-    data_length += sr.decompress(buffer.data(), BLOCK_BUFFER_SIZE, blocks_address_ext).second;
+    data_length += kosinski.decompress(buffer.data(), BLOCK_BUFFER_SIZE, blocks_address_base).second;
+    data_length += kosinski.decompress(buffer.data(), BLOCK_BUFFER_SIZE, blocks_address_ext).second;
 
     const size_t blockSize = Block::calculateBlockSize(getBlockWidth(), getBlockHeight());
     const size_t block_count = data_length / blockSize;
@@ -272,7 +272,7 @@ bool Sonic3Level::loadBlocks()
 
     while (1)
     {
-        SonicReader::result_t r = sr.decompress(buffer.data(), BLOCK_BUFFER_SIZE, read_address);
+        Kosinski::result_t r = kosinski.decompress(buffer.data(), BLOCK_BUFFER_SIZE, read_address);
         if (!r.first)
         {
             error = true;

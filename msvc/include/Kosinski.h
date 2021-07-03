@@ -5,15 +5,15 @@
 
 /**
  * Decompressor for RLE-compressed level data
- * 
- * See doc/kosinski.txt for details of how the (de-)compression algorithm works
+ *
+ * See doc/kosinski.txt for details of how the algorithm works
  */
-class SonicReader
+class Kosinski
 {
 public:
     typedef std::pair<bool, size_t> result_t;
 
-    explicit SonicReader(std::fstream& rom);
+    explicit Kosinski(std::fstream& rom);
 
     result_t decompress(unsigned char buffer[], size_t buffer_size, std::streamoff rom_offset);
 

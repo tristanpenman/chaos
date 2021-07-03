@@ -1,10 +1,10 @@
 #include <fstream>
 
-#include "SonicReader.h"
+#include "Kosinski.h"
 
 using namespace std;
 
-SonicReader::SonicReader(fstream& file)
+Kosinski::Kosinski(fstream& file)
   : m_bitfield(0)
   , m_bitcount(0)
   , m_file(file)
@@ -12,7 +12,7 @@ SonicReader::SonicReader(fstream& file)
 
 }
 
-uint8_t SonicReader::getBit()
+uint8_t Kosinski::getBit()
 {
   const uint8_t bit = static_cast<uint8_t>(m_bitfield) & 1;
 
@@ -30,7 +30,7 @@ uint8_t SonicReader::getBit()
   return bit;
 }
 
-void SonicReader::loadBitfield()
+void Kosinski::loadBitfield()
 {
   m_bitfield  = static_cast<uint16_t>(m_file.get());
   m_bitfield |= static_cast<uint16_t>(m_file.get()) << 8;
@@ -38,7 +38,7 @@ void SonicReader::loadBitfield()
   m_bitcount = 16;
 }
 
-SonicReader::Result SonicReader::decompress(uint8_t buffer[], size_t bufferSize)
+Kosinski::Result Kosinski::decompress(uint8_t buffer[], size_t bufferSize)
 {
   uint16_t pos = 0;
   uint16_t count = 0;

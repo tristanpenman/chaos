@@ -21,6 +21,8 @@ set(PROJECT_SOURCES
     src/Game.h
     src/GameFactory.cpp
     src/GameFactory.h
+    src/Kosinski.cpp
+    src/Kosinski.h
     src/Level.h
     src/Logger.cpp
     src/Logger.h
@@ -33,8 +35,6 @@ set(PROJECT_SOURCES
     src/PatternDesc.h
     src/Rom.cpp
     src/Rom.h
-    src/SonicReader.cpp
-    src/SonicReader.h
     src/games/Sonic2.cpp
     src/games/Sonic2.h
     src/games/Sonic2Level.cpp

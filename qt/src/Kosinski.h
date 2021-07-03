@@ -8,12 +8,12 @@
  *
  * See doc/kosinski.txt for details of how the (de-)compression algorithm works
  */
-class SonicReader
+class Kosinski
 {
 public:
   typedef std::pair<bool, size_t> Result;
 
-  explicit SonicReader(std::fstream& rom);
+  explicit Kosinski(std::fstream& rom);
 
   Result decompress(uint8_t buffer[], size_t bufferSize);
 

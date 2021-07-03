@@ -10,7 +10,7 @@
 #include "PatternBuffer.h"
 #include "Rom.h"
 #include "Sonic2Rom.h"
-#include "SonicReader.h"
+#include "Kosinski.h"
 
 #include "Sonic2Level.h"
 
@@ -77,8 +77,8 @@ bool Sonic2Level::loadPatterns()
     vector<unsigned char> buffer(PATTERN_BUFFER_SIZE);
     streamoff patterns_addr = m_rom.getPatternsAddress(m_level_index);
 
-    SonicReader sr(file);
-    SonicReader::result_t r = sr.decompress(buffer.data(), PATTERN_BUFFER_SIZE, patterns_addr);
+    Kosinski kosinski(file);
+    Kosinski::result_t r = kosinski.decompress(buffer.data(), PATTERN_BUFFER_SIZE, patterns_addr);
     if (!r.first)
     {
         REPORT_ERROR("Pattern decompression failed", "Decompression error");
@@ -118,8 +118,8 @@ bool Sonic2Level::loadChunks()
     vector<unsigned char> buffer(CHUNK_BUFFER_SIZE);
     streamoff chunks_addr = m_rom.getChunksAddress(m_level_index);
 
-    SonicReader sr(file);
-    SonicReader::result_t r = sr.decompress(buffer.data(), CHUNK_BUFFER_SIZE, chunks_addr);
+    Kosinski kosinski(file);
+    Kosinski::result_t r = kosinski.decompress(buffer.data(), CHUNK_BUFFER_SIZE, chunks_addr);
     if (!r.first)
     {
         REPORT_ERROR("Chunk decompression failed", "Decompression error");
@@ -159,8 +159,8 @@ bool Sonic2Level::loadBlocks()
     vector<unsigned char> buffer(BLOCK_BUFFER_SIZE);
     streamoff blocks_addr = m_rom.getBlocksAddress(m_level_index);
 
-    SonicReader sr(file);
-    SonicReader::result_t r = sr.decompress(buffer.data(), BLOCK_BUFFER_SIZE, blocks_addr);
+    Kosinski kosinski(file);
+    Kosinski::result_t r = kosinski.decompress(buffer.data(), BLOCK_BUFFER_SIZE, blocks_addr);
     if (!r.first)
     {
         REPORT_ERROR("Block decompression failed", "Decompression error");
@@ -197,8 +197,8 @@ bool Sonic2Level::loadMap()
     vector<unsigned char> buffer(LEVEL_BUFFER_SIZE);
     streamoff map_addr = m_rom.getMapAddress(m_level_index);
 
-    SonicReader reader(file);
-    SonicReader::result_t result = reader.decompress(buffer.data(), LEVEL_BUFFER_SIZE, map_addr);
+    Kosinski reader(file);
+    Kosinski::result_t result = reader.decompress(buffer.data(), LEVEL_BUFFER_SIZE, map_addr);
     if (!result.first)
     {
         REPORT_ERROR("Map decompression failed", "Decompression error");
