@@ -141,7 +141,7 @@ void Sonic3Level::loadPatterns(Rom& rom, uint32_t basePatternsAddr, uint32_t ext
     // modules are padded with zeroes
     char b = 0;
     while (b == 0) {
-      b = file.get();
+      b = static_cast<char>(file.get());
     }
 
     // Set read address to the next packet/module
@@ -168,7 +168,7 @@ void Sonic3Level::loadPatterns(Rom& rom, uint32_t basePatternsAddr, uint32_t ext
 
     char b = 0;
     while (b == 0) {
-      b = file.get();
+      b = static_cast<char>(file.get());
     }
 
     // Set read address to the next packet/module
@@ -268,14 +268,14 @@ void Sonic3Level::loadBlocks(Rom& rom, uint32_t baseBlocksAddr, uint32_t extBloc
 void Sonic3Level::loadMap(Rom& rom, uint32_t mapAddr)
 {
   // read map header
-  const uint32_t rowSizeFg = rom.read16BitAddr(mapAddr);
-  const uint32_t rowSizeBg = rom.read16BitAddr(mapAddr + 2);
-  const uint32_t rowCountFg = rom.read16BitAddr(mapAddr + 4);
-  const uint32_t rowCountBg = rom.read16BitAddr(mapAddr + 6);
+  const uint16_t rowSizeFg = rom.read16BitAddr(mapAddr);
+  const uint16_t rowSizeBg = rom.read16BitAddr(mapAddr + 2);
+  const uint16_t rowCountFg = rom.read16BitAddr(mapAddr + 4);
+  const uint16_t rowCountBg = rom.read16BitAddr(mapAddr + 6);
 
   // create map
-  const uint32_t mapWidth = max(rowSizeBg, rowSizeFg);
-  const uint32_t mapHeight = max(rowCountBg, rowCountFg);
+  const uint16_t mapWidth = max(rowSizeBg, rowSizeFg);
+  const uint16_t mapHeight = max(rowCountBg, rowCountFg);
   m_map = new Map(MAP_LAYERS, mapWidth, mapHeight);
 
   // setup for reading values
@@ -285,13 +285,13 @@ void Sonic3Level::loadMap(Rom& rom, uint32_t mapAddr)
   const uint32_t ptrTableAddr = mapAddr + 8;
 
   // read rows
-  for (uint32_t rowIndex = 0; rowIndex < rowCountFg; rowIndex++) {
+  for (uint16_t rowIndex = 0; rowIndex < rowCountFg; rowIndex++) {
     const streamoff rowOffset = rom.read16BitAddr(ptrTableAddr + rowIndex * 4) - 0x8000;
     file.seekg(ptrTableAddr + rowOffset);
     file.read(reinterpret_cast<char*>(buffer.data()), bufferSize);
 
     // set tiles
-    for (uint32_t colIndex = 0; colIndex < rowSizeFg; colIndex++) {
+    for (uint16_t colIndex = 0; colIndex < rowSizeFg; colIndex++) {
        m_map->setValue(0, colIndex, rowIndex, buffer[colIndex]);
     }
   }

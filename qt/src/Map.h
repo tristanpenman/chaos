@@ -5,32 +5,32 @@
 class Map
 {
 public:
-  Map(uint8_t layers, uint8_t width, uint8_t height);
-  Map(uint8_t layers, uint8_t width, uint8_t height, uint8_t* data);
+  Map(uint8_t layers, uint16_t width, uint16_t height);
+  Map(uint8_t layers, uint16_t width, uint16_t height, uint8_t* data);
 
   ~Map();
 
-  uint8_t getWidth() const;
-  uint8_t getHeight() const;
+  uint16_t getWidth() const;
+  uint16_t getHeight() const;
   uint8_t getLayerCount() const;
 
-  uint8_t getValue(uint8_t layer, uint8_t x, uint8_t y) const;
-  void setValue(uint8_t layer, uint8_t x, uint8_t y, uint8_t);
+  uint8_t getValue(uint8_t layer, uint16_t x, uint16_t y) const;
+  void setValue(uint8_t layer, uint16_t x, uint16_t y, uint8_t);
 
 protected:
   uint8_t m_layers;
-  uint8_t m_height;
-  uint8_t m_width;
+  uint16_t m_height;
+  uint16_t m_width;
 
   uint8_t* m_data;
 };
 
-inline uint8_t Map::getWidth() const
+inline uint16_t Map::getWidth() const
 {
   return m_width;
 }
 
-inline uint8_t Map::getHeight() const
+inline uint16_t Map::getHeight() const
 {
   return m_height;
 }

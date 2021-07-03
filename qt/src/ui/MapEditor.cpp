@@ -136,7 +136,7 @@ void MapEditor::drawBlock(QPixmap& pixmap, size_t index)
         const auto& chunk = m_level->getChunk(chunkIndex);
         drawChunk(image, chunk, dx * 16, dy * 16, chunkDesc.getHFlip(), chunkDesc.getVFlip());
       } catch (const exception& e) {
-        LOG << "Failed to draw chunk";
+        LOG << "Failed to draw chunk: " << e.what();
       }
     }
   }
