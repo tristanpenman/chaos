@@ -3,44 +3,44 @@
 #include "Buffer.h"
 
 Buffer::Buffer()
-  : m_hBitmap(0)
-  , m_hDC(0)
+  : m_hbitmap(0)
+  , m_hdc(0)
 {
 
 }
 
 Buffer::Buffer(HDC compatible_with, int w, int h)
-  : m_hBitmap(0)
-  , m_hDC(0)
+  : m_hbitmap(0)
+  , m_hdc(0)
 {
     reset(compatible_with, w, h);
 }
 
 Buffer::~Buffer()
 {
-    if (m_hDC)
+    if (m_hdc)
     {
-        DeleteDC(m_hDC);
-        m_hDC = 0;
+        DeleteDC(m_hdc);
+        m_hdc = 0;
     }
 
-    if (m_hBitmap)
+    if (m_hbitmap)
     {
-        DeleteObject(m_hBitmap);
-        m_hBitmap = 0;
+        DeleteObject(m_hbitmap);
+        m_hbitmap = 0;
     }
 }
 
 void Buffer::reset(HDC compatible_with, int w, int h)
 {
-    m_hBitmap = CreateCompatibleBitmap(compatible_with, w, h);
-    if (!m_hBitmap)
+    m_hbitmap = CreateCompatibleBitmap(compatible_with, w, h);
+    if (!m_hbitmap)
     {
         throw std::runtime_error("Could not allocate memory for pattern buffer");
     }
 
-    m_hDC = CreateCompatibleDC(compatible_with);
-    if (!m_hDC)
+    m_hdc = CreateCompatibleDC(compatible_with);
+    if (!m_hdc)
     {
         throw std::runtime_error("Could not create pattern buffer device context");
     }

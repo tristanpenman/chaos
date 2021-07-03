@@ -3,21 +3,21 @@
 class WndLevel
 {
 public:
-    static ATOM getClass(HINSTANCE hInstance);
+    static ATOM getClass(HINSTANCE hinst);
     static void destroyClass();
 
 protected:
-    static int messageCreate(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-    static int messageClose(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-    static int messageDestroy(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-    static int messageMDIActivate(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-    static int messageSetFocus(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-    static int messageSize(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+    static int messageCreate(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+    static int messageClose(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+    static int messageDestroy(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+    static int messageMDIActivate(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+    static int messageSetFocus(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+    static int messageSize(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
-    static LRESULT CALLBACK wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+    static LRESULT CALLBACK wndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     static ATOM ms_class;
-    static HINSTANCE ms_hInstance;
-    static InstanceValue_t<HWND> ms_mapWindows;
+    static HINSTANCE ms_hinst;
+    static InstanceValue_t<HWND> ms_map_windows;
 };

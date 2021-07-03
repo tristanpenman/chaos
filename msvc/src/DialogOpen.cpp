@@ -3,7 +3,7 @@
 #include "DialogOpen.h"
 
 DialogOpen::DialogOpen()
-    : m_szFileName("")
+    : m_file_name("")
 {
     static TCHAR szFilter[] =
         TEXT("Genesis Binary ROMs (*.bin)\0*.bin\0")  \
@@ -29,8 +29,8 @@ DialogOpen::DialogOpen()
     m_ofn.lCustData = 0L;
     m_ofn.lpfnHook = NULL;
     m_ofn.lpTemplateName = NULL;
-    m_ofn.lpstrFile = m_szFileName;
-    m_ofn.lpstrFileTitle = m_szTitleName;
+    m_ofn.lpstrFile = m_file_name;
+    m_ofn.lpstrFileTitle = m_title;
 }
 
 bool DialogOpen::showDialog()

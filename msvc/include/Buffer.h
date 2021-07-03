@@ -12,7 +12,7 @@ class Buffer
 {
 public:
     Buffer();
-    explicit Buffer(HDC compatible_with, int w, int h);
+    Buffer(HDC compatible_with, int w, int h);
 
     virtual ~Buffer();
 
@@ -20,8 +20,8 @@ protected:
     void draw(HDC dest, int dest_x, int dest_y, int src_x, int src_y, int w, int h, bool h_flip, bool v_flip) const;
     void reset(HDC compatible_with, int w, int h);
 
-    HBITMAP m_hBitmap;
-    HDC     m_hDC;
+    HBITMAP m_hbitmap;
+    HDC     m_hdc;
 };
 
 inline void Buffer::draw(HDC dest, int dest_x, int dest_y, int src_x, int src_y, int w, int h, bool h_flip, bool v_flip) const
@@ -30,22 +30,22 @@ inline void Buffer::draw(HDC dest, int dest_x, int dest_y, int src_x, int src_y,
     {
         if (v_flip)
         {
-            StretchBlt(dest, dest_x, dest_y, w, h, m_hDC, src_x + w - 1, src_y + h - 1, -w, -h, SRCCOPY);
+            StretchBlt(dest, dest_x, dest_y, w, h, m_hdc, src_x + w - 1, src_y + h - 1, -w, -h, SRCCOPY);
         }
         else
         {
-            StretchBlt(dest, dest_x, dest_y, w, h, m_hDC, src_x + w - 1, src_y, -w, h, SRCCOPY);
+            StretchBlt(dest, dest_x, dest_y, w, h, m_hdc, src_x + w - 1, src_y, -w, h, SRCCOPY);
         }
     }
     else
     {
         if (v_flip)
         {
-            StretchBlt(dest, dest_x, dest_y, w, h, m_hDC, src_x, src_y + h - 1, w, -h, SRCCOPY);
+            StretchBlt(dest, dest_x, dest_y, w, h, m_hdc, src_x, src_y + h - 1, w, -h, SRCCOPY);
         }
         else
         {
-            BitBlt(dest, dest_x, dest_y, w, h, m_hDC, src_x, src_y, SRCCOPY);
+            BitBlt(dest, dest_x, dest_y, w, h, m_hdc, src_x, src_y, SRCCOPY);
         }
     }
 }

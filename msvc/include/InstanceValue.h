@@ -1,6 +1,6 @@
 #pragma once
 
-class InstanceValueException {};
+#include <stdexcept>
 
 typedef HWND InstanceValueLookup_t;
 
@@ -8,10 +8,10 @@ template<typename T>
 class InstanceValue_t : public std::map<InstanceValueLookup_t, typename T>
 {
 public:
-    const T  get   (InstanceValueLookup_t i) const;
-    T        get   (InstanceValueLookup_t i);
-    void     set   (InstanceValueLookup_t i, T val);
-    T        unset (InstanceValueLookup_t i);
+    const T get(InstanceValueLookup_t i) const;
+    T get(InstanceValueLookup_t i);
+    void set(InstanceValueLookup_t i, T val);
+    T unset(InstanceValueLookup_t i);
 };
 
 template<typename T>
@@ -21,7 +21,7 @@ inline T InstanceValue_t<T>::get(InstanceValueLookup_t i)
 
     if (itr == end())
     {
-        throw InstanceValueException();
+        throw std::runtime_error("Instance not found");
     }
 
     return itr->second;
@@ -34,7 +34,7 @@ inline const T InstanceValue_t<T>::get(InstanceValueLookup_t i)	const
 
     if (itr == end())
     {
-        throw InstanceValueException();
+        throw std::runtime_error("Instance not found");
     }
 
     return itr->second;
@@ -47,7 +47,7 @@ inline void InstanceValue_t<T>::set(InstanceValueLookup_t i, T val)
 
     if (itr != end())
     {
-        throw InstanceValueException();
+        throw std::runtime_error("Instance already exists");
     }
 
     insert(value_type(i, val));
@@ -60,7 +60,7 @@ inline T InstanceValue_t<T>::unset(InstanceValueLookup_t i)
 
     if (itr == end())
     {
-        throw InstanceValueException();
+        throw std::runtime_error("Instance not found");
     }
 
     T t = itr->second;

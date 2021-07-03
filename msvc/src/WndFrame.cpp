@@ -11,14 +11,14 @@
 
 #define IDM_FIRSTCHILD  100
 
-HINSTANCE WndFrame::ms_hInstance = 0;
+HINSTANCE WndFrame::ms_hinst = 0;
 ATOM      WndFrame::ms_class = 0;
 
 extern ChaosApplication g_application;
 
 extern HMENU g_menu_chaos;
 
-HWND WndFrame::createWindow(HINSTANCE hInstance, HWND hParent)
+HWND WndFrame::createWindow(HINSTANCE hinst, HWND hwnd_parent)
 {
     if (!ms_class)
     {
@@ -29,16 +29,16 @@ HWND WndFrame::createWindow(HINSTANCE hInstance, HWND hParent)
         wc.lpfnWndProc   = frameWndProc;
         wc.cbClsExtra    = 0;
         wc.cbWndExtra    = 0;
-        wc.hInstance     = hInstance;
+        wc.hInstance     = hinst;
         wc.hIcon         = LoadIcon(NULL, MAKEINTRESOURCE(ID_ICON_CHAOS));
-        wc.hIconSm       = LoadIcon(hInstance, MAKEINTRESOURCE(ID_ICON_CHAOS));
+        wc.hIconSm       = LoadIcon(hinst, MAKEINTRESOURCE(ID_ICON_CHAOS));
         wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
         wc.hbrBackground = (HBRUSH) GetStockObject(GRAY_BRUSH);
         wc.lpszMenuName  = NULL;
         wc.lpszClassName = TEXT("ChaosFrame");
 
         ms_class = RegisterClassEx(&wc);
-        ms_hInstance = hInstance;
+        ms_hinst = hinst;
 
         if (!ms_class)
         {
@@ -55,9 +55,9 @@ HWND WndFrame::createWindow(HINSTANCE hInstance, HWND hParent)
         CW_USEDEFAULT,                       // initial y position
         CW_USEDEFAULT,                       // initial x size
         CW_USEDEFAULT,                       // initial y size
-        hParent,                             // parent window handle
+        hwnd_parent,                             // parent window handle
         g_menu_chaos,                        // window menu handle
-        hInstance,                           // program instance handle
+        hinst,                           // program instance handle
         NULL);                               // creation parameters
 
     return hWnd;
@@ -72,7 +72,7 @@ bool WndFrame::openFile()
 
 HWND WndFrame::createLevelWindow(HWND hClient)
 {
-    int level = DialogLoadLevel::showDialog(ms_hInstance, g_application.getMainWindow());
+    int level = DialogLoadLevel::showDialog(ms_hinst, g_application.getMainWindow());
 
     if (level < 0)
     {
@@ -82,9 +82,9 @@ HWND WndFrame::createLevelWindow(HWND hClient)
     HWND                hwndChild = 0;
     MDICREATESTRUCT     mdicreate;
 
-    mdicreate.szClass = (LPCTSTR) MAKELONG(WndLevel::getClass(ms_hInstance), 0);
+    mdicreate.szClass = (LPCTSTR) MAKELONG(WndLevel::getClass(ms_hinst), 0);
     mdicreate.szTitle = "Level Editor";
-    mdicreate.hOwner  = ms_hInstance;
+    mdicreate.hOwner  = ms_hinst;
     mdicreate.x       = CW_USEDEFAULT;
     mdicreate.y       = CW_USEDEFAULT;
     mdicreate.cx      = CW_USEDEFAULT;
@@ -102,14 +102,14 @@ void WndFrame::enableMenuItems(HWND hwnd)
     EnableMenuItem(GetMenu(hwnd), ID_FILE_OPEN_LEVEL, MF_ENABLED);
 }
 
-LRESULT CALLBACK WndFrame::frameWndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK WndFrame::frameWndProc(HWND hwnd, UINT imsg, WPARAM wparam, LPARAM lparam)
 {
     static HWND         hwndClient;
     static HMENU        hMenuWindow;
 
     CLIENTCREATESTRUCT  clientcreate;
 
-    switch (iMsg)
+    switch (imsg)
     {
     case WM_CREATE:
 
@@ -123,13 +123,13 @@ LRESULT CALLBACK WndFrame::frameWndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPA
             0, // y
             0, // w
             0, // h
-            hwnd, (HMENU) 1, ms_hInstance, (LPSTR) &clientcreate);
+            hwnd, (HMENU) 1, ms_hinst, (LPSTR) &clientcreate);
 
         return 0;
 
 
     case WM_COMMAND:
-        switch (LOWORD (wParam))
+        switch (LOWORD (wparam))
         {
         case ID_FILE_OPEN:
             // Can ROM be loaded?
@@ -184,11 +184,11 @@ LRESULT CALLBACK WndFrame::frameWndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPA
     }
 
     // Pass unprocessed messages to DefFrameProc (not DefWindowProc)
-    return DefFrameProc(hwnd, hwndClient, iMsg, wParam, lParam);
+    return DefFrameProc(hwnd, hwndClient, imsg, wparam, lparam);
 
 }
 
-BOOL CALLBACK WndFrame::closeEnumProc(HWND hwnd, LPARAM lParam)
+BOOL CALLBACK WndFrame::closeEnumProc(HWND hwnd, LPARAM lparam)
 {
     // Check for icon title
     if (GetWindow(hwnd, GW_OWNER))
@@ -212,9 +212,9 @@ void WndFrame::destroyClass()
 {
     if (ms_class)
     {
-        UnregisterClass((LPCTSTR)MAKELONG(ms_class, 0), ms_hInstance);
+        UnregisterClass((LPCTSTR)MAKELONG(ms_class, 0), ms_hinst);
         ms_class = 0;
     }
 
-    ms_hInstance = 0;
+    ms_hinst = 0;
 }

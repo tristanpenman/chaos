@@ -23,8 +23,8 @@ using namespace std;
 
 ChaosApplication::ChaosApplication()
   : m_rom(NULL)
-  , m_hMain(0)
-  , m_hInstance(0)
+  , m_hwnd_main(0)
+  , m_hinst(0)
   , m_file()
 {
 
@@ -52,17 +52,17 @@ bool ChaosApplication::destroyInstance(HWND hwnd)
     return m_rom->destroyInstance(hwnd);
 }
 
-int ChaosApplication::run(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow)
+int ChaosApplication::run(HINSTANCE hinst, HINSTANCE hinst_prev, PSTR cmd_line, int cmd_show)
 {
     InitCommonControls();
 
-    m_hInstance = hInstance;
-    m_hMain = WndFrame::createWindow(hInstance, NULL);
+    m_hinst = hinst;
+    m_hwnd_main = WndFrame::createWindow(hinst, NULL);
 
-    if (m_hMain)
+    if (m_hwnd_main)
     {
-        ShowWindow(m_hMain, iCmdShow);
-        UpdateWindow(m_hMain);
+        ShowWindow(m_hwnd_main, cmd_show);
+        UpdateWindow(m_hwnd_main);
     }
 
     MSG msg;
@@ -84,7 +84,7 @@ void ChaosApplication::destroyWindowClasses()
 
 bool ChaosApplication::cleanup()
 {
-    SendMessage(m_hMain, WM_COMMAND, ID_WINDOW_CLOSEALL, 0) ;
+    SendMessage(m_hwnd_main, WM_COMMAND, ID_WINDOW_CLOSEALL, 0);
 
     if (m_rom)
     {
@@ -97,12 +97,12 @@ bool ChaosApplication::cleanup()
 
 const HWND ChaosApplication::getMainWindow() const
 {
-    return m_hMain;
+    return m_hwnd_main;
 }
 
 void ChaosApplication::resetMainWindow(HWND hwnd)
 {
-    m_hMain = hwnd;
+    m_hwnd_main = hwnd;
 }
 
 bool ChaosApplication::openROM(const string& path)

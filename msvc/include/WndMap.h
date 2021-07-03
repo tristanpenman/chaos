@@ -5,21 +5,21 @@
 class WndMap
 {
 public:
-    static HWND createWindow(HINSTANCE hInstance, HWND hParent);
-    static LRESULT CALLBACK wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+    static HWND createWindow(HINSTANCE hinst, HWND hwnd_parent);
+    static LRESULT CALLBACK wndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
     static void destroyClass();
-    static ATOM getClass(HINSTANCE hInstance);
+    static ATOM getClass(HINSTANCE hinst);
 
 protected:
-    static int messageCreate(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-    static int messageDestroy(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-    static int messageKeyDown(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-    static int messageMouseWheel(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-    static int messagePaint(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-    static int messageScrollHorizontal(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-    static int messageScrollVertical(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-    static int messageSize(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+    static int messageCreate(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+    static int messageDestroy(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+    static int messageKeyDown(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+    static int messageMouseWheel(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+    static int messagePaint(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+    static int messageScrollHorizontal(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+    static int messageScrollVertical(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+    static int messageSize(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
     static void resetScrollBars(HWND hwnd);
 
@@ -33,10 +33,10 @@ protected:
 
 private:
     static ATOM ms_class;
-    static HINSTANCE ms_hInstance;
+    static HINSTANCE ms_hinst;
 
-    static InstanceValue_t<int> x;
-    static InstanceValue_t<int> y;
-    static InstanceValue_t<unsigned int> blockWidth;
-    static InstanceValue_t<unsigned int> blockHeight;
+    static InstanceValue_t<int> ms_x;
+    static InstanceValue_t<int> ms_y;
+    static InstanceValue_t<unsigned int> ms_block_width;
+    static InstanceValue_t<unsigned int> ms_block_height;
 };

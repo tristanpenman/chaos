@@ -12,7 +12,7 @@ public:
 
     virtual ~ChaosApplication();
 
-    int run(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow);
+    int run(HINSTANCE hinst, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow);
 
     bool cleanup();
 
@@ -34,8 +34,8 @@ protected:
     void destroyWindowClasses();
 
 private:
-    HWND m_hMain;
-    HINSTANCE m_hInstance;
+    HWND m_hwnd_main;
+    HINSTANCE m_hinst;
     ChaosRom* m_rom;
     std::fstream m_file;
 };

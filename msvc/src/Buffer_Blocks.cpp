@@ -12,20 +12,20 @@
 
 Buffer_Blocks::Buffer_Blocks(
     const Level* level,
-    const SonicBlock** blocksArray, unsigned int blockCount,
-    const SonicChunk* chunksArray, unsigned int chunkCount,
-    const Buffer_Patterns* pPatternBuffer, HDC hdc)
+    const SonicBlock** blocks_array, unsigned int block_count,
+    const SonicChunk* chunks_array, unsigned int chunk_count,
+    const Buffer_Patterns* pattern_buffer, HDC hdc)
 {
-    refresh(level, blocksArray, blockCount, chunksArray, chunkCount, pPatternBuffer, hdc);
+    refresh(level, blocks_array, block_count, chunks_array, chunk_count, pattern_buffer, hdc);
 }
 
-void Buffer_Blocks::drawBlock(unsigned int blockIndex, HDC dest, int x, int y) const
+void Buffer_Blocks::drawBlock(unsigned int block_index, HDC dest, int x, int y) const
 {
-    BitBlt(dest, x, y, m_blockWidth, m_blockWidth, m_hDC, blockIndex * m_blockWidth, 0, SRCCOPY);
+    BitBlt(dest, x, y, m_block_width, m_block_width, m_hdc, block_index * m_block_width, 0, SRCCOPY);
 }
 
 void Buffer_Blocks::renderChunkIntoBuffer(HDC hdc, int x, int y, const SonicChunk& chunk, bool h_flip, bool v_flip,
-    const Buffer_Patterns* pPatternBuffer) const
+    const Buffer_Patterns* pattern_buffer) const
 {
     const unsigned int pattern_width = SegaPattern::getPatternWidth();
     const unsigned int pattern_height = SegaPattern::getPatternHeight();
@@ -41,8 +41,9 @@ void Buffer_Blocks::renderChunkIntoBuffer(HDC hdc, int x, int y, const SonicChun
 
         for (int pat_x = 0; pat_x < 2; pat_x++)
         {
-            pPatternBuffer->drawPattern(
-                chunk.getPatternDescriptor(pat_x, pat_y), hdc,
+            pattern_buffer->drawPattern(
+                chunk.getPatternDescriptor(pat_x, pat_y),
+                hdc,
                 px,
                 py,
                 h_flip,
@@ -56,43 +57,43 @@ void Buffer_Blocks::renderChunkIntoBuffer(HDC hdc, int x, int y, const SonicChun
 }
 
 void Buffer_Blocks::renderBlockIntoBuffer(const SonicBlock& block, HDC hdc, int x, int y,
-    const SonicChunk* chunksArray, unsigned int chunkCount,
-    const Buffer_Patterns* pPatternBuffer) const
+    const SonicChunk* chunks_array, unsigned int chunk_count,
+    const Buffer_Patterns* pattern_buffer) const
 {
-    const unsigned int chunkWidth = SonicChunk::getChunkWidth();
-    const unsigned int chunkHeight = SonicChunk::getChunkHeight();
+    const unsigned int chunk_width = SonicChunk::getChunkWidth();
+    const unsigned int chunk_height = SonicChunk::getChunkHeight();
 
     for (unsigned int chunk_y = 0; chunk_y < 8; chunk_y++)
     {
         for (unsigned int chunk_x = 0; chunk_x < 8; chunk_x++)
         {
             const SonicChunkDescriptor& desc = block.getChunkDescriptor(chunk_x, chunk_y);
-            const SonicChunk& chunk = chunksArray[desc.getChunkIndex()];
+            const SonicChunk& chunk = chunks_array[desc.getChunkIndex()];
 
             renderChunkIntoBuffer(hdc,
-                    x + chunk_x * chunkWidth,
-                    y + chunk_y * chunkHeight,
+                    x + chunk_x * chunk_width,
+                    y + chunk_y * chunk_height,
                     chunk,
                     desc.getHFlip(),
                     desc.getVFlip(),
-                    pPatternBuffer);
+                    pattern_buffer);
         }
     }
 }
 
 void Buffer_Blocks::refresh(
     const Level* level,
-    const SonicBlock** blocksArray, unsigned int blockCount,
-    const SonicChunk* chunksArray, unsigned int chunkCount, const Buffer_Patterns* pPatternBuffer, HDC hdc)
+    const SonicBlock** blocks_array, unsigned int block_count,
+    const SonicChunk* chunks_array, unsigned int chunk_count, const Buffer_Patterns* pattern_buffer, HDC hdc)
 {
-    m_blockWidth = level->getBlockWidth();
+    m_block_width = level->getBlockWidth();
 
-    reset(hdc, blockCount * m_blockWidth, m_blockWidth);
-    SelectObject(m_hDC, m_hBitmap);
+    reset(hdc, block_count * m_block_width, m_block_width);
+    SelectObject(m_hdc, m_hbitmap);
 
-    for (unsigned int blockIndex = 0; blockIndex < blockCount; blockIndex++)
+    for (unsigned int blockIndex = 0; blockIndex < block_count; blockIndex++)
     {
-        renderBlockIntoBuffer(*blocksArray[blockIndex], m_hDC, blockIndex * m_blockWidth, 0,
-            chunksArray, chunkCount, pPatternBuffer);
+        renderBlockIntoBuffer(*blocks_array[blockIndex], m_hdc, blockIndex * m_block_width, 0,
+            chunks_array, chunk_count, pattern_buffer);
     }
 }

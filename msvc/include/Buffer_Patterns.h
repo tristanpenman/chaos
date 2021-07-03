@@ -14,7 +14,7 @@ class SegaPatternDescriptor;
 class Buffer_Patterns : public Buffer
 {
 public:
-    explicit Buffer_Patterns(
+    Buffer_Patterns(
         const SegaPalette* palettes, unsigned int palette_count,
         const SegaPattern* patterns, unsigned int pattern_count, HDC hdc);
 
@@ -29,4 +29,7 @@ public:
     void refresh(
         const SegaPalette* palettes, unsigned int palette_count,
         const SegaPattern* patterns, unsigned int pattern_count, HDC hdc);
+
+private:
+    unsigned int m_pattern_count;
 };
