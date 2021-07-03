@@ -7,10 +7,6 @@
 #include <QPixmap>
 #include <QScrollBar>
 
-#include "BlockSelector.h"
-#include "MapEditor.h"
-#include "ZoomSupport.h"
-
 #include "../Block.h"
 #include "../Chunk.h"
 #include "../Level.h"
@@ -18,6 +14,11 @@
 #include "../Map.h"
 #include "../Palette.h"
 #include "../Pattern.h"
+
+#include "BlockSelector.h"
+#include "ZoomSupport.h"
+
+#include "MapEditor.h"
 
 #define LOG Logger("MapEditor")
 

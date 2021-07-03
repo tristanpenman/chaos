@@ -1,8 +1,9 @@
 #include <cstring>
 #include <stdexcept>
 
-#include "Chunk.h"
 #include "Pattern.h"
+
+#include "Chunk.h"
 
 Chunk::Chunk()
 {

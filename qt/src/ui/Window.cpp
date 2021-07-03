@@ -20,6 +20,7 @@
 #include "MapEditor.h"
 #include "PaletteInspector.h"
 #include "PatternInspector.h"
+
 #include "Window.h"
 
 #define LOG Logger("Window")

@@ -4,8 +4,8 @@
   + ~~code style~~
   + ~~warnings~~
   + ~~remove ROM details from Level Select~~
+  + ~~Normalise variable naming~~
   + Rename SonicReader to Kosinski (in progress)
-  + Normalise variable naming (in progress)
   + Cleaner separation of core and WinAPI classes
   + Tidy up exception handling
   + Tidy up Sonic 3 loader code

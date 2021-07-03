@@ -10,8 +10,9 @@
 
 #include "../Logger.h"
 
-#include "BlockSelector.h"
 #include "Rectangle.h"
+
+#include "BlockSelector.h"
 
 #define LOG Logger("BlockSelector")
 

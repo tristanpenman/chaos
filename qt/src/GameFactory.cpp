@@ -1,7 +1,7 @@
-#include "GameFactory.h"
-
 #include "games/Sonic2.h"
 #include "games/Sonic3.h"
+
+#include "GameFactory.h"
 
 using namespace std;
 

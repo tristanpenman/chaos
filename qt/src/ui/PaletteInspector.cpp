@@ -1,10 +1,10 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
-#include "PaletteInspector.h"
-
 #include "../Level.h"
 #include "../Palette.h"
+
+#include "PaletteInspector.h"
 
 PaletteInspector::PaletteInspector(QWidget* parent, std::shared_ptr<Level>& level)
   : QDialog(parent)

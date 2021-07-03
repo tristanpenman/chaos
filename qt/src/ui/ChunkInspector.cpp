@@ -7,13 +7,13 @@
 #include <QPixmap>
 #include <QVBoxLayout>
 
-#include "ChunkInspector.h"
-
 #include "../Chunk.h"
 #include "../Level.h"
 #include "../Logger.h"
 #include "../Palette.h"
 #include "../Pattern.h"
+
+#include "ChunkInspector.h"
 
 #define LOG Logger("ChunkInspector")
 

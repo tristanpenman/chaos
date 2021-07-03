@@ -2,14 +2,14 @@
 #include <QLabel>
 #include <QVBoxLayout>
 
-#include "BlockInspector.h"
-
 #include "../Block.h"
 #include "../Chunk.h"
 #include "../Level.h"
 #include "../Logger.h"
 #include "../Palette.h"
 #include "../Pattern.h"
+
+#include "BlockInspector.h"
 
 #define LOG Logger("BlockInspector")
 
