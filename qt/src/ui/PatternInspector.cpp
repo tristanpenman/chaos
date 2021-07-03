@@ -1,5 +1,4 @@
 #include <cmath>
-#include <iostream>
 
 #include <QComboBox>
 #include <QHBoxLayout>
@@ -8,16 +7,21 @@
 #include <QPixmap>
 #include <QVBoxLayout>
 
-#include "PatternInspector.h"
-
 #include "../Level.h"
+#include "../Logger.h"
 #include "../Palette.h"
 #include "../Pattern.h"
+
+#include "PatternInspector.h"
+
+#define LOG Logger("PatternInspector")
+
+using namespace std;
 
 static constexpr int PIXMAP_WIDTH = 320;
 static constexpr int PATTERNS_PER_ROW = PIXMAP_WIDTH / Pattern::PATTERN_WIDTH;
 
-PatternInspector::PatternInspector(QWidget* parent, std::shared_ptr<Level>& level)
+PatternInspector::PatternInspector(QWidget* parent, shared_ptr<Level>& level)
   : QDialog(parent)
   , m_level(level)
   , m_pixmap(nullptr)
@@ -68,7 +72,7 @@ void PatternInspector::drawPattern(QImage& image, const Pattern& pattern, const 
 
 void PatternInspector::drawPatterns(size_t paletteIndex)
 {
-  std::cout << "[PatternInspector] Drawing patterns using palette " << paletteIndex << std::endl;
+  LOG << "Drawing patterns using palette " << paletteIndex;
 
   const Palette& palette = m_level->getPalette(paletteIndex);
 
@@ -85,11 +89,11 @@ void PatternInspector::drawPatterns(size_t paletteIndex)
   }
 
   // copy to pixmap
-  std::cout << "[PatternInspector] Copying pattern image to pixmap" << std::endl;
+  LOG << "Copying pattern image to pixmap";
   if (m_pixmap->convertFromImage(image)) {
     m_label->setPixmap(*m_pixmap);
   } else {
-    std::cout << "[PatternInspector] Failed to copy image to pixmap" << std::endl;
+    LOG << "Failed to copy image to pixmap";
   }
 }
 

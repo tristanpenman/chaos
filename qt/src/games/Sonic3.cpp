@@ -1,9 +1,10 @@
-#include <iostream>
-
+#include "../Logger.h"
 #include "../Rom.h"
 
 #include "Sonic3.h"
 #include "Sonic3Level.h"
+
+#define LOG Logger("Sonic3")
 
 const uint32_t levelLayoutDirAddr = 0x81360;  // Layout pointers are found here
 const uint32_t levelSelectIndex = 0x6A8E;     // Level select order
@@ -13,7 +14,7 @@ const uint32_t levelPaletteDir = 0x8BF54;     // Directory of palette pointers
 
 using namespace std;
 
-Sonic3::Sonic3(std::shared_ptr<Rom>& rom)
+Sonic3::Sonic3(shared_ptr<Rom>& rom)
   : m_rom(rom)
 {
 
@@ -58,26 +59,26 @@ shared_ptr<Level> Sonic3::loadLevel(unsigned int levelIdx)
   const uint32_t extendedBlocksAddr = getExtendedBlocksAddr(levelIdx);
   const uint32_t mapAddr = getTilesAddr(levelIdx);
 
-  cout << "[Sonic3] Character palette addr: 0x" << hex << characterPaletteAddr << dec << endl;
-  cout << "[Sonic3] Level palettes addr: 0x" << hex << levelPalettesAddr << dec << endl;
-  cout << "[Sonic3] Patterns addr: 0x" << hex << patternsAddr << dec << endl;
-  cout << "[Sonic3] Extended patterns addr: 0x" << hex << extendedPatternsAddr << dec << endl;
-  cout << "[Sonic3] Chunks addr: 0x" << hex << chunksAddr << dec << endl;
-  cout << "[Sonic3] Extended chunks addr: 0x" << hex << extendedChunksAddr << dec << endl;
-  cout << "[Sonic3] Blocks addr: 0x" << hex << blocksAddr << dec << endl;
-  cout << "[Sonic3] Extended blocks addr: 0x" << hex << extendedBlocksAddr << dec << endl;
-  cout << "[Sonic3] Map addr: 0x" << hex << mapAddr << dec << endl;
+  LOG << "Character palette addr: 0x" << hex << characterPaletteAddr;
+  LOG << "Level palettes addr: 0x" << hex << levelPalettesAddr;
+  LOG << "Patterns addr: 0x" << hex << patternsAddr;
+  LOG << "Extended patterns addr: 0x" << hex << extendedPatternsAddr;
+  LOG << "Chunks addr: 0x" << hex << chunksAddr;
+  LOG << "Extended chunks addr: 0x" << hex << extendedChunksAddr;
+  LOG << "Blocks addr: 0x" << hex << blocksAddr;
+  LOG << "Extended blocks addr: 0x" << hex << extendedBlocksAddr;
+  LOG << "Map addr: 0x" << hex << mapAddr;
 
-  return std::make_shared<Sonic3Level>(*m_rom,
-                                       characterPaletteAddr,
-                                       levelPalettesAddr,
-                                       patternsAddr,
-                                       extendedPatternsAddr,
-                                       chunksAddr,
-                                       extendedChunksAddr,
-                                       blocksAddr,
-                                       extendedBlocksAddr,
-                                       mapAddr);
+  return make_shared<Sonic3Level>(*m_rom,
+                                  characterPaletteAddr,
+                                  levelPalettesAddr,
+                                  patternsAddr,
+                                  extendedPatternsAddr,
+                                  chunksAddr,
+                                  extendedChunksAddr,
+                                  blocksAddr,
+                                  extendedBlocksAddr,
+                                  mapAddr);
 }
 
 uint32_t Sonic3::getDataAddress(unsigned int levelIdx, unsigned int entryOffset)

@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include <QComboBox>
 #include <QLabel>
 #include <QVBoxLayout>
@@ -9,10 +7,15 @@
 #include "../Block.h"
 #include "../Chunk.h"
 #include "../Level.h"
+#include "../Logger.h"
 #include "../Palette.h"
 #include "../Pattern.h"
 
-BlockInspector::BlockInspector(QWidget* parent, std::shared_ptr<Level>& level)
+#define LOG Logger("BlockInspector")
+
+using namespace std;
+
+BlockInspector::BlockInspector(QWidget* parent, shared_ptr<Level>& level)
   : QDialog(parent)
   , m_level(level)
 {
@@ -89,7 +92,7 @@ void BlockInspector::drawChunk(QImage& image, const Chunk& chunk, int dx, int dy
 
 void BlockInspector::drawBlock(size_t index)
 {
-  std::cout << "[BlockInspector] Drawing block " << index << std::endl;
+  LOG << "Drawing block " << index;
 
   const Block& block = m_level->getBlock(index);
 
@@ -103,18 +106,18 @@ void BlockInspector::drawBlock(size_t index)
       try {
         const auto& chunk = m_level->getChunk(chunkIndex);
         drawChunk(image, chunk, dx * 16, dy * 16, chunkDesc.getHFlip(), chunkDesc.getVFlip());
-      } catch (const std::exception& e) {
-        std::cout << "[BlockInspector] Failed to draw chunk " << chunkIndex << ": " << e.what() << std::endl;
+      } catch (const exception& e) {
+        LOG << "Failed to draw chunk " << chunkIndex << ": " << e.what();
       }
     }
   }
 
   // copy to pixmap
-  std::cout << "[BlockInspector] Copying block image to pixmap" << std::endl;
+  LOG << "Copying block image to pixmap";
   if (m_pixmap->convertFromImage(image)) {
     m_label->setPixmap(*m_pixmap);
   } else {
-    std::cout << "[BlockInspector] Failed to copy image to pixmap" << std::endl;
+    LOG << "Failed to copy image to pixmap";
   }
 }
 

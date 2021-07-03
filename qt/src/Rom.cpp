@@ -17,7 +17,7 @@
 
 using namespace std;
 
-bool Rom::open(const std::string& path)
+bool Rom::open(const string& path)
 {
   m_file.open(path, ios::in | ios::out | ios::binary);
 
@@ -61,9 +61,9 @@ uint8_t Rom::readByte(streamoff offset)
   return value;
 }
 
-std::vector<char> Rom::readBytes(streamoff offset, size_t count)
+vector<char> Rom::readBytes(streamoff offset, size_t count)
 {
-  std::vector<char> buffer(count);
+  vector<char> buffer(count);
 
   m_file.seekg(offset);
 

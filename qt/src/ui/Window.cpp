@@ -11,6 +11,7 @@
 
 #include "../Game.h"
 #include "../GameFactory.h"
+#include "../Logger.h"
 #include "../Rom.h"
 
 #include "BlockInspector.h"
@@ -21,9 +22,11 @@
 #include "PatternInspector.h"
 #include "Window.h"
 
+#define LOG Logger("Window")
+
 using namespace std;
 
-Window::Window(bool debug)
+Window::Window()
   : QMainWindow(nullptr)
   , m_levelSelect(nullptr)
   , m_paletteInspector(nullptr)
@@ -34,7 +37,6 @@ Window::Window(bool debug)
   , m_levelSelectAction(nullptr)
   , m_inspectorsMenu(nullptr)
   , m_vbox(nullptr)
-  , m_debug(debug)
   , m_rom(nullptr)
   , m_game(nullptr)
   , m_level(nullptr)
@@ -99,7 +101,7 @@ void Window::createViewMenu()
 
 bool Window::openRom(const QString &path)
 {
-  m_rom = std::make_shared<Rom>();
+  m_rom = make_shared<Rom>();
   if (!m_rom->open(path.toStdString())) {
     showError(tr("ROM Error"), tr("Failed to open ROM file"));
     m_rom.reset();
@@ -113,10 +115,8 @@ bool Window::openRom(const QString &path)
     return false;
   }
 
-  if (m_debug) {
-    cout << "[Window] ROM identified" << endl;
-    cout << "[Window] Domestic name: '" << m_rom->readDomesticName() << "'" << endl;
-  }
+  LOG << "ROM identified";
+  LOG << "Domestic name: '" << m_rom->readDomesticName() << "'";
 
   m_levelSelectAction->setDisabled(false);
 
@@ -195,9 +195,7 @@ void Window::levelSelected(int levelIdx)
     return;
   }
 
-  if (m_debug) {
-    cout << "[Window] Loading level: " << levelIdx << " (" << m_game->getTitleCards()[levelIdx] << ")" << endl;
-  }
+  LOG << "Loading level: " << levelIdx << " (" << m_game->getTitleCards()[levelIdx] << ")";
 
   m_level = m_game->loadLevel(levelIdx);
 

@@ -1,7 +1,8 @@
-#include <iostream>
+#include <fstream>
 
 #include "../Block.h"
 #include "../Chunk.h"
+#include "../Logger.h"
 #include "../Map.h"
 #include "../Palette.h"
 #include "../Pattern.h"
@@ -10,9 +11,11 @@
 
 #include "Sonic3Level.h"
 
-static constexpr uint8_t MAP_LAYERS = 2;
+#define LOG Logger("Sonic3Level")
 
 using namespace std;
+
+static constexpr uint8_t MAP_LAYERS = 2;
 
 Sonic3Level::Sonic3Level(Rom& rom,
                          uint32_t sonicPaletteAddr,
@@ -42,7 +45,7 @@ Sonic3Level::Sonic3Level(Rom& rom,
 const Palette& Sonic3Level::getPalette(size_t index) const
 {
   if (index >= PALETTE_COUNT) {
-    throw std::runtime_error("Invalid palette index");
+    throw runtime_error("Invalid palette index");
   }
 
   return m_palettes[index];
@@ -51,7 +54,7 @@ const Palette& Sonic3Level::getPalette(size_t index) const
 const Pattern& Sonic3Level::getPattern(size_t index) const
 {
   if (index >= m_patternCount) {
-    throw std::runtime_error("Invalid pattern index");
+    throw runtime_error("Invalid pattern index");
   }
 
   return m_patterns[index];
@@ -60,7 +63,7 @@ const Pattern& Sonic3Level::getPattern(size_t index) const
 const Chunk& Sonic3Level::getChunk(size_t index) const
 {
   if (index >= m_chunkCount) {
-    throw std::runtime_error("Invalid chunk index");
+    throw runtime_error("Invalid chunk index");
   }
 
   return m_chunks[index];
@@ -69,7 +72,7 @@ const Chunk& Sonic3Level::getChunk(size_t index) const
 const Block& Sonic3Level::getBlock(size_t index) const
 {
   if (index >= m_blockCount) {
-    throw std::runtime_error("Invalid block index");
+    throw runtime_error("Invalid block index");
   }
 
   return m_blocks[index];
@@ -112,7 +115,7 @@ void Sonic3Level::loadPatterns(Rom& rom, uint32_t basePatternsAddr, uint32_t ext
   // setup decompression
   auto& file = rom.getFile();
   SonicReader sr(file);
-  std::vector<uint8_t> buffer(PATTERN_BUFFER_SIZE);
+  vector<uint8_t> buffer(PATTERN_BUFFER_SIZE);
 
   // base patterns
   size_t total = 0;
@@ -122,11 +125,11 @@ void Sonic3Level::loadPatterns(Rom& rom, uint32_t basePatternsAddr, uint32_t ext
     // decompress module
     auto result = sr.decompress(buffer.data(), PATTERN_BUFFER_SIZE);
     if (!result.first) {
-      throw std::runtime_error("Base pattern decompression error");
+      throw runtime_error("Base pattern decompression error");
     }
 
     if (result.second % Pattern::PATTERN_SIZE_IN_ROM != 0) {
-      throw std::runtime_error("Inconsistent base pattern data");
+      throw runtime_error("Inconsistent base pattern data");
     }
 
     const auto patternCount = result.second / Pattern::PATTERN_SIZE_IN_ROM;
@@ -151,11 +154,11 @@ void Sonic3Level::loadPatterns(Rom& rom, uint32_t basePatternsAddr, uint32_t ext
   while (total < baseDataSize + extDataSize) {
     auto result = sr.decompress(buffer.data(), PATTERN_BUFFER_SIZE);
     if (!result.first) {
-      throw std::runtime_error("Extended pattern decompression error");
+      throw runtime_error("Extended pattern decompression error");
     }
 
     if (result.second % Pattern::PATTERN_SIZE_IN_ROM != 0) {
-      throw std::runtime_error("Inconsistent extended pattern data");
+      throw runtime_error("Inconsistent extended pattern data");
     }
 
     const auto patternCount = result.second / Pattern::PATTERN_SIZE_IN_ROM;
@@ -173,7 +176,7 @@ void Sonic3Level::loadPatterns(Rom& rom, uint32_t basePatternsAddr, uint32_t ext
     total += result.second;
   }
 
-  cout << "[Sonic3Level] Pattern count: " << m_patternCount << endl;
+  LOG << "Pattern count: " << m_patternCount;
 }
 
 void Sonic3Level::loadChunks(Rom& rom, uint32_t baseChunksAddr, uint32_t extChunksAddr)
@@ -183,17 +186,17 @@ void Sonic3Level::loadChunks(Rom& rom, uint32_t baseChunksAddr, uint32_t extChun
   // setup decompression
   auto& file = rom.getFile();
   SonicReader sr(file);
-  std::vector<uint8_t> buffer(CHUNK_BUFFER_SIZE);
+  vector<uint8_t> buffer(CHUNK_BUFFER_SIZE);
 
   // decompress base chunks
   file.seekg(baseChunksAddr);
   auto result = sr.decompress(buffer.data(), CHUNK_BUFFER_SIZE);
   if (!result.first) {
-    throw std::runtime_error("Base chunk decompression error");
+    throw runtime_error("Base chunk decompression error");
   }
 
   if (result.second % Chunk::CHUNK_SIZE_IN_ROM != 0) {
-    throw std::runtime_error("Inconsistent base chunk data");
+    throw runtime_error("Inconsistent base chunk data");
   }
 
   m_chunkCount = result.second / Chunk::CHUNK_SIZE_IN_ROM;
@@ -202,11 +205,11 @@ void Sonic3Level::loadChunks(Rom& rom, uint32_t baseChunksAddr, uint32_t extChun
   file.seekg(extChunksAddr);
   result = sr.decompress(buffer.data() + result.second, CHUNK_BUFFER_SIZE - result.second);
   if (!result.first) {
-    throw std::runtime_error("Extended chunk decompression error");
+    throw runtime_error("Extended chunk decompression error");
   }
 
   if (result.second % Chunk::CHUNK_SIZE_IN_ROM != 0) {
-    throw std::runtime_error("Inconsistent extended chunk data");
+    throw runtime_error("Inconsistent extended chunk data");
   }
 
   m_chunkCount += result.second / Chunk::CHUNK_SIZE_IN_ROM;
@@ -216,7 +219,7 @@ void Sonic3Level::loadChunks(Rom& rom, uint32_t baseChunksAddr, uint32_t extChun
     m_chunks[i].fromSegaFormat(&buffer[i * Chunk::CHUNK_SIZE_IN_ROM]);
   }
 
-  cout << "[Sonic3Level] Chunk count: " << m_chunkCount << endl;
+  LOG << "Chunk count: " << m_chunkCount;
 }
 
 void Sonic3Level::loadBlocks(Rom& rom, uint32_t baseBlocksAddr, uint32_t extBlocksAddr)
@@ -226,17 +229,17 @@ void Sonic3Level::loadBlocks(Rom& rom, uint32_t baseBlocksAddr, uint32_t extBloc
   // setup decompression
   auto& file = rom.getFile();
   SonicReader sr(file);
-  std::vector<uint8_t> buffer(BLOCK_BUFFER_SIZE);
+  vector<uint8_t> buffer(BLOCK_BUFFER_SIZE);
 
   // decompress base blocks
   file.seekg(baseBlocksAddr);
   auto result = sr.decompress(buffer.data(), BLOCK_BUFFER_SIZE);
   if (!result.first) {
-    throw std::runtime_error("Base block decompression error");
+    throw runtime_error("Base block decompression error");
   }
 
   if (result.second % Block::BLOCK_SIZE_IN_ROM != 0) {
-    throw std::runtime_error("Inconsistent base block data");
+    throw runtime_error("Inconsistent base block data");
   }
 
   m_blockCount = result.second / Block::BLOCK_SIZE_IN_ROM;
@@ -245,11 +248,11 @@ void Sonic3Level::loadBlocks(Rom& rom, uint32_t baseBlocksAddr, uint32_t extBloc
   file.seekg(extBlocksAddr);
   result = sr.decompress(buffer.data() + result.second, BLOCK_BUFFER_SIZE - result.second);
   if (!result.first) {
-    throw std::runtime_error("Extended block decompression error");
+    throw runtime_error("Extended block decompression error");
   }
 
   if (result.second % Block::BLOCK_SIZE_IN_ROM != 0) {
-    throw std::runtime_error("Inconsistent extended block data");
+    throw runtime_error("Inconsistent extended block data");
   }
 
   m_blockCount += result.second / Block::BLOCK_SIZE_IN_ROM;
@@ -259,7 +262,7 @@ void Sonic3Level::loadBlocks(Rom& rom, uint32_t baseBlocksAddr, uint32_t extBloc
     m_blocks[i].fromSegaFormat(&buffer[i * Block::BLOCK_SIZE_IN_ROM]);
   }
 
-  cout << "[Sonic3Level] Block count: " << m_blockCount << endl;
+  LOG << "Block count: " << m_blockCount;
 }
 
 void Sonic3Level::loadMap(Rom& rom, uint32_t mapAddr)
@@ -278,7 +281,7 @@ void Sonic3Level::loadMap(Rom& rom, uint32_t mapAddr)
   // setup for reading values
   auto& file = rom.getFile();
   const size_t bufferSize = sizeof(uint8_t) * mapWidth;
-  std::vector<uint8_t> buffer(bufferSize);
+  vector<uint8_t> buffer(bufferSize);
   const uint32_t ptrTableAddr = mapAddr + 8;
 
   // read rows
@@ -293,5 +296,5 @@ void Sonic3Level::loadMap(Rom& rom, uint32_t mapAddr)
     }
   }
 
-  cout << "[Sonic3Level] Map size: " << mapWidth << "x" << mapHeight << endl;
+  LOG << "Map size: " << mapWidth << "x" << mapHeight;
 }

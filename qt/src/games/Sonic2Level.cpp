@@ -1,9 +1,9 @@
 #include <cstdint>
-#include <iostream>
 #include <vector>
 
 #include "../Block.h"
 #include "../Chunk.h"
+#include "../Logger.h"
 #include "../Map.h"
 #include "../Palette.h"
 #include "../Pattern.h"
@@ -12,6 +12,8 @@
 
 #include "Sonic2.h"
 #include "Sonic2Level.h"
+
+#define LOG Logger("Sonic2Level")
 
 static constexpr uint8_t MAP_LAYERS = 2;
 static constexpr uint8_t MAP_HEIGHT = 16;
@@ -44,7 +46,7 @@ Sonic2Level::Sonic2Level(Rom& rom,
 const Palette& Sonic2Level::getPalette(size_t index) const
 {
   if (index >= PALETTE_COUNT) {
-    throw std::runtime_error("Invalid palette index");
+    throw runtime_error("Invalid palette index");
   }
 
   return m_palettes[index];
@@ -53,7 +55,7 @@ const Palette& Sonic2Level::getPalette(size_t index) const
 const Pattern& Sonic2Level::getPattern(size_t index) const
 {
   if (index >= m_patternCount) {
-    throw std::runtime_error("Invalid pattern index");
+    throw runtime_error("Invalid pattern index");
   }
 
   return m_patterns[index];
@@ -62,7 +64,7 @@ const Pattern& Sonic2Level::getPattern(size_t index) const
 const Chunk& Sonic2Level::getChunk(size_t index) const
 {
   if (index >= m_chunkCount) {
-    throw std::runtime_error("Invalid chunk index");
+    throw runtime_error("Invalid chunk index");
   }
 
   return m_chunks[index];
@@ -71,7 +73,7 @@ const Chunk& Sonic2Level::getChunk(size_t index) const
 const Block& Sonic2Level::getBlock(size_t index) const
 {
   if (index >= m_blockCount) {
-    throw std::runtime_error("Invalid block index");
+    throw runtime_error("Invalid block index");
   }
 
   return m_blocks[index];
@@ -110,13 +112,13 @@ void Sonic2Level::loadPatterns(Rom& rom, uint32_t patternsAddr)
   std::vector<uint8_t> buffer(PATTERN_BUFFER_SIZE);
   auto result = sr.decompress(buffer.data(), PATTERN_BUFFER_SIZE);
   if (!result.first) {
-    throw std::runtime_error("Pattern decompression failed");
+    throw runtime_error("Pattern decompression failed");
   }
 
   // check data
   m_patternCount = result.second / Pattern::PATTERN_SIZE_IN_ROM;
   if (result.second % Pattern::PATTERN_SIZE_IN_ROM != 0) {
-    throw std::runtime_error("Inconsistent pattern data");
+    throw runtime_error("Inconsistent pattern data");
   }
 
   // convert pattern data
@@ -125,7 +127,7 @@ void Sonic2Level::loadPatterns(Rom& rom, uint32_t patternsAddr)
     m_patterns[i].fromSegaFormat(&buffer[i * Pattern::PATTERN_SIZE_IN_ROM]);
   }
 
-  cout << "[Sonic2Level] Pattern count: " << m_patternCount << " (" << result.second << " bytes)" << endl;
+  LOG << "Pattern count: " << m_patternCount << " (" << result.second << " bytes)";
 }
 
 void Sonic2Level::loadChunks(Rom& rom, uint32_t chunksAddr)
@@ -139,13 +141,13 @@ void Sonic2Level::loadChunks(Rom& rom, uint32_t chunksAddr)
   vector<uint8_t> buffer(CHUNK_BUFFER_SIZE);
   SonicReader::Result result = sr.decompress(buffer.data(), CHUNK_BUFFER_SIZE);
   if (!result.first) {
-    throw std::runtime_error("Chunk decompression error");
+    throw runtime_error("Chunk decompression error");
   }
 
   // check data
   m_chunkCount = result.second / Chunk::CHUNK_SIZE_IN_ROM;
   if (result.second % Chunk::CHUNK_SIZE_IN_ROM != 0) {
-    throw std::runtime_error("Inconsistent chunk data");
+    throw runtime_error("Inconsistent chunk data");
   }
 
   // convert chunk data
@@ -154,7 +156,7 @@ void Sonic2Level::loadChunks(Rom& rom, uint32_t chunksAddr)
     m_chunks[i].fromSegaFormat(&buffer[i * Chunk::CHUNK_SIZE_IN_ROM]);
   }
 
-  cout << "[Sonic2Level] Chunk count: " << m_chunkCount << " (" << result.second << " bytes)" << endl;
+  LOG << "Chunk count: " << m_chunkCount << " (" << result.second << " bytes)";
 }
 
 void Sonic2Level::loadBlocks(Rom& rom, uint32_t blocksAddr)
@@ -168,13 +170,13 @@ void Sonic2Level::loadBlocks(Rom& rom, uint32_t blocksAddr)
   vector<uint8_t> buffer(BLOCK_BUFFER_SIZE);
   SonicReader::Result result = sr.decompress(buffer.data(), BLOCK_BUFFER_SIZE);
   if (!result.first) {
-    throw std::runtime_error("Block decompression error");
+    throw runtime_error("Block decompression error");
   }
 
   // check data
   m_blockCount = result.second / Block::BLOCK_SIZE_IN_ROM;
   if (result.second % Block::BLOCK_SIZE_IN_ROM != 0) {
-    throw std::runtime_error("Inconsistent block data");
+    throw runtime_error("Inconsistent block data");
   }
 
   m_blocks = new Block[m_blockCount];
@@ -182,7 +184,7 @@ void Sonic2Level::loadBlocks(Rom& rom, uint32_t blocksAddr)
     m_blocks[i].fromSegaFormat(&buffer[i * Block::BLOCK_SIZE_IN_ROM]);
   }
 
-  cout << "[Sonic2Level] Block count: " << m_blockCount << " (" << result.second << " bytes)" << endl;
+  LOG << "Block count: " << m_blockCount << " (" << result.second << " bytes)";
 }
 
 void Sonic2Level::loadMap(Rom& rom, uint32_t mapAddr)
@@ -196,12 +198,12 @@ void Sonic2Level::loadMap(Rom& rom, uint32_t mapAddr)
   SonicReader reader(file);
   SonicReader::Result result = reader.decompress(buffer.data(), MAP_BUFFER_SIZE);
   if (!result.first) {
-    throw std::runtime_error("Map decompression error");
+    throw runtime_error("Map decompression error");
   }
 
   // check data
   if (result.second != MAP_LAYERS * MAP_HEIGHT * MAP_WIDTH) {
-    throw std::runtime_error("Inconsistent map data");
+    throw runtime_error("Inconsistent map data");
   }
 
   m_map = new Map(MAP_LAYERS, MAP_WIDTH, MAP_HEIGHT, buffer.data());

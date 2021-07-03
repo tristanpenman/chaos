@@ -1,3 +1,5 @@
+#include <fstream>
+
 #include <QApplication>
 #include <QCommandLineParser>
 
@@ -5,7 +7,13 @@
 #include "os/macos.h"
 #endif
 
+#include "Logger.h"
+
 #include "ui/Window.h"
+
+#define LOG Logger("main")
+
+std::fstream log_file;
 
 int main(int argc, char *argv[])
 {
@@ -19,15 +27,31 @@ int main(int argc, char *argv[])
   parser.addPositionalArgument(QApplication::translate("main", "rom-file"),
                                QApplication::translate("main", "Path to ROM file"));
 
-  const QString debugOpt("debug");
-  parser.addOption(QCommandLineOption(debugOpt, QObject::tr("Enable debug mode")));
+  const QString logOpt("log");
+  parser.addOption(QCommandLineOption(logOpt, QObject::tr("Enable logging"), QObject::tr("target")));
 
   const QString levelOpt("level");
   parser.addOption(QCommandLineOption(levelOpt, QObject::tr("Level to load"), QObject::tr("index")));
 
   parser.process(app);
 
-  Window window(parser.isSet(debugOpt));
+  if (parser.isSet(logOpt)) {
+    const auto target = parser.value(logOpt);
+    if (target.compare("--") == 0) {
+      Logger::configure();
+    } else {
+      log_file.open(target.toStdString(), std::ios::out);
+      if (log_file.good()) {
+        Logger::configure(log_file);
+        LOG << "Begin log";
+      } else {
+        Logger::configure();
+        LOG << "Failed to open log file; falling back to STDOUT";
+      }
+    }
+  }
+
+  Window window;
 
   // attempt to load a rom if a positional argument is provided
   bool romLoaded = false;

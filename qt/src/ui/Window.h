@@ -22,7 +22,7 @@ class Window : public QMainWindow
   Q_OBJECT
 
 public:
-  Window(bool debug);
+  Window();
 
   bool openRom(const QString& path);
   void openLevel(const QString& level);
@@ -59,8 +59,6 @@ private:
 
   // layouts
   QVBoxLayout *m_vbox;
-
-  bool m_debug;
 
   std::shared_ptr<Rom> m_rom;
   std::shared_ptr<Game> m_game;

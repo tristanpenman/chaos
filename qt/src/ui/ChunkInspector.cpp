@@ -11,13 +11,18 @@
 
 #include "../Chunk.h"
 #include "../Level.h"
+#include "../Logger.h"
 #include "../Palette.h"
 #include "../Pattern.h"
+
+#define LOG Logger("ChunkInspector")
+
+using namespace std;
 
 static constexpr int PIXMAP_WIDTH = 320;
 static constexpr int CHUNKS_PER_ROW = PIXMAP_WIDTH / Chunk::CHUNK_WIDTH;
 
-ChunkInspector::ChunkInspector(QWidget* parent, std::shared_ptr<Level>& level)
+ChunkInspector::ChunkInspector(QWidget* parent, shared_ptr<Level>& level)
   : QDialog(parent)
   , m_level(level)
   , m_pixmap(nullptr)
@@ -89,7 +94,7 @@ void ChunkInspector::drawChunk(QImage& image, const Chunk& chunk, int dx, int dy
 
 void ChunkInspector::drawChunks()
 {
-  std::cout << "[ChunkInspector] Drawing chunks" << std::endl;
+  LOG << "Drawing chunks";
 
   // image to draw to
   QImage image(m_pixmap->width(), m_pixmap->height(), QImage::Format_RGB888);
@@ -104,10 +109,10 @@ void ChunkInspector::drawChunks()
   }
 
   // copy to pixmap
-  std::cout << "[ChunkInspector] Copying pattern image to pixmap" << std::endl;
+  LOG << "Copying pattern image to pixmap";
   if (m_pixmap->convertFromImage(image)) {
     m_label->setPixmap(*m_pixmap);
   } else {
-    std::cout << "[ChunkInspector] Failed to copy image to pixmap" << std::endl;
+    LOG << "Failed to copy image to pixmap";
   }
 }

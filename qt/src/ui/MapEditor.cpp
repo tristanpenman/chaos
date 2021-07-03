@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include <QApplication>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
@@ -15,11 +13,16 @@
 #include "../Block.h"
 #include "../Chunk.h"
 #include "../Level.h"
+#include "../Logger.h"
 #include "../Map.h"
 #include "../Palette.h"
 #include "../Pattern.h"
 
-MapEditor::MapEditor(QWidget *parent, std::shared_ptr<Level>& level)
+#define LOG Logger("MapEditor")
+
+using namespace std;
+
+MapEditor::MapEditor(QWidget *parent, shared_ptr<Level>& level)
   : QWidget(parent)
   , m_level(level)
   , m_selectedBlock(0)
@@ -33,6 +36,7 @@ MapEditor::MapEditor(QWidget *parent, std::shared_ptr<Level>& level)
   setLayout(hbox);
 
   // render block artwork into pixmaps
+  LOG << "Drawing blocks";
   const size_t blockCount = m_level->getBlockCount();
   m_blocks = new QPixmap*[blockCount];
   for (size_t i = 0; i < blockCount; i++) {
@@ -115,8 +119,6 @@ void MapEditor::drawChunk(QImage& image, const Chunk& chunk, int dx, int dy, boo
 
 void MapEditor::drawBlock(QPixmap& pixmap, size_t index)
 {
-  std::cout << "[MapEditor] Drawing block " << index << std::endl;
-
   const Block& block = m_level->getBlock(index);
 
   QImage image(Block::BLOCK_WIDTH, Block::BLOCK_HEIGHT, QImage::Format_RGB888);
@@ -129,14 +131,14 @@ void MapEditor::drawBlock(QPixmap& pixmap, size_t index)
       try {
         const auto& chunk = m_level->getChunk(chunkIndex);
         drawChunk(image, chunk, dx * 16, dy * 16, chunkDesc.getHFlip(), chunkDesc.getVFlip());
-      } catch (const std::exception& e) {
-        std::cout << "[MapEditor] Failed to draw chunk " << chunkIndex << ": " << e.what() << std::endl;
+      } catch (const exception& e) {
+        LOG << "Failed to draw chunk";
       }
     }
   }
 
   if (!pixmap.convertFromImage(image)) {
-    throw std::runtime_error("Failed to copy image to pixmap");
+    throw runtime_error("Failed to copy image to pixmap");
   }
 }
 

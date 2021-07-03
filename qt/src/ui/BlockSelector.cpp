@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include <QEvent>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
@@ -10,8 +8,12 @@
 #include <QScrollEvent>
 #include <QVBoxLayout>
 
+#include "../Logger.h"
+
 #include "BlockSelector.h"
 #include "Rectangle.h"
+
+#define LOG Logger("BlockSelector")
 
 static constexpr int BLOCK_SPACING = 5;
 
@@ -46,16 +48,18 @@ BlockSelector::BlockSelector(QWidget *parent, QPixmap** blocks, size_t blockCoun
   m_view->setDragMode(QGraphicsView::DragMode::NoDrag);
   m_view->centerOn(0, -m_scene->height() / 2);
 
-  // set width according to scrollbars... not sure why `height / 2` works
+  // set width according to scrollbars...
+  // TODO: not sure why height/2 works here, need to test across platforms
   const auto scrollbarSize = m_view->verticalScrollBar()->height() / 2;
   m_view->setFixedWidth(128 + scrollbarSize);
   m_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   m_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
   // styleable container for selected block
-  const auto halfScrollbarSize = scrollbarSize / 2;
   auto selectedContainer = new QWidget(this);
   auto selectedLayout = new QVBoxLayout(this);
+  // use half-scrollbar size so that it is as wide as the scrollable view
+  const auto halfScrollbarSize = scrollbarSize / 2;
   selectedLayout->setContentsMargins(halfScrollbarSize, halfScrollbarSize, halfScrollbarSize, halfScrollbarSize);
   selectedContainer->setLayout(selectedLayout);
   selectedContainer->setStyleSheet("background: #ccc");
@@ -117,11 +121,11 @@ bool BlockSelector::eventFilter(QObject *object, QEvent *ev)
 void BlockSelector::handleClick(const QPoint& pos)
 {
   const int y = pos.y() - BLOCK_SPACING + m_view->verticalScrollBar()->value();
-  const int tile = y / (128 + BLOCK_SPACING);
   const int tileOffset = y % (128 + BLOCK_SPACING);
 
   if (tileOffset < 128) {
-    std::cout << "[BlockSelector] selected block " << tile << std::endl;
+    const int tile = y / (128 + BLOCK_SPACING);
+    LOG << "Selected block " << tile;
     m_selectedBlock = tile;
     m_selected->setPixmap(*m_blocks[tile]);
     emit blockSelected(tile);
@@ -131,15 +135,14 @@ void BlockSelector::handleClick(const QPoint& pos)
 void BlockSelector::handleHighlight(const QPoint &pos)
 {
   const int y = pos.y() - BLOCK_SPACING + m_view->verticalScrollBar()->value();
-  const int tile = y / (128 + BLOCK_SPACING);
   const int tileOffset = y % (128 + BLOCK_SPACING);
-
   if (tileOffset >= 128) {
     m_highlightedBlock = -1;
     m_highlight->setVisible(false);
     return;
   }
 
+  const int tile = y / (128 + BLOCK_SPACING);
   if (m_highlightedBlock != tile) {
     m_highlightedBlock = tile;
     m_highlight->setPos(0, tile * (128 + BLOCK_SPACING));

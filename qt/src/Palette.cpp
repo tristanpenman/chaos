@@ -22,7 +22,7 @@ const Palette::Color& Palette::getColor(size_t index) const
 {
   if (index >= PALETTE_SIZE)
   {
-    throw std::runtime_error("Invalid palette index");
+    throw runtime_error("Invalid palette index");
   }
 
   return m_colors[index];
@@ -32,7 +32,7 @@ void Palette::setColor(size_t index, Color& color)
 {
   if (index >= PALETTE_SIZE)
   {
-    throw std::runtime_error("Invalid palette index");
+    throw runtime_error("Invalid palette index");
   }
 
   memcpy(&m_colors[index], &color, sizeof(Color));
