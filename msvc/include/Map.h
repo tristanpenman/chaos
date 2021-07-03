@@ -7,7 +7,7 @@ public:
     Map(unsigned int layers, unsigned int width, unsigned int height);
     Map(unsigned int layers, unsigned int width, unsigned int height, unsigned char* data);
 
-    virtual ~Map();
+    ~Map();
 
     void cleanup();
 

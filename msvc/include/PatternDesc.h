@@ -22,8 +22,6 @@ public:
     explicit PatternDesc(const PatternDesc& desc);
     PatternDesc(unsigned short patternIndex, unsigned short paletteIndex);
 
-    virtual ~PatternDesc() {}
-
     PatternDesc& operator=(const PatternDesc&);
 
     unsigned short get() const;

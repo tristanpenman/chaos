@@ -1,5 +1,8 @@
 #pragma once
 
+#include <algorithm>
+#include <iosfwd>
+
 /**
  * Decompressor for RLE-compressed level data
  * 

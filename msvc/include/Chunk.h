@@ -21,8 +21,6 @@ class Chunk
 public:
     Chunk();
 
-    virtual ~Chunk() {}
-
     void loadFromBuffer(unsigned char buffer[CHUNK_SIZE_IN_ROM]);
 
     const PatternDesc& getPatternDescriptor(unsigned int x, unsigned int y) const;

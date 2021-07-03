@@ -21,8 +21,6 @@ class Palette
 public:
     Palette();
 
-    virtual ~Palette() {}
-
     const NativeColor& getNativeColor(unsigned char index) const;
 
     void setNativeColor(unsigned char index, NativeColor color);

@@ -26,8 +26,6 @@ class Pattern
 public:
     Pattern();
 
-    virtual ~Pattern() {}
-
     void loadFromBuffer(unsigned char[PATTERN_SIZE_IN_ROM]);
 
     unsigned char getPixel(unsigned char x, unsigned char y) const;

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "windows.h"
+
 class WndFrame
 {
 public:

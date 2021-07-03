@@ -10,7 +10,7 @@ class Block
 public:
     Block(unsigned int w, unsigned int h);
 
-    virtual ~Block();
+    ~Block();
 
     bool loadFromBuffer(unsigned char* buffer);
 
