@@ -60,6 +60,8 @@ set(PROJECT_SOURCES
     src/ui/Rectangle.h
     src/ui/Window.cpp
     src/ui/Window.h
+    src/ui/ZoomSupport.cpp
+    src/ui/ZoomSupport.h
 )
 
 if (APPLE)

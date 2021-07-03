@@ -9,6 +9,7 @@
 
 #include "BlockSelector.h"
 #include "MapEditor.h"
+#include "ZoomSupport.h"
 
 #include "../Block.h"
 #include "../Chunk.h"
@@ -62,6 +63,9 @@ MapEditor::MapEditor(QWidget *parent, shared_ptr<Level>& level)
   m_view->centerOn(-m_scene->width() / 2, -m_scene->height() / 2);
   m_view->setDragMode(QGraphicsView::DragMode::NoDrag);
   hbox->addWidget(m_view);
+
+  // zoom support
+  new ZoomSupport(m_view);
 
   // selector
   auto blockSelector = new BlockSelector(this, m_blocks, blockCount);

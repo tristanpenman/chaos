@@ -16,6 +16,7 @@
   + ~~Block inspector~~
   + ~~Read-only map editor~~
   + ~~Read Sonic 3 levels~~
+  + ~~zoom in/out using mouse wheel~~
   + rename SonicReader to Kosinski (in progress)
 - Level modification support
   + ~~Block selector~~
@@ -26,6 +27,7 @@
   + Selection rectangle
   + Copy and paste
 - General improvements
+  + ~~Logging interface~~
   + Figure out how to read level names and locations from ROM files
   + Support for loading levels from decompilations
 - Sprite preview support
