@@ -1,12 +1,11 @@
 #pragma once
 
-#include <iostream>
+#include <exception>
 #include <fstream>
-#include <exception>
-#include <string>
-#include <sstream>
+#include <iostream>
 #include <map>
-#include <exception>
+#include <sstream>
+#include <string>
 #include <vector>
 
 #include <assert.h>

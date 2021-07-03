@@ -1,8 +1,8 @@
 #include "Precompiled.h"
 
-#include "ChaosApplication.h"
+#include "Application.h"
 
-extern ChaosApplication g_application;
+extern Application g_application;
 
 void REPORT_ERROR(const std::string& message, const std::string& title)
 {

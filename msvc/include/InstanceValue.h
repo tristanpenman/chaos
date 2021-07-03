@@ -1,24 +1,24 @@
 #pragma once
 
+#include <map>
 #include <stdexcept>
 
-typedef HWND InstanceValueLookup_t;
+#include "windows.h"
 
 template<typename T>
-class InstanceValue_t : public std::map<InstanceValueLookup_t, typename T>
+class InstanceValue : public std::map<HWND, typename T>
 {
 public:
-    const T get(InstanceValueLookup_t i) const;
-    T get(InstanceValueLookup_t i);
-    void set(InstanceValueLookup_t i, T val);
-    T unset(InstanceValueLookup_t i);
+    const T get(HWND) const;
+    T get(HWND);
+    void set(HWND, T val);
+    T unset(HWND);
 };
 
 template<typename T>
-inline T InstanceValue_t<T>::get(InstanceValueLookup_t i)
+inline T InstanceValue<T>::get(HWND hwnd)
 {
-    iterator itr = find(i);
-
+    iterator itr = find(hwnd);
     if (itr == end())
     {
         throw std::runtime_error("Instance not found");
@@ -28,10 +28,9 @@ inline T InstanceValue_t<T>::get(InstanceValueLookup_t i)
 }
 
 template<typename T>
-inline const T InstanceValue_t<T>::get(InstanceValueLookup_t i)	const
+inline const T InstanceValue<T>::get(HWND hwnd) const
 {
-    const_iterator itr = find(i);
-
+    const_iterator itr = find(hwnd);
     if (itr == end())
     {
         throw std::runtime_error("Instance not found");
@@ -41,31 +40,27 @@ inline const T InstanceValue_t<T>::get(InstanceValueLookup_t i)	const
 }
 
 template<typename T>
-inline void InstanceValue_t<T>::set(InstanceValueLookup_t i, T val)
+inline void InstanceValue<T>::set(HWND hwnd, T val)
 {
-    iterator itr = find(i);
-
+    iterator itr = find(hwnd);
     if (itr != end())
     {
         throw std::runtime_error("Instance already exists");
     }
 
-    insert(value_type(i, val));
+    insert(value_type(hwnd, val));
 }
 
 template<typename T>
-inline T InstanceValue_t<T>::unset(InstanceValueLookup_t i)
+inline T InstanceValue<T>::unset(HWND hwnd)
 {
-    iterator itr = find(i);
-
+    iterator itr = find(hwnd);
     if (itr == end())
     {
         throw std::runtime_error("Instance not found");
     }
 
     T t = itr->second;
-
     erase(itr);
-
     return t;
 }

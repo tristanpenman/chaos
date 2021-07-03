@@ -86,61 +86,33 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Buffer.cpp" />
-    <ClCompile Include="src\Buffer_Blocks.cpp" />
-    <ClCompile Include="src\Buffer_Patterns.cpp" />
-    <ClCompile Include="src\ChaosApplication.cpp" />
-    <ClCompile Include="src\ChaosRom.cpp" />
-    <ClCompile Include="src\ChaosRomFactory.cpp" />
-    <ClCompile Include="src\ChaosRom_Sonic2.cpp" />
-    <ClCompile Include="src\ChaosRom_Sonic3.cpp" />
-    <ClCompile Include="src\DialogLoadLevel.cpp" />
-    <ClCompile Include="src\DialogOpen.cpp" />
-    <ClCompile Include="src\Level_Sonic2.cpp" />
-    <ClCompile Include="src\Level_Sonic3.cpp" />
-    <ClCompile Include="src\Main.cpp" />
-    <ClCompile Include="src\Precompiled.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="src\SegaPalette.cpp" />
-    <ClCompile Include="src\SegaPattern.cpp" />
-    <ClCompile Include="src\SonicBlock.cpp" />
-    <ClCompile Include="src\SonicChunk.cpp" />
-    <ClCompile Include="src\SonicMap.cpp" />
-    <ClCompile Include="src\SonicReader.cpp" />
-    <ClCompile Include="src\WndFrame.cpp" />
-    <ClCompile Include="src\WndLevel.cpp" />
-    <ClCompile Include="src\WndMap.cpp" />
-  </ItemGroup>
-  <ItemGroup>
+    <ClInclude Include="include\Application.h" />
+    <ClInclude Include="include\Block.h" />
+    <ClInclude Include="include\BlockBuffer.h" />
     <ClInclude Include="include\Buffer.h" />
-    <ClInclude Include="include\Buffer_Blocks.h" />
-    <ClInclude Include="include\Buffer_Patterns.h" />
-    <ClInclude Include="include\ChaosApplication.h" />
-    <ClInclude Include="include\ChaosRom.h" />
-    <ClInclude Include="include\ChaosRomFactory.h" />
-    <ClInclude Include="include\ChaosRom_Sonic2.h" />
-    <ClInclude Include="include\ChaosRom_Sonic3.h" />
-    <ClInclude Include="include\DialogLoadLevel.h" />
-    <ClInclude Include="include\DialogOpen.h" />
+    <ClInclude Include="include\Chunk.h" />
+    <ClInclude Include="include\ChunkDesc.h" />
     <ClInclude Include="include\Dialogs.h" />
     <ClInclude Include="include\Icons.h" />
     <ClInclude Include="include\InstanceValue.h" />
     <ClInclude Include="include\Level.h" />
-    <ClInclude Include="include\Level_Sonic2.h" />
-    <ClInclude Include="include\Level_Sonic3.h" />
+    <ClInclude Include="include\LevelSelectDialog.h" />
+    <ClInclude Include="include\Map.h" />
     <ClInclude Include="include\Menus.h" />
     <ClInclude Include="include\NativeColor.h" />
+    <ClInclude Include="include\OpenRomDialog.h" />
+    <ClInclude Include="include\Palette.h" />
+    <ClInclude Include="include\Pattern.h" />
+    <ClInclude Include="include\PatternBuffer.h" />
+    <ClInclude Include="include\PatternDesc.h" />
     <ClInclude Include="include\Precompiled.h" />
     <ClInclude Include="include\Resource.h" />
-    <ClInclude Include="include\SegaPalette.h" />
-    <ClInclude Include="include\SegaPattern.h" />
-    <ClInclude Include="include\SegaPatternDescriptor.h" />
-    <ClInclude Include="include\SonicBlock.h" />
-    <ClInclude Include="include\SonicChunk.h" />
-    <ClInclude Include="include\SonicChunkDescriptor.h" />
-    <ClInclude Include="include\SonicMap.h" />
+    <ClInclude Include="include\Rom.h" />
+    <ClInclude Include="include\RomFactory.h" />
+    <ClInclude Include="include\Sonic2Level.h" />
+    <ClInclude Include="include\Sonic2Rom.h" />
+    <ClInclude Include="include\Sonic3Level.h" />
+    <ClInclude Include="include\Sonic3Rom.h" />
     <ClInclude Include="include\SonicReader.h" />
     <ClInclude Include="include\WndFrame.h" />
     <ClInclude Include="include\WndLevel.h" />
@@ -162,6 +134,34 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\Sonic.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Application.cpp" />
+    <ClCompile Include="src\Block.cpp" />
+    <ClCompile Include="src\BlockBuffer.cpp" />
+    <ClCompile Include="src\Buffer.cpp" />
+    <ClCompile Include="src\Chunk.cpp" />
+    <ClCompile Include="src\LevelSelectDialog.cpp" />
+    <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\Map.cpp" />
+    <ClCompile Include="src\OpenRomDialog.cpp" />
+    <ClCompile Include="src\Palette.cpp" />
+    <ClCompile Include="src\Pattern.cpp" />
+    <ClCompile Include="src\PatternBuffer.cpp" />
+    <ClCompile Include="src\Precompiled.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\Rom.cpp" />
+    <ClCompile Include="src\RomFactory.cpp" />
+    <ClCompile Include="src\Sonic2Level.cpp" />
+    <ClCompile Include="src\Sonic2Rom.cpp" />
+    <ClCompile Include="src\Sonic3Level.cpp" />
+    <ClCompile Include="src\Sonic3Rom.cpp" />
+    <ClCompile Include="src\SonicReader.cpp" />
+    <ClCompile Include="src\WndFrame.cpp" />
+    <ClCompile Include="src\WndLevel.cpp" />
+    <ClCompile Include="src\WndMap.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

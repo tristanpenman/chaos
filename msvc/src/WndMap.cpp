@@ -1,28 +1,29 @@
 #include "Precompiled.h"
 
-#include "InstanceValue.h"
-#include "ChaosApplication.h"
-#include "ChaosRom.h"
-#include "Resource.h"
-#include "SegaPattern.h"
+#include "Application.h"
+#include "Block.h"
+#include "BlockBuffer.h"
 #include "Buffer.h"
-#include "Buffer_Patterns.h"
-#include "Buffer_Blocks.h"
-#include "SonicChunk.h"
-#include "SonicBlock.h"
-#include "SonicMap.h"
-#include "WndMap.h"
+#include "Chunk.h"
+#include "InstanceValue.h"
 #include "Level.h"
+#include "Map.h"
+#include "Pattern.h"
+#include "PatternBuffer.h"
+#include "Resource.h"
+#include "Rom.h"
 
-extern ChaosApplication g_application;
+#include "WndMap.h"
+
+extern Application g_application;
 
 ATOM WndMap::ms_class = 0;
 HINSTANCE WndMap::ms_hinst = 0;
 
-InstanceValue_t<int> WndMap::ms_x;
-InstanceValue_t<int> WndMap::ms_y;
-InstanceValue_t<unsigned int> WndMap::ms_block_width;
-InstanceValue_t<unsigned int> WndMap::ms_block_height;
+InstanceValue<int> WndMap::ms_x;
+InstanceValue<int> WndMap::ms_y;
+InstanceValue<unsigned int> WndMap::ms_block_width;
+InstanceValue<unsigned int> WndMap::ms_block_height;
 
 ATOM WndMap::getClass(HINSTANCE hinst)
 {
@@ -85,7 +86,7 @@ void WndMap::resetScrollBars(HWND hwnd)
         return;
     }
 
-    const SonicMap& map = pLevel->getMap();
+    const Map& map = pLevel->getMap();
 
     RECT rect;
     if (GetClientRect(hwnd, &rect) == TRUE)
@@ -292,10 +293,10 @@ int WndMap::messagePaint(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
         return DefWindowProc(hwnd, msg, wparam, lparam);
     }
 
-    const SonicMap& map = pLevel->getMap();
+    const Map& map = pLevel->getMap();
 
-    const Buffer_Patterns& patternBuffer = pLevel->getPatternBuffer();
-    const Buffer_Blocks& blockBuffer = pLevel->getBlockBuffer();
+    const PatternBuffer& patternBuffer = pLevel->getPatternBuffer();
+    const BlockBuffer& blockBuffer = pLevel->getBlockBuffer();
     const unsigned int ms_block_width = WndMap::ms_block_width[hwnd];
     const unsigned int ms_block_height = WndMap::ms_block_height[hwnd];
 

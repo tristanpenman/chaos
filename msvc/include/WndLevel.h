@@ -1,5 +1,7 @@
 #pragma once
 
+#include "InstanceValue.h"
+
 class WndLevel
 {
 public:
@@ -19,5 +21,5 @@ protected:
 private:
     static ATOM ms_class;
     static HINSTANCE ms_hinst;
-    static InstanceValue_t<HWND> ms_map_windows;
+    static InstanceValue<HWND> ms_map_windows;
 };

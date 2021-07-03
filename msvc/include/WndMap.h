@@ -35,8 +35,8 @@ private:
     static ATOM ms_class;
     static HINSTANCE ms_hinst;
 
-    static InstanceValue_t<int> ms_x;
-    static InstanceValue_t<int> ms_y;
-    static InstanceValue_t<unsigned int> ms_block_width;
-    static InstanceValue_t<unsigned int> ms_block_height;
+    static InstanceValue<int> ms_x;
+    static InstanceValue<int> ms_y;
+    static InstanceValue<unsigned int> ms_block_width;
+    static InstanceValue<unsigned int> ms_block_height;
 };

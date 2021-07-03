@@ -1,8 +1,8 @@
 #include "Precompiled.h"
 
-#include "ChaosApplication.h"
+#include "Application.h"
 
-ChaosApplication g_application;
+Application g_application;
 
 HMENU g_menu_chaos = 0;
 HMENU g_menu_level = 0;

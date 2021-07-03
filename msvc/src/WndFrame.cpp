@@ -1,20 +1,20 @@
 #include "Precompiled.h"
 
+#include "Application.h"
 #include "InstanceValue.h"
-#include "ChaosApplication.h"
-#include "DialogLoadLevel.h"
-#include "DialogOpen.h"
+#include "LevelSelectDialog.h"
+#include "OpenRomDialog.h"
+#include "WndLevel.h"
+#include "WndMap.h"
 
 #include "WndFrame.h"
-#include "WndMap.h"
-#include "WndLevel.h"
 
-#define IDM_FIRSTCHILD  100
+#define IDM_FIRSTCHILD 100
 
 HINSTANCE WndFrame::ms_hinst = 0;
-ATOM      WndFrame::ms_class = 0;
+ATOM WndFrame::ms_class = 0;
 
-extern ChaosApplication g_application;
+extern Application g_application;
 
 extern HMENU g_menu_chaos;
 
@@ -55,9 +55,9 @@ HWND WndFrame::createWindow(HINSTANCE hinst, HWND hwnd_parent)
         CW_USEDEFAULT,                       // initial y position
         CW_USEDEFAULT,                       // initial x size
         CW_USEDEFAULT,                       // initial y size
-        hwnd_parent,                             // parent window handle
+        hwnd_parent,                         // parent window handle
         g_menu_chaos,                        // window menu handle
-        hinst,                           // program instance handle
+        hinst,                               // program instance handle
         NULL);                               // creation parameters
 
     return hWnd;
@@ -65,14 +65,14 @@ HWND WndFrame::createWindow(HINSTANCE hinst, HWND hwnd_parent)
 
 bool WndFrame::openFile()
 {
-    DialogOpen dialog;
+    OpenRomDialog dialog;
 
     return dialog.showDialog() && g_application.openROM(dialog.getFileName());
 }
 
 HWND WndFrame::createLevelWindow(HWND hClient)
 {
-    int level = DialogLoadLevel::showDialog(ms_hinst, g_application.getMainWindow());
+    int level = LevelSelectDialog::showDialog(ms_hinst, g_application.getMainWindow());
 
     if (level < 0)
     {
@@ -99,7 +99,7 @@ HWND WndFrame::createLevelWindow(HWND hClient)
 
 void WndFrame::enableMenuItems(HWND hwnd)
 {
-    EnableMenuItem(GetMenu(hwnd), ID_FILE_OPEN_LEVEL, MF_ENABLED);
+    EnableMenuItem(GetMenu(hwnd), ID_FILE_LEVEL_SELECT, MF_ENABLED);
 }
 
 LRESULT CALLBACK WndFrame::frameWndProc(HWND hwnd, UINT imsg, WPARAM wparam, LPARAM lparam)
@@ -140,7 +140,7 @@ LRESULT CALLBACK WndFrame::frameWndProc(HWND hwnd, UINT imsg, WPARAM wparam, LPA
             }
             return 0;
 
-        case ID_FILE_OPEN_LEVEL:
+        case ID_FILE_LEVEL_SELECT:
             // Is ROM loaded?
             if (g_application.getROM())
             {

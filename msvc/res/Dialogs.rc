@@ -6,14 +6,14 @@
 
 /******************************************************************************
  *
- * Load level dialog
+ * Level Select dialog
  *
  *****************************************************************************/
 
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_AUS
 ID_DIALOG_LOAD_LEVEL DIALOG 0, 0, 182, 158
 STYLE DS_CENTER | DS_SHELLFONT | WS_VISIBLE | WS_BORDER | WS_CAPTION | WS_DLGFRAME | WS_POPUP | WS_SYSMENU
-CAPTION "Load Level"
+CAPTION "Level Select"
 FONT 8, "Ms Shell Dlg 2"
 BEGIN
 

@@ -1,31 +1,31 @@
 #include "Precompiled.h"
 
-#include "InstanceValue.h"
-#include "ChaosApplication.h"
-#include "ChaosRom.h"
-#include "Resource.h"
-#include "SegaPattern.h"
+#include "Application.h"
+#include "Block.h"
+#include "BlockBuffer.h"
 #include "Buffer.h"
-#include "Buffer_Patterns.h"
-#include "Buffer_Blocks.h"
-#include "SonicChunk.h"
-#include "SonicBlock.h"
-#include "SonicMap.h"
+#include "Chunk.h"
+#include "InstanceValue.h"
 #include "Level.h"
-
-#include "WndMap.h"
-#include "WndLevel.h"
+#include "Map.h"
+#include "Pattern.h"
+#include "PatternBuffer.h"
+#include "Resource.h"
+#include "Rom.h"
 #include "WndFrame.h"
+#include "WndMap.h"
 
-extern ChaosApplication g_application;
+#include "WndLevel.h"
+
+extern Application g_application;
 
 extern HMENU g_menu_chaos;
 extern HMENU g_menu_level;
 
-ATOM      WndLevel::ms_class = 0;
+ATOM WndLevel::ms_class = 0;
 HINSTANCE WndLevel::ms_hinst = 0;
 
-InstanceValue_t<HWND> WndLevel::ms_map_windows;
+InstanceValue<HWND> WndLevel::ms_map_windows;
 
 ATOM WndLevel::getClass(HINSTANCE hinst)
 {
@@ -42,7 +42,7 @@ ATOM WndLevel::getClass(HINSTANCE hinst)
         wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
         wc.hbrBackground = NULL;
         wc.lpszMenuName  = TEXT("MENU_LEVEL");
-        wc.lpszClassName = TEXT("ChaosLevel");
+        wc.lpszClassName = TEXT("WndLevel");
 
         ms_class = RegisterClass(&wc);
         ms_hinst = hinst;
