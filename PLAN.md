@@ -4,11 +4,11 @@
   + ~~code style~~
   + ~~warnings~~
   + ~~remove ROM details from Level Select~~
-  + cleaner separation of core and WinAPI classes
-  + normalise variable naming
-  + tidy up exception handling
-  + tidy up Sonic 3 loader code
-  + rename SonicReader to Kosinski
+  + Rename SonicReader to Kosinski (in progress)
+  + Normalise variable naming (in progress)
+  + Cleaner separation of core and WinAPI classes
+  + Tidy up exception handling
+  + Tidy up Sonic 3 loader code
 - Port simple map viewer interface to Mac and Linux using Qt
   + ~~Palette inspector~~
   + ~~Pattern inspector~~
@@ -16,15 +16,15 @@
   + ~~Block inspector~~
   + ~~Read-only map editor~~
   + ~~Read Sonic 3 levels~~
-  + rename SonicReader to Kosinski
+  + rename SonicReader to Kosinski (in progress)
 - Level modification support
-  + Block selector (in progress)
-  + RLE compression implementation
-  + resize Sonic 2 ROM
-  + resize Sonic 3 ROM
-  + pencil
-  + selection rectangle
-  + copy and paste
+  + ~~Block selector~~
+  + Pencil mode (in progress)
+  + RLE compression implementation (in progress)
+  + Resize Sonic 2 ROM
+  + Resize Sonic 3 ROM
+  + Selection rectangle
+  + Copy and paste
 - General improvements
   + Figure out how to read level names and locations from ROM files
   + Support for loading levels from decompilations

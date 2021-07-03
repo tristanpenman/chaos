@@ -55,6 +55,7 @@ set(PROJECT_SOURCES
     src/ui/PaletteInspector.h
     src/ui/PatternInspector.cpp
     src/ui/PatternInspector.h
+    src/ui/Rectangle.h
     src/ui/Window.cpp
     src/ui/Window.h
 )

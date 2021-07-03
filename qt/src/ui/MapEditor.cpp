@@ -22,6 +22,7 @@
 MapEditor::MapEditor(QWidget *parent, std::shared_ptr<Level>& level)
   : QWidget(parent)
   , m_level(level)
+  , m_selectedBlock(0)
 {
   setStyleSheet("background: #ccc");
 
@@ -61,6 +62,7 @@ MapEditor::MapEditor(QWidget *parent, std::shared_ptr<Level>& level)
   // selector
   auto blockSelector = new BlockSelector(this, m_blocks, blockCount);
   hbox->addWidget(blockSelector);
+  connect(blockSelector, SIGNAL(blockSelected(int)), this, SLOT(blockSelected(int)));
 
   // allow map to grow but block selector remains the same size
   hbox->setStretch(0, 1);
@@ -136,4 +138,9 @@ void MapEditor::drawBlock(QPixmap& pixmap, size_t index)
   if (!pixmap.convertFromImage(image)) {
     throw std::runtime_error("Failed to copy image to pixmap");
   }
+}
+
+void MapEditor::blockSelected(int blockIdx)
+{
+  m_selectedBlock = blockIdx;
 }

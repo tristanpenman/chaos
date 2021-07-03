@@ -30,4 +30,9 @@ private:
   QGraphicsScene* m_scene;
   QGraphicsView* m_view;
   QPixmap** m_blocks;
+
+  size_t m_selectedBlock;
+
+private slots:
+  void blockSelected(int);
 };
