@@ -29,6 +29,12 @@ fstream& Rom::getFile()
   return m_file;
 }
 
+size_t Rom::getSize()
+{
+  m_file.seekg(0, ios::end);
+  return m_file.tellg();
+}
+
 string Rom::readDomesticName()
 {
   char buffer[DOMESTIC_NAME_LEN + 1];

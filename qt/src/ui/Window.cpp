@@ -20,6 +20,7 @@
 #include "MapEditor.h"
 #include "PaletteInspector.h"
 #include "PatternInspector.h"
+#include "RomInfo.h"
 
 #include "Window.h"
 
@@ -47,57 +48,16 @@ Window::Window()
   setAttribute(Qt::WA_AcceptTouchEvents, false);
 
   // choose a nice default width and height, and center the window
-  QRect geometry = QGuiApplication::primaryScreen()->geometry();
+  const auto geometry = QGuiApplication::primaryScreen()->geometry();
   const int width = geometry.height() * 0.75;
   const int height = geometry.height() * 0.5;
   setGeometry(0, 0, width, height);
   move(geometry.center() - rect().center());
 
+  // menus
   createFileMenu();
   createViewMenu();
-}
-
-void Window::createFileMenu()
-{
-  // write up Open ROM action
-  QAction* openRomAction = new QAction(tr("&Open ROM..."));
-  openRomAction->setShortcuts(QKeySequence::Open);
-  connect(openRomAction, SIGNAL(triggered()), this, SLOT(showOpenRomDialog()));
-
-  // track Level Select action so we can enable it later
-  m_levelSelectAction = new QAction(tr("&Level Select..."));
-  m_levelSelectAction->setDisabled(true);
-  connect(m_levelSelectAction, SIGNAL(triggered()), this, SLOT(levelSelect()));
-
-  // build file menu
-  QMenu* fileMenu = menuBar()->addMenu(tr("&File"));
-  fileMenu->addAction(openRomAction);
-  fileMenu->addSeparator();
-  fileMenu->addAction(m_levelSelectAction);
-}
-
-void Window::createViewMenu()
-{
-  QMenu* viewMenu = menuBar()->addMenu(tr("&View"));
-
-  // wire up inspectors
-  QAction* inspectPalettesAction = new QAction(tr("Palettes"), this);
-  connect(inspectPalettesAction, SIGNAL(triggered()), this, SLOT(showPaletteInspector()));
-  QAction* inspectPatternsAction = new QAction(tr("Patterns (8x8)"), this);
-  connect(inspectPatternsAction, SIGNAL(triggered()), this, SLOT(showPatternInspector()));
-  QAction* inspectChunksAction = new QAction(tr("Chunks (16x16)"), this);
-  connect(inspectChunksAction, SIGNAL(triggered()), this, SLOT(showChunkInspector()));
-  QAction* inspectBlocksAction = new QAction(tr("Blocks (128x128)"), this);
-  connect(inspectBlocksAction, SIGNAL(triggered()), this, SLOT(showBlockInspector()));
-
-  // build inspectors sub-menu
-  m_inspectorsMenu = viewMenu->addMenu(tr("&Inspectors"));
-  m_inspectorsMenu->setDisabled(true);
-  m_inspectorsMenu->addAction(inspectPalettesAction);
-  m_inspectorsMenu->addSeparator();
-  m_inspectorsMenu->addAction(inspectPatternsAction);
-  m_inspectorsMenu->addAction(inspectChunksAction);
-  m_inspectorsMenu->addAction(inspectBlocksAction);
+  createToolsMenu();
 }
 
 bool Window::openRom(const QString &path)
@@ -119,7 +79,13 @@ bool Window::openRom(const QString &path)
   LOG << "ROM identified";
   LOG << "Domestic name: '" << m_rom->readDomesticName() << "'";
 
-  m_levelSelectAction->setDisabled(false);
+  m_levelSelectAction->setEnabled(true);
+  m_relocateLevelsAction->setEnabled(m_game->canRelocateLevels());
+
+  if (m_romInfo) {
+    delete m_romInfo;
+    m_romInfo = nullptr;
+  }
 
   return true;
 }
@@ -137,8 +103,20 @@ void Window::openLevel(const QString& level)
 
 void Window::showOpenRomDialog()
 {
+  if (m_level) {
+    const QMessageBox::StandardButton reply = QMessageBox::question(this,
+          tr("Close Level"),
+          tr("Are you sure you want to close the current level?"),
+          QMessageBox::Yes | QMessageBox::No);
+    if (reply == QMessageBox::No) {
+      return;
+    }
+  }
+
   const QString fileName = QFileDialog::getOpenFileName(this, tr("Open ROM"), QString(), QString("*.bin"));
   if (!fileName.isEmpty()) {
+    m_level.reset();
+
     if (openRom(fileName)) {
       levelSelect();
     }
@@ -199,14 +177,16 @@ void Window::levelSelected(int levelIdx)
   LOG << "Loading level: " << levelIdx << " (" << m_game->getTitleCards()[levelIdx] << ")";
 
   m_level = m_game->loadLevel(levelIdx);
-
-  if (m_level) {
-    m_inspectorsMenu->setEnabled(true);
-    m_mapEditor = new MapEditor(this, m_level);
-    this->setCentralWidget(m_mapEditor);
-  } else {
+  if (!m_level) {
     showError(tr("Level Error"), tr("Failed to load level"));
+    return;
   }
+
+  m_inspectorsMenu->setEnabled(true);
+  m_romInfoAction->setEnabled(true);
+
+  m_mapEditor = new MapEditor(this, m_level);
+  this->setCentralWidget(m_mapEditor);
 }
 
 void Window::showPaletteInspector()
@@ -243,6 +223,86 @@ void Window::showBlockInspector()
   }
 
   m_blockInspector->show();
+}
+
+void Window::showRomInfo()
+{
+  if (!m_romInfo) {
+    m_romInfo = new RomInfo(this, *m_rom, *m_game);
+  }
+
+  m_romInfo->show();
+}
+
+void Window::relocateLevels()
+{
+  try {
+    if (!m_game->relocateLevels()) {
+      showError(tr("Relocate Levels"), tr("Levels could not be relocated."));
+    }
+  } catch (exception& e) {
+    showError(tr("Relocate Levels"), tr("Exception while relocating levels: ") + e.what());
+  }
+}
+
+void Window::createFileMenu()
+{
+  // Open ROM
+  auto openRomAction = new QAction(tr("&Open ROM..."));
+  openRomAction->setShortcuts(QKeySequence::Open);
+  connect(openRomAction, SIGNAL(triggered()), this, SLOT(showOpenRomDialog()));
+
+  // Level Select
+  m_levelSelectAction = new QAction(tr("&Level Select..."));
+  m_levelSelectAction->setDisabled(true);
+  connect(m_levelSelectAction, SIGNAL(triggered()), this, SLOT(levelSelect()));
+
+  // file menu
+  auto fileMenu = menuBar()->addMenu(tr("&File"));
+  fileMenu->addAction(openRomAction);
+  fileMenu->addSeparator();
+  fileMenu->addAction(m_levelSelectAction);
+}
+
+void Window::createViewMenu()
+{
+  auto viewMenu = menuBar()->addMenu(tr("&View"));
+
+  // wire up inspectors
+  auto inspectPalettesAction = new QAction(tr("Palettes"), this);
+  connect(inspectPalettesAction, SIGNAL(triggered()), this, SLOT(showPaletteInspector()));
+  auto inspectPatternsAction = new QAction(tr("Patterns (8x8)"), this);
+  connect(inspectPatternsAction, SIGNAL(triggered()), this, SLOT(showPatternInspector()));
+  auto inspectChunksAction = new QAction(tr("Chunks (16x16)"), this);
+  connect(inspectChunksAction, SIGNAL(triggered()), this, SLOT(showChunkInspector()));
+  auto inspectBlocksAction = new QAction(tr("Blocks (128x128)"), this);
+  connect(inspectBlocksAction, SIGNAL(triggered()), this, SLOT(showBlockInspector()));
+
+  // build inspectors sub-menu
+  m_inspectorsMenu = viewMenu->addMenu(tr("&Inspectors"));
+  m_inspectorsMenu->setDisabled(true);
+  m_inspectorsMenu->addAction(inspectPalettesAction);
+  m_inspectorsMenu->addSeparator();
+  m_inspectorsMenu->addAction(inspectPatternsAction);
+  m_inspectorsMenu->addAction(inspectChunksAction);
+  m_inspectorsMenu->addAction(inspectBlocksAction);
+}
+
+void Window::createToolsMenu()
+{
+  auto toolsMenu = menuBar()->addMenu(tr("&Tools"));
+
+  m_romInfoAction = new QAction(tr("ROM Info..."), this);
+  connect(m_romInfoAction, SIGNAL(triggered()), this, SLOT(showRomInfo()));
+  m_romInfoAction->setDisabled(true);
+
+  m_relocateLevelsAction = new QAction(tr("Relocate Levels"), this);
+  connect(m_relocateLevelsAction, SIGNAL(triggered()), this, SLOT(relocateLevels()));
+  m_relocateLevelsAction->setDisabled(true);
+
+  toolsMenu->addAction(m_romInfoAction);
+  toolsMenu->addSeparator();
+  toolsMenu->addAction(m_relocateLevelsAction);
 }
 
 void Window::showError(const QString& title, const QString& text)

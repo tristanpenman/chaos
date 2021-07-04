@@ -16,6 +16,7 @@ class MapEditor;
 class PaletteInspector;
 class PatternInspector;
 class Rom;
+class RomInfo;
 
 class Window : public QMainWindow
 {
@@ -28,19 +29,26 @@ public:
   void openLevel(const QString& level);
 
 public slots:
+  // file
+  void showOpenRomDialog();
   void levelSelect();
   void levelSelected(int levelIdx);
 
-private slots:
-  void showOpenRomDialog();
+  // view -> inspectors
   void showPaletteInspector();
   void showPatternInspector();
   void showChunkInspector();
   void showBlockInspector();
 
+  // tools
+  void showRomInfo();
+  void relocateLevels();
+
 private:
   void createFileMenu();
   void createViewMenu();
+  void createToolsMenu();
+
   void showError(const QString& title, const QString& text);
 
   // dialogs
@@ -49,12 +57,17 @@ private:
   PatternInspector* m_patternInspector;
   ChunkInspector* m_chunkInspector;
   BlockInspector* m_blockInspector;
+  RomInfo* m_romInfo;
 
   // editor
   MapEditor* m_mapEditor;
 
-  // menus
+  // actions
   QAction* m_levelSelectAction;
+  QAction* m_relocateLevelsAction;
+  QAction* m_romInfoAction;
+
+  // menus
   QMenu *m_inspectorsMenu;
 
   // layouts

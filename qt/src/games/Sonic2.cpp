@@ -28,6 +28,11 @@ bool Sonic2::isCompatible()
   return name.find("SONIC THE") != name.npos && name.find("HEDGEHOG 2") != name.npos;
 }
 
+const char* Sonic2::getIdentifier() const
+{
+  return "Sonic2";
+}
+
 vector<string> Sonic2::getTitleCards()
 {
   return {
@@ -77,6 +82,16 @@ shared_ptr<Level> Sonic2::loadLevel(unsigned int levelIdx)
                                   chunksAddr,
                                   blocksAddr,
                                   mapAddr);
+}
+
+bool Sonic2::canRelocateLevels() const
+{
+  return true;
+}
+
+bool Sonic2::relocateLevels()
+{
+  throw std::runtime_error("Not implemented");
 }
 
 uint32_t Sonic2::getDataAddress(unsigned int levelIdx, unsigned int entryOffset)

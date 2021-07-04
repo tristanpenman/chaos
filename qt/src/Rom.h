@@ -12,6 +12,8 @@ public:
 
   std::fstream& getFile();
 
+  size_t getSize();
+
   std::string readDomesticName();
   std::string readInternationalName();
 

@@ -27,6 +27,11 @@ bool Sonic3::isCompatible()
   return name.find("SONIC THE") != name.npos && name.find("HEDGEHOG 3") != name.npos;
 }
 
+const char* Sonic3::getIdentifier() const
+{
+  return "Sonic3";
+}
+
 vector<string> Sonic3::getTitleCards()
 {
   return {
@@ -79,6 +84,16 @@ shared_ptr<Level> Sonic3::loadLevel(unsigned int levelIdx)
                                   blocksAddr,
                                   extendedBlocksAddr,
                                   mapAddr);
+}
+
+bool Sonic3::canRelocateLevels() const
+{
+  return false;
+}
+
+bool Sonic3::relocateLevels()
+{
+  throw std::runtime_error("Not implemented");
 }
 
 uint32_t Sonic3::getDataAddress(unsigned int levelIdx, unsigned int entryOffset)
