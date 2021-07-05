@@ -4,10 +4,8 @@
 
 #include "Rom.h"
 
-// TODO: not currently used
 #define CHECKSUM_OFFSET 0x018E
 #define CHECKSUM_BUFFER_SIZE 0x8000  // 32kB
-
 #define ROM_HEADER_OFFSET 0x100
 #define ROM_LENGTH_OFFSET 0x01A4
 #define DOMESTIC_NAME_LEN 48
@@ -33,6 +31,61 @@ size_t Rom::getSize()
 {
   m_file.seekg(0, ios::end);
   return m_file.tellg();
+}
+
+uint32_t Rom::readSize()
+{
+  return read32BitAddr(0x1A4);
+}
+
+void Rom::writeSize(uint32_t size)
+{
+  write32BitAddr(size, 0x1A4);
+
+  m_file.flush();
+}
+
+uint16_t Rom::calculateChecksum()
+{
+  vector<char> buffer(CHECKSUM_BUFFER_SIZE);
+  m_file.seekg(512);
+  int count = 0;
+  while (!m_file.eof()) {
+    m_file.read(buffer.data(), buffer.size());
+    auto readCount = m_file.gcount();
+    for (auto i = 0; i < readCount; i += 2) {
+      int num;
+
+      if (buffer[i] < 0) {
+        num = buffer[i] + 256;
+      } else {
+        num = buffer[i];
+      }
+
+      count += num << 8;
+
+      if ((i + 1) < readCount) {
+        if (buffer[i + 1] < 0) {
+          num = buffer[i + 1] + 256;
+        } else {
+          num = buffer[i + 1];
+        }
+
+        count += num;
+      }
+
+      count &= 0xFFFF;
+    }
+  }
+
+  m_file.clear();
+
+  return static_cast<uint16_t>(count);
+}
+
+uint16_t Rom::readChecksum()
+{
+  return read16BitAddr(CHECKSUM_OFFSET);
 }
 
 string Rom::readDomesticName()
