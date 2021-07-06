@@ -21,5 +21,5 @@ public:
 
   virtual bool canRelocateLevels() const = 0;
 
-  virtual bool relocateLevels() = 0;
+  virtual bool relocateLevels(bool unsafe) = 0;
 };

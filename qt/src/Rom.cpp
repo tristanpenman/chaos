@@ -33,7 +33,7 @@ size_t Rom::getSize()
   return m_file.tellg();
 }
 
-uint32_t Rom::readSize()
+uint32_t Rom::readAddrRange()
 {
   return read32BitAddr(0x1A4);
 }
@@ -86,6 +86,13 @@ uint16_t Rom::calculateChecksum()
 uint16_t Rom::readChecksum()
 {
   return read16BitAddr(CHECKSUM_OFFSET);
+}
+
+void Rom::writeChecksum(uint16_t checksum)
+{
+  write16BitAddr(checksum, CHECKSUM_OFFSET);
+
+  m_file.flush();
 }
 
 string Rom::readDomesticName()

@@ -21,11 +21,11 @@
 - Level modification support
   + ~~Block selector~~
   + ~~Pencil mode~~
-  + Relocate levels in Sonic 2 ROM (in progress)
+  + ~~Relocate levels in Sonic 2 ROM~~
   * Undo/redo
   + RLE compression implementation (in progress)
   + Toolbar
-  + Resize Sonic 3 ROM
+  + Relocate levels in Sonic 3 ROM
   + Selection rectangle
   + Copy and paste
 - General improvements

@@ -16,7 +16,7 @@ public:
   std::vector<std::string> getTitleCards() override;
   std::shared_ptr<Level> loadLevel(unsigned int levelIdx) override;
   bool canRelocateLevels() const override;
-  bool relocateLevels() override;
+  bool relocateLevels(bool unsafe) override;
 
 private:
   uint32_t getDataAddress(uint32_t levelIdx, uint32_t entryOffset);

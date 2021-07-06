@@ -1,3 +1,4 @@
+#include "../Kosinski.h"
 #include "../Logger.h"
 #include "../Rom.h"
 
@@ -8,12 +9,15 @@
 
 using namespace std;
 
-constexpr uint32_t levelLayoutDirAddrLoc = 0xE46E;  // Pointer to directory of layout pointers
-constexpr uint32_t levelSelectIndex = 0x9454;       // Level select order
-constexpr uint32_t levelDataDir = 0x42594;          // Level data pointers (patterns, chunks, blocks)
-constexpr uint32_t levelDataDirEntrySize = 12;      // Each pointer is 4 bytes, total of 3 pointers
-constexpr uint32_t levelPaletteDir = 0x2782;        // Directory of palette pointers
-constexpr uint32_t sonicTailsPaletteAddr = 0x29E2;  // Default palette used for Sonic and Tails
+static constexpr uint32_t defaultRomSize = 0x100000;            // Size of a standard Sonic 2 ROM (1MB)
+static constexpr uint32_t defaultLevelLayoutDirAddr = 0x045A80;
+static constexpr uint32_t levelLayoutDirAddrLoc = 0xE46E;       // Pointer to directory of layout pointers
+static constexpr uint32_t levelLayoutDirSize = 68;
+static constexpr uint32_t levelSelectAddr = 0x9454;             // Level select order
+static constexpr uint32_t levelDataDir = 0x42594;               // Level data pointers (patterns, chunks, blocks)
+static constexpr uint32_t levelDataDirEntrySize = 12;           // Each pointer is 4 bytes, total of 3 pointers
+static constexpr uint32_t levelPaletteDir = 0x2782;             // Directory of palette pointers
+static constexpr uint32_t sonicTailsPaletteAddr = 0x29E2;       // Default palette used for Sonic and Tails
 
 Sonic2::Sonic2(shared_ptr<Rom>& rom)
   : m_rom(rom)
@@ -89,14 +93,84 @@ bool Sonic2::canRelocateLevels() const
   return true;
 }
 
-bool Sonic2::relocateLevels()
+bool Sonic2::relocateLevels(bool unsafe)
 {
-  throw std::runtime_error("Not implemented");
+  // check rom size
+  const auto romSize = m_rom->getSize();
+  if (romSize != defaultRomSize && !unsafe) {
+    return false;
+  }
+
+  // check level layout directory address
+  const auto levelLayoutDirAddr = m_rom->read32BitAddr(levelLayoutDirAddrLoc);
+  if (levelLayoutDirAddr != defaultLevelLayoutDirAddr && !unsafe) {
+    return false;
+  }
+
+  // relocate levels using level select order
+  const auto maxMapSize = 2 * 128 * 16;
+  const auto maxMapCount = levelLayoutDirSize / 2;
+  const auto bufferSize = levelLayoutDirSize + maxMapSize * maxMapCount;
+  vector<uint8_t> buffer(bufferSize);
+
+  // setup decompression
+  auto& file = m_rom->getFile();
+  Kosinski kosinski(file);
+  vector<uint8_t> mapBuffer(0xFFFFF);
+
+  for (int levelIdx = 0; levelIdx < 20; levelIdx++) {
+
+    const uint32_t zoneIdxLoc = levelSelectAddr + levelIdx * 2;
+    const uint8_t zoneIdx = m_rom->readByte(zoneIdxLoc);
+
+    const uint32_t actIdxLoc = zoneIdxLoc + 1;
+    const uint8_t actIdx = m_rom->readByte(actIdxLoc);
+
+    const uint32_t levelLayoutDirAddr = m_rom->read32BitAddr(levelLayoutDirAddrLoc);
+    const uint32_t levelOffsetLoc = levelLayoutDirAddr + zoneIdx * 4 + actIdx * 2;
+    const uint16_t levelOffset = m_rom->read16BitAddr(levelOffsetLoc);
+
+    const uint32_t tilesAddr = levelLayoutDirAddr + levelOffset;
+
+    // copy to new location to rom
+    const uint16_t newLevelOffset = 68 + maxMapSize * levelIdx;
+    buffer[zoneIdx * 4 + actIdx * 2] = (newLevelOffset >> 8) & 0xFF;
+    buffer[zoneIdx * 4 + actIdx * 2 + 1] = newLevelOffset & 0xFF;
+
+    const auto outputOffset = levelLayoutDirSize + maxMapSize * levelIdx;
+
+    // figure out how many bytes to copy
+    file.seekg(tilesAddr);
+    const auto result = kosinski.decompress(mapBuffer.data(), mapBuffer.size());
+    if (!result.first) {
+      stringstream ss;
+      ss << "Unable to relocate levels; level decompression failed on level " << levelIdx;
+      throw std::runtime_error(ss.str());
+    }
+
+    // copy however much data was read by the decompressor
+    const auto bytesToCopy = static_cast<uint32_t>(file.tellg()) - tilesAddr;
+    file.seekg(tilesAddr);
+    file.read(reinterpret_cast<char*>(buffer.data() + outputOffset), bytesToCopy);
+  }
+
+  m_rom->write32BitAddr(romSize, levelLayoutDirAddrLoc);
+  file.seekp(romSize);
+  file.write(reinterpret_cast<char*>(buffer.data()), bufferSize);
+
+  // write new rom size
+  m_rom->writeSize(romSize + bufferSize - 1);
+
+  // write new checksum
+  uint16_t checksum = m_rom->calculateChecksum();
+  m_rom->writeChecksum(checksum);
+
+  return true;
 }
 
 uint32_t Sonic2::getDataAddress(unsigned int levelIdx, unsigned int entryOffset)
 {
-  const uint32_t levelDataIdxLoc = levelSelectIndex + levelIdx * 2;
+  const uint32_t levelDataIdxLoc = levelSelectAddr + levelIdx * 2;
   const uint8_t levelDataIdx = m_rom->readByte(levelDataIdxLoc);
 
   const uint32_t dataAddrLoc = levelDataDir +
@@ -137,7 +211,7 @@ uint32_t Sonic2::getPatternsAddr(unsigned int levelIdx)
 
 uint32_t Sonic2::getTilesAddr(unsigned int levelIdx)
 {
-  const uint32_t zoneIdxLoc = levelSelectIndex + levelIdx * 2;
+  const uint32_t zoneIdxLoc = levelSelectAddr + levelIdx * 2;
   const uint8_t zoneIdx = m_rom->readByte(zoneIdxLoc);
 
   const uint32_t actIdxLoc = zoneIdxLoc + 1;

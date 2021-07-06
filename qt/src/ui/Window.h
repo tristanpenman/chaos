@@ -50,6 +50,7 @@ private:
   void createToolsMenu();
 
   void showError(const QString& title, const QString& text);
+  void showInfo(const QString& title, const QString& text);
 
   // dialogs
   LevelSelect* m_levelSelect;

@@ -6,11 +6,11 @@
 
 #define LOG Logger("Sonic3")
 
-const uint32_t levelLayoutDirAddr = 0x81360;  // Layout pointers are found here
-const uint32_t levelSelectIndex = 0x6A8E;     // Level select order
-const uint32_t levelDataDir = 0x5AB0C;        // Level data pointers (patterns, chunks, blocks)
-const uint32_t levelDataDirEntrySize = 24;    // Each pointer is 4 bytestotal of 3 pointers
-const uint32_t levelPaletteDir = 0x8BF54;     // Directory of palette pointers
+static constexpr const uint32_t levelLayoutDirAddr = 0x81360;  // Layout pointers are found here
+static constexpr const uint32_t levelSelectIndex = 0x6A8E;     // Level select order
+static constexpr const uint32_t levelDataDir = 0x5AB0C;        // Level data pointers (patterns, chunks, blocks)
+static constexpr const uint32_t levelDataDirEntrySize = 24;    // Each pointer is 4 bytestotal of 3 pointers
+static constexpr const uint32_t levelPaletteDir = 0x8BF54;     // Directory of palette pointers
 
 using namespace std;
 
@@ -91,7 +91,7 @@ bool Sonic3::canRelocateLevels() const
   return false;
 }
 
-bool Sonic3::relocateLevels()
+bool Sonic3::relocateLevels(bool)
 {
   throw std::runtime_error("Not implemented");
 }

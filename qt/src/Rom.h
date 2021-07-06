@@ -14,11 +14,12 @@ public:
 
   size_t getSize();
 
-  uint32_t readSize();
+  uint32_t readAddrRange();
   void writeSize(uint32_t size);
 
   uint16_t calculateChecksum();
   uint16_t readChecksum();
+  void writeChecksum(uint16_t checksum);
 
   std::string readDomesticName();
   std::string readInternationalName();

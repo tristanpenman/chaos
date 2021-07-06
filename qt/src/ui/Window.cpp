@@ -237,8 +237,23 @@ void Window::showRomInfo()
 void Window::relocateLevels()
 {
   try {
-    if (!m_game->relocateLevels()) {
-      showError(tr("Relocate Levels"), tr("Levels could not be relocated."));
+    if (m_game->relocateLevels(false)) {
+      showInfo(tr("Relocate Levels"), tr("Levels relocated successfully."));
+      return;
+    }
+
+    const QMessageBox::StandardButton reply = QMessageBox::question(this,
+          tr("Relocate Levels"),
+          tr("Levels could not be relocated safely. Would you like to try anyway?"),
+          QMessageBox::Yes | QMessageBox::No);
+    if (reply == QMessageBox::No) {
+      return;
+    }
+
+    if (m_game->relocateLevels(true)) {
+      showInfo(tr("Relocate Levels"), tr("Levels relocated successfully (unsafe)."));
+    } else {
+      showError(tr("Relocate Levels"), tr("Level relocation was attempted but rolled back."));
     }
   } catch (exception& e) {
     showError(tr("Relocate Levels"), tr("Exception while relocating levels: ") + e.what());
@@ -286,6 +301,15 @@ void Window::createViewMenu()
   m_inspectorsMenu->addAction(inspectPatternsAction);
   m_inspectorsMenu->addAction(inspectChunksAction);
   m_inspectorsMenu->addAction(inspectBlocksAction);
+
+  // zoom
+  auto actualSizeAction = new QAction(tr("Actual Size"), this);
+  auto zoomInAction = new QAction(tr("Zoom In"), this);
+  auto zoomOutAction = new QAction(tr("Zoom Out"), this);
+  viewMenu->addSeparator();
+  viewMenu->addAction(actualSizeAction);
+  viewMenu->addAction(zoomInAction);
+  viewMenu->addAction(zoomOutAction);
 }
 
 void Window::createToolsMenu()
@@ -306,6 +330,14 @@ void Window::createToolsMenu()
 }
 
 void Window::showError(const QString& title, const QString& text)
+{
+  QMessageBox msgBox;
+  msgBox.setWindowTitle(title);
+  msgBox.setText(text);
+  msgBox.exec();
+}
+
+void Window::showInfo(const QString& title, const QString& text)
 {
   QMessageBox msgBox;
   msgBox.setWindowTitle(title);

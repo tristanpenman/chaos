@@ -27,13 +27,15 @@ RomInfo::RomInfo(QWidget *parent, Rom& rom, Game& game)
   fileSizeField->setText(QString::number(fileSize) + tr(" bytes"));
   layout->addRow(fileSizeLabel, fileSizeField);
 
-  // rom size (header)
-  auto romSizeLabel = new QLabel(this);
-  romSizeLabel->setText(tr("Rom size (header):"));
-  auto romSizeField = new QLabel(this);
-  auto romSize = rom.readSize();
-  romSizeField->setText(QString::number(romSize) + tr(" bytes"));
-  layout->addRow(romSizeLabel, romSizeField);
+  // address range
+  auto addrRangeLabel = new QLabel(this);
+  addrRangeLabel->setText(tr("Address range:"));
+  auto addrRangeField = new QLabel(this);
+  auto addrRange = rom.readAddrRange();
+  addrRangeField->setText(QString("0x%1 (%2)").arg(
+                            QString("%1").arg(addrRange, 1, 16).toUpper(),
+                            QString::number(addrRange) + " bytes"));
+  layout->addRow(addrRangeLabel, addrRangeField);
 
   // checksum in rom
   auto romChecksumLabel = new QLabel(this);
