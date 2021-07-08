@@ -98,7 +98,7 @@ bool Sonic2::relocateLevels(bool unsafe)
   LOG << "Relocating levels in " << (unsafe ? "unsafe" : "safe") << " mode";
 
   // check rom size
-  const auto romSize = m_rom->getSize();
+  const auto romSize = static_cast<uint32_t>(m_rom->getSize());
   if (romSize != defaultRomSize && !unsafe) {
     LOG << "Rom size does not match default; giving up";
     return false;
@@ -112,9 +112,9 @@ bool Sonic2::relocateLevels(bool unsafe)
   }
 
   // relocate levels using level select order
-  const auto maxMapSize = 2 * 128 * 16;
-  const auto maxMapCount = levelLayoutDirSize / 2;
-  const auto bufferSize = levelLayoutDirSize + maxMapSize * maxMapCount;
+  const uint16_t maxMapSize = 2 * 128 * 16;
+  const uint32_t maxMapCount = levelLayoutDirSize / 2;
+  const uint32_t bufferSize = levelLayoutDirSize + maxMapSize * maxMapCount;
   vector<uint8_t> buffer(bufferSize);
 
   // setup decompression
@@ -122,7 +122,7 @@ bool Sonic2::relocateLevels(bool unsafe)
   Kosinski kosinski(file);
   vector<uint8_t> mapBuffer(0xFFFFF);
 
-  for (int levelIdx = 0; levelIdx < 20; levelIdx++) {
+  for (uint16_t levelIdx = 0; levelIdx < 20; levelIdx++) {
     LOG << "Relocating level " << levelIdx;
 
     const uint32_t zoneIdxLoc = levelSelectAddr + levelIdx * 2;
@@ -131,7 +131,6 @@ bool Sonic2::relocateLevels(bool unsafe)
     const uint32_t actIdxLoc = zoneIdxLoc + 1;
     const uint8_t actIdx = m_rom->readByte(actIdxLoc);
 
-    const uint32_t levelLayoutDirAddr = m_rom->read32BitAddr(levelLayoutDirAddrLoc);
     const uint32_t levelOffsetLoc = levelLayoutDirAddr + zoneIdx * 4 + actIdx * 2;
     const uint16_t levelOffset = m_rom->read16BitAddr(levelOffsetLoc);
 

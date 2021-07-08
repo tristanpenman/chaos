@@ -44,7 +44,7 @@ private:
   int m_highlightX;
   int m_highlightY;
 
-  size_t m_selectedBlock;
+  uint8_t m_selectedBlock;
 
 private slots:
   void blockSelected(int);
