@@ -22,5 +22,5 @@ public:
 
   virtual ~Command() = default;
 
-  virtual Result perform() = 0;
+  virtual Result commit() = 0;
 };

@@ -150,7 +150,10 @@ bool MapEditor::eventFilter(QObject *object, QEvent *ev)
     break;
 
   case QEvent::MouseButtonPress:
-    return handleClick();
+    return handleMousePress();
+
+  case QEvent::MouseButtonRelease:
+    return handleMouseRelease();
 
   case QEvent::MouseMove:
     {
@@ -166,9 +169,9 @@ bool MapEditor::eventFilter(QObject *object, QEvent *ev)
   return false;
 }
 
-std::shared_ptr<Command> MapEditor::applyCommand(Command &command)
+shared_ptr<Command> MapEditor::applyCommand(Command& command)
 {
-  auto result = command.perform();
+  auto result = command.commit();
 
   // apply changes to visible tiles
   for (const auto& change : result.changes) {
@@ -179,19 +182,37 @@ std::shared_ptr<Command> MapEditor::applyCommand(Command &command)
   return result.undoCommand;
 }
 
-bool MapEditor::handleClick()
+bool MapEditor::handleMousePress()
 {
+  // TODO: Fix
   if (m_highlightX < 0 || m_highlightY < 0) {
     return false;
   }
 
-  // perform command
-  PencilCommand pencilCommand(m_level->getMap(), m_highlightX, m_highlightY, m_selectedBlock);
-  auto undoCommand = applyCommand(pencilCommand);
+  // update tile
+  const auto offset = m_highlightY * m_level->getMap().getWidth() + m_highlightX;
+  m_tiles[offset]->setPixmap(*m_blocks[m_selectedBlock]);
+
+  // start command
+  m_pencilCommand = std::make_shared<PencilCommand>(m_level->getMap());
+  m_pencilCommand->addChange(0, m_highlightX, m_highlightY, m_selectedBlock);
+
+  return true;
+}
+
+bool MapEditor::handleMouseRelease()
+{
+  if (!m_pencilCommand) {
+    return false;
+  }
+
+  // generate undo command
+  const auto result = m_pencilCommand->commit();
+  m_pencilCommand.reset();
 
   // save undo command
   m_redoCommands.clear();
-  m_undoCommands.push_front(undoCommand);
+  m_undoCommands.push_front(result.undoCommand);
   if (m_undoCommands.size() > MAX_UNDO_COMMANDS) {
     LOG << "Dropping undo command";
     m_undoCommands.pop_back();
@@ -204,8 +225,17 @@ bool MapEditor::handleClick()
 
 void MapEditor::handleMove(const QPointF& pos)
 {
-  m_highlightX = (pos.x() / 128);
-  m_highlightY = (pos.y() / 128);
+  const auto highlightX = (pos.x() / 128);
+  const auto highlightY = (pos.y() / 128);
+
+  if (m_pencilCommand && highlightX != m_highlightX && highlightY != m_highlightY) {
+    const auto offset = m_highlightY * m_level->getMap().getWidth() + m_highlightX;
+    m_tiles[offset]->setPixmap(*m_blocks[m_selectedBlock]);
+    m_pencilCommand->addChange(0, m_highlightX, m_highlightY, m_selectedBlock);
+  }
+
+  m_highlightX = highlightX;
+  m_highlightY = highlightY;
   m_highlight->setPos(m_highlightX * 128, m_highlightY * 128);
   m_highlight->setVisible(true);
 }

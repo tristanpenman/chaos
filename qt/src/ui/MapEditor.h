@@ -15,6 +15,7 @@ class Command;
 class Level;
 class Palette;
 class Pattern;
+class PencilCommand;
 class Rectangle;
 
 class MapEditor : public QWidget
@@ -33,7 +34,9 @@ protected:
 private:
   std::shared_ptr<Command> applyCommand(Command& command);
 
-  bool handleClick();
+  bool handleMousePress();
+  bool handleMouseRelease();
+
   void handleMove(const QPointF& pos);
 
   void drawPattern(QImage&, const Pattern&, const Palette&, int dx, int dy, bool hFlip, bool vFlip);
@@ -55,6 +58,8 @@ private:
 
   std::deque<std::shared_ptr<Command>> m_undoCommands;
   std::deque<std::shared_ptr<Command>> m_redoCommands;
+
+  std::shared_ptr<PencilCommand> m_pencilCommand;
 
 private slots:
   void blockSelected(int);
