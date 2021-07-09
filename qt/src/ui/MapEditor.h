@@ -1,5 +1,6 @@
 #pragma once
 
+#include <deque>
 #include <memory>
 
 #include <QWidget>
@@ -10,6 +11,7 @@ class QGraphicsView;
 class QPixmap;
 
 class Chunk;
+class Command;
 class Level;
 class Palette;
 class Pattern;
@@ -22,10 +24,15 @@ class MapEditor : public QWidget
 public:
   MapEditor(QWidget *parent, std::shared_ptr<Level>&);
 
+  void undo();
+  void redo();
+
 protected:
   bool eventFilter(QObject *object, QEvent *ev) override;
 
 private:
+  std::shared_ptr<Command> applyCommand(Command& command);
+
   bool handleClick();
   void handleMove(const QPointF& pos);
 
@@ -46,6 +53,12 @@ private:
 
   uint8_t m_selectedBlock;
 
+  std::deque<std::shared_ptr<Command>> m_undoCommands;
+  std::deque<std::shared_ptr<Command>> m_redoCommands;
+
 private slots:
   void blockSelected(int);
+
+signals:
+  void undosRedosChanged(int undos, int redos);
 };

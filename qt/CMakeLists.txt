@@ -15,6 +15,7 @@ set(PROJECT_SOURCES
     src/main.cpp
     src/Block.cpp
     src/Block.h
+    src/Command.h
     src/Chunk.cpp
     src/Chunk.h
     src/ChunkDesc.h
@@ -35,6 +36,8 @@ set(PROJECT_SOURCES
     src/PatternDesc.h
     src/Rom.cpp
     src/Rom.h
+    src/commands/PencilCommand.cpp
+    src/commands/PencilCommand.h
     src/games/Sonic2.cpp
     src/games/Sonic2.h
     src/games/Sonic2Level.cpp

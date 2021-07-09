@@ -16,6 +16,8 @@
 #include "../Palette.h"
 #include "../Pattern.h"
 
+#include "../commands/PencilCommand.h"
+
 #include "BlockSelector.h"
 #include "Rectangle.h"
 #include "ZoomSupport.h"
@@ -23,6 +25,8 @@
 #include "MapEditor.h"
 
 #define LOG Logger("MapEditor")
+
+#define MAX_UNDO_COMMANDS 20
 
 using namespace std;
 
@@ -94,6 +98,44 @@ MapEditor::MapEditor(QWidget *parent, shared_ptr<Level>& level)
   hbox->setStretch(1, 0);
 }
 
+void MapEditor::undo()
+{
+  if (m_undoCommands.empty()) {
+    return;
+  }
+
+  auto undoCommand = m_undoCommands.front();
+  m_undoCommands.pop_front();
+
+  auto redoCommand = applyCommand(*undoCommand);
+  m_redoCommands.push_front(redoCommand);
+  if (m_redoCommands.size() > MAX_UNDO_COMMANDS) {
+    LOG << "Dropping redo command";
+    m_redoCommands.pop_back();
+  }
+
+  emit undosRedosChanged(m_undoCommands.size(), m_redoCommands.size());
+}
+
+void MapEditor::redo()
+{
+  if (m_redoCommands.empty()) {
+    return;
+  }
+
+  auto redoCommand = m_redoCommands.front();
+  m_redoCommands.pop_front();
+
+  auto undoCommand = applyCommand(*redoCommand);
+  m_undoCommands.push_front(undoCommand);
+  if (m_undoCommands.size() > MAX_UNDO_COMMANDS) {
+    LOG << "Dropping undo command";
+    m_undoCommands.pop_back();
+  }
+
+  emit undosRedosChanged(m_undoCommands.size(), m_redoCommands.size());
+}
+
 bool MapEditor::eventFilter(QObject *object, QEvent *ev)
 {
   if (object != m_view->viewport()) {
@@ -124,18 +166,38 @@ bool MapEditor::eventFilter(QObject *object, QEvent *ev)
   return false;
 }
 
+std::shared_ptr<Command> MapEditor::applyCommand(Command &command)
+{
+  auto result = command.perform();
+
+  // apply changes to visible tiles
+  for (const auto& change : result.changes) {
+    const auto offset = change.y * m_level->getMap().getWidth() + change.x;
+    m_tiles[offset]->setPixmap(*m_blocks[change.value]);
+  }
+
+  return result.undoCommand;
+}
+
 bool MapEditor::handleClick()
 {
   if (m_highlightX < 0 || m_highlightY < 0) {
     return false;
   }
 
-  // update scene
-  const auto offset = m_highlightY * m_level->getMap().getWidth() + m_highlightX;
-  m_tiles[offset]->setPixmap(*m_blocks[m_selectedBlock]);
+  // perform command
+  PencilCommand pencilCommand(m_level->getMap(), m_highlightX, m_highlightY, m_selectedBlock);
+  auto undoCommand = applyCommand(pencilCommand);
 
-  // modify map
-  m_level->getMap().setValue(0, m_highlightX, m_highlightY, m_selectedBlock);
+  // save undo command
+  m_redoCommands.clear();
+  m_undoCommands.push_front(undoCommand);
+  if (m_undoCommands.size() > MAX_UNDO_COMMANDS) {
+    LOG << "Dropping undo command";
+    m_undoCommands.pop_back();
+  }
+
+  emit undosRedosChanged(m_undoCommands.size(), m_redoCommands.size());
 
   return true;
 }

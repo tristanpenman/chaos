@@ -34,7 +34,11 @@ public slots:
   void levelSelect();
   void levelSelected(int levelIdx);
 
-  // view -> inspectors
+  // edit
+  void undo();
+  void redo();
+
+  // view
   void showPaletteInspector();
   void showPatternInspector();
   void showChunkInspector();
@@ -44,8 +48,12 @@ public slots:
   void showRomInfo();
   void relocateLevels();
 
+private slots:
+  void undosRedosChanged(int undos, int redos);
+
 private:
   void createFileMenu();
+  void createEditMenu();
   void createViewMenu();
   void createToolsMenu();
 
@@ -65,6 +73,8 @@ private:
 
   // actions
   QAction* m_levelSelectAction;
+  QAction* m_undoAction;
+  QAction* m_redoAction;
   QAction* m_relocateLevelsAction;
   QAction* m_romInfoAction;
 

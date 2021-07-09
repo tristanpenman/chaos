@@ -22,7 +22,7 @@
   + ~~Block selector~~
   + ~~Pencil mode~~
   + ~~Relocate levels in Sonic 2 ROM~~
-  * Undo/redo
+  * Undo/redo (in progress)
   + RLE compression implementation (in progress)
   + Toolbar
   + Relocate levels in Sonic 3 ROM
@@ -30,6 +30,7 @@
   + Copy and paste
 - General improvements
   + ~~Logging interface~~
+  * Keyboard shortcuts (in progress)
   + Figure out how to read level names and locations from ROM files
   + Support for loading levels from decompilations
 - Sprite preview support

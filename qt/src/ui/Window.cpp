@@ -37,6 +37,8 @@ Window::Window()
   , m_blockInspector(nullptr)
   , m_mapEditor(nullptr)
   , m_levelSelectAction(nullptr)
+  , m_undoAction(nullptr)
+  , m_redoAction(nullptr)
   , m_inspectorsMenu(nullptr)
   , m_vbox(nullptr)
   , m_rom(nullptr)
@@ -56,6 +58,7 @@ Window::Window()
 
   // menus
   createFileMenu();
+  createEditMenu();
   createViewMenu();
   createToolsMenu();
 }
@@ -186,7 +189,18 @@ void Window::levelSelected(int levelIdx)
   m_romInfoAction->setEnabled(true);
 
   m_mapEditor = new MapEditor(this, m_level);
+  connect(m_mapEditor, SIGNAL(undosRedosChanged(int,int)), this, SLOT(undosRedosChanged(int,int)));
   this->setCentralWidget(m_mapEditor);
+}
+
+void Window::undo()
+{
+  m_mapEditor->undo();
+}
+
+void Window::redo()
+{
+  m_mapEditor->redo();
 }
 
 void Window::showPaletteInspector()
@@ -260,6 +274,14 @@ void Window::relocateLevels()
   }
 }
 
+void Window::undosRedosChanged(int undos, int redos)
+{
+  LOG << "Undos: " << undos << ", redos: " << redos;
+
+  m_undoAction->setEnabled(undos > 0);
+  m_redoAction->setEnabled(redos > 0);
+}
+
 void Window::createFileMenu()
 {
   // Open ROM
@@ -277,6 +299,22 @@ void Window::createFileMenu()
   fileMenu->addAction(openRomAction);
   fileMenu->addSeparator();
   fileMenu->addAction(m_levelSelectAction);
+}
+
+void Window::createEditMenu()
+{
+  auto editMenu = menuBar()->addMenu(tr("&Edit"));
+
+  m_undoAction = new QAction(tr("Undo"));
+  m_undoAction->setDisabled(true);
+  connect(m_undoAction, SIGNAL(triggered()), this, SLOT(undo()));
+
+  m_redoAction = new QAction(tr("Redo"));
+  m_redoAction->setDisabled(true);
+  connect(m_redoAction, SIGNAL(triggered()), this, SLOT(redo()));
+
+  editMenu->addAction(m_undoAction);
+  editMenu->addAction(m_redoAction);
 }
 
 void Window::createViewMenu()
@@ -317,12 +355,12 @@ void Window::createToolsMenu()
   auto toolsMenu = menuBar()->addMenu(tr("&Tools"));
 
   m_romInfoAction = new QAction(tr("ROM Info..."), this);
-  connect(m_romInfoAction, SIGNAL(triggered()), this, SLOT(showRomInfo()));
   m_romInfoAction->setDisabled(true);
+  connect(m_romInfoAction, SIGNAL(triggered()), this, SLOT(showRomInfo()));
 
   m_relocateLevelsAction = new QAction(tr("Relocate Levels"), this);
-  connect(m_relocateLevelsAction, SIGNAL(triggered()), this, SLOT(relocateLevels()));
   m_relocateLevelsAction->setDisabled(true);
+  connect(m_relocateLevelsAction, SIGNAL(triggered()), this, SLOT(relocateLevels()));
 
   toolsMenu->addAction(m_romInfoAction);
   toolsMenu->addSeparator();
