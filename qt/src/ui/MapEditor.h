@@ -28,6 +28,10 @@ public:
   void undo();
   void redo();
 
+  void actualSize();
+  void zoomIn();
+  void zoomOut();
+
 protected:
   bool eventFilter(QObject *object, QEvent *ev) override;
 

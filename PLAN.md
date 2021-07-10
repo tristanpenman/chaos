@@ -31,6 +31,7 @@
 - General improvements
   + ~~Logging interface~~
   * Keyboard shortcuts (in progress)
+  + Zoom in/out menu items (in progress)
   + Figure out how to read level names and locations from ROM files
   + Support for loading levels from decompilations
 - Sprite preview support

@@ -136,6 +136,21 @@ void MapEditor::redo()
   emit undosRedosChanged(m_undoCommands.size(), m_redoCommands.size());
 }
 
+void MapEditor::actualSize()
+{
+  // TODO
+}
+
+void MapEditor::zoomIn()
+{
+  // TODO
+}
+
+void MapEditor::zoomOut()
+{
+  // TODO
+}
+
 bool MapEditor::eventFilter(QObject *object, QEvent *ev)
 {
   if (object != m_view->viewport()) {

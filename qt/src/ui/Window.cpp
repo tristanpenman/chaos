@@ -44,6 +44,9 @@ Window::Window()
   , m_exportMapAction(nullptr)
   , m_undoAction(nullptr)
   , m_redoAction(nullptr)
+  , m_actualSizeAction(nullptr)
+  , m_zoomInAction(nullptr)
+  , m_zoomOutAction(nullptr)
   , m_inspectorsMenu(nullptr)
   , m_vbox(nullptr)
   , m_statusBar(nullptr)
@@ -204,6 +207,33 @@ void Window::undo()
 void Window::redo()
 {
   m_mapEditor->redo();
+}
+
+void Window::actualSize()
+{
+  if (!m_mapEditor) {
+    return;
+  }
+
+  m_mapEditor->actualSize();
+}
+
+void Window::zoomIn()
+{
+  if (!m_mapEditor) {
+    return;
+  }
+
+  m_mapEditor->zoomIn();
+}
+
+void Window::zoomOut()
+{
+  if (!m_mapEditor) {
+    return;
+  }
+
+  m_mapEditor->zoomOut();
 }
 
 void Window::showPaletteInspector()
@@ -429,13 +459,20 @@ void Window::createViewMenu()
   m_inspectorsMenu->addAction(inspectBlocksAction);
 
   // zoom
-  auto actualSizeAction = new QAction(tr("Actual Size"), this);
-  auto zoomInAction = new QAction(tr("Zoom In"), this);
-  auto zoomOutAction = new QAction(tr("Zoom Out"), this);
+  m_actualSizeAction = new QAction(tr("Actual Size"), this);
+  m_actualSizeAction->setDisabled(true);
+  connect(m_actualSizeAction, SIGNAL(triggered()), this, SLOT(actualSize()));
+  m_zoomInAction = new QAction(tr("Zoom In"), this);
+  m_zoomInAction->setDisabled(true);
+  connect(m_zoomInAction, SIGNAL(triggered()), this, SLOT(zoomIn()));
+  m_zoomOutAction = new QAction(tr("Zoom Out"), this);
+  m_zoomOutAction->setDisabled(true);
+  connect(m_zoomOutAction, SIGNAL(triggered()), this, SLOT(zoomOut()));
+
   viewMenu->addSeparator();
-  viewMenu->addAction(actualSizeAction);
-  viewMenu->addAction(zoomInAction);
-  viewMenu->addAction(zoomOutAction);
+  viewMenu->addAction(m_actualSizeAction);
+  viewMenu->addAction(m_zoomInAction);
+  viewMenu->addAction(m_zoomOutAction);
 }
 
 void Window::createToolsMenu()

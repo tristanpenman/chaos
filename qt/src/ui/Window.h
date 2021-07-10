@@ -41,6 +41,11 @@ public slots:
   void redo();
 
   // view
+  void actualSize();
+  void zoomIn();
+  void zoomOut();
+
+  // view/inspectors
   void showPaletteInspector();
   void showPatternInspector();
   void showChunkInspector();
@@ -81,6 +86,9 @@ private:
   QAction* m_exportMapAction;
   QAction* m_undoAction;
   QAction* m_redoAction;
+  QAction* m_actualSizeAction;
+  QAction* m_zoomInAction;
+  QAction* m_zoomOutAction;
   QAction* m_relocateLevelsAction;
   QAction* m_romInfoAction;
 
