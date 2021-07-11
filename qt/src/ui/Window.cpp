@@ -251,6 +251,20 @@ void Window::showRomInfo()
 void Window::relocateLevels()
 {
   try {
+    const QMessageBox::StandardButton confirmation = QMessageBox::question(this,
+          tr("Relocate Levels"),
+          tr("Relocating levels will permanently modify the structure of this ROM. ") +
+                tr("The current level will be closed and any unsaved changes will be lost.\n\n") +
+                tr("Are you sure you want to continue?"),
+          QMessageBox::Yes | QMessageBox::No);
+    if (confirmation == QMessageBox::No) {
+      return;
+    }
+
+    delete m_mapEditor;
+    m_mapEditor = nullptr;
+    m_level.reset();
+
     if (m_game->relocateLevels(false)) {
       showInfo(tr("Relocate Levels"), tr("Levels relocated successfully."));
       return;
