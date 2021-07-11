@@ -65,5 +65,5 @@ private slots:
   void blockSelected(int);
 
 signals:
-  void undosRedosChanged(int undos, int redos);
+  void undosRedosChanged(size_t undos, size_t redos);
 };

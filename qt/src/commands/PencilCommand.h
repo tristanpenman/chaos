@@ -11,16 +11,16 @@ class PencilCommand : public Command
 public:
   PencilCommand(Map& map);
 
-  void addChange(int layer, int x, int y, int value);
+  void addChange(uint8_t layer, uint16_t x, uint16_t y, uint8_t value);
 
   Result commit() override;
 
 private:
   struct Location
   {
-    int layer;
-    int x;
-    int y;
+    uint8_t layer;
+    uint16_t x;
+    uint16_t y;
 
     bool operator==(const Location &o)  const
     {
@@ -41,5 +41,5 @@ private:
 
   Map& m_map;
 
-  std::unordered_map<Location, int, LocationHash> m_changes;
+  std::unordered_map<Location, uint8_t, LocationHash> m_changes;
 };

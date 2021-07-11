@@ -10,7 +10,7 @@ PencilCommand::PencilCommand(Map& map)
 
 }
 
-void PencilCommand::addChange(int layer, int x, int y, int value)
+void PencilCommand::addChange(uint8_t layer, uint16_t x, uint16_t y, uint8_t value)
 {
   m_changes[{layer, x, y}] = value;
 }

@@ -8,10 +8,10 @@ class Command
 public:
   struct Change
   {
-    int layer;
-    int x;
-    int y;
-    int value;
+    uint8_t layer;
+    uint16_t x;
+    uint16_t y;
+    uint8_t value;
   };
 
   struct Result

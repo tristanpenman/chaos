@@ -35,6 +35,7 @@ Window::Window()
   , m_patternInspector(nullptr)
   , m_chunkInspector(nullptr)
   , m_blockInspector(nullptr)
+  , m_romInfo(nullptr)
   , m_mapEditor(nullptr)
   , m_levelSelectAction(nullptr)
   , m_undoAction(nullptr)
@@ -189,7 +190,7 @@ void Window::levelSelected(int levelIdx)
   m_romInfoAction->setEnabled(true);
 
   m_mapEditor = new MapEditor(this, m_level);
-  connect(m_mapEditor, SIGNAL(undosRedosChanged(int,int)), this, SLOT(undosRedosChanged(int,int)));
+  connect(m_mapEditor, SIGNAL(undosRedosChanged(size_t,size_t)), this, SLOT(undosRedosChanged(size_t,size_t)));
   this->setCentralWidget(m_mapEditor);
 }
 
