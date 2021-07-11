@@ -3,7 +3,7 @@
 
 #include "../Block.h"
 #include "../Chunk.h"
-#include "../Kosinski.h"
+#include "../KosinskiReader.h"
 #include "../Logger.h"
 #include "../Map.h"
 #include "../Palette.h"
@@ -115,7 +115,7 @@ void Sonic3Level::loadPatterns(Rom& rom, uint32_t basePatternsAddr, uint32_t ext
 
   // setup decompression
   auto& file = rom.getFile();
-  Kosinski kosinski(file);
+  KosinskiReader reader;
   vector<uint8_t> buffer(PATTERN_BUFFER_SIZE);
   size_t total = 0;
   int patternIndex = 0;
@@ -125,7 +125,7 @@ void Sonic3Level::loadPatterns(Rom& rom, uint32_t basePatternsAddr, uint32_t ext
     file.seekg(basePatternsAddr + 2);
     while (total < baseDataSize) {
       // decompress module
-      auto result = kosinski.decompress(buffer.data(), PATTERN_BUFFER_SIZE);
+      auto result = reader.decompress(file, buffer.data(), PATTERN_BUFFER_SIZE);
       if (!result.first) {
         throw runtime_error("Base pattern decompression error");
       }
@@ -157,7 +157,7 @@ void Sonic3Level::loadPatterns(Rom& rom, uint32_t basePatternsAddr, uint32_t ext
     // extended patterns
     file.seekg(extPatternsAddr + 2);
     while (total < baseDataSize + extDataSize) {
-      auto result = kosinski.decompress(buffer.data(), PATTERN_BUFFER_SIZE);
+      auto result = reader.decompress(file, buffer.data(), PATTERN_BUFFER_SIZE);
       if (!result.first) {
         throw runtime_error("Extended pattern decompression error");
       }
@@ -192,14 +192,14 @@ void Sonic3Level::loadChunks(Rom& rom, uint32_t baseChunksAddr, uint32_t extChun
 
   // setup decompression
   auto& file = rom.getFile();
-  Kosinski kosinski(file);
+  KosinskiReader reader;
   vector<uint8_t> buffer(CHUNK_BUFFER_SIZE);
   size_t total = 0;
 
   {
     // decompress base chunks
     file.seekg(baseChunksAddr);
-    auto result = kosinski.decompress(buffer.data(), CHUNK_BUFFER_SIZE);
+    auto result = reader.decompress(file, buffer.data(), CHUNK_BUFFER_SIZE);
     if (!result.first) {
       throw runtime_error("Base chunk decompression error");
     }
@@ -215,7 +215,7 @@ void Sonic3Level::loadChunks(Rom& rom, uint32_t baseChunksAddr, uint32_t extChun
   {
     // decompress extended chunks
     file.seekg(extChunksAddr);
-    auto result = kosinski.decompress(buffer.data() + total, CHUNK_BUFFER_SIZE - total);
+    auto result = reader.decompress(file, buffer.data() + total, CHUNK_BUFFER_SIZE - total);
     if (!result.first) {
       throw runtime_error("Extended chunk decompression error");
     }
@@ -243,14 +243,14 @@ void Sonic3Level::loadBlocks(Rom& rom, uint32_t baseBlocksAddr, uint32_t extBloc
 
   // setup decompression
   auto& file = rom.getFile();
-  Kosinski kosinski(file);
+  KosinskiReader reader;
   vector<uint8_t> buffer(BLOCK_BUFFER_SIZE);
   size_t total = 0;
 
   {
     // decompress base blocks
     file.seekg(baseBlocksAddr);
-    auto result = kosinski.decompress(buffer.data(), BLOCK_BUFFER_SIZE);
+    auto result = reader.decompress(file, buffer.data(), BLOCK_BUFFER_SIZE);
     if (!result.first) {
       throw runtime_error("Base block decompression error");
     }
@@ -266,7 +266,7 @@ void Sonic3Level::loadBlocks(Rom& rom, uint32_t baseBlocksAddr, uint32_t extBloc
   {
     // decompress extended blocks
     file.seekg(extBlocksAddr);
-    auto result = kosinski.decompress(buffer.data() + total, BLOCK_BUFFER_SIZE - total);
+    auto result = reader.decompress(file, buffer.data() + total, BLOCK_BUFFER_SIZE - total);
     if (!result.first) {
       throw runtime_error("Extended block decompression error");
     }

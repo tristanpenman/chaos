@@ -1,4 +1,4 @@
-#include "../Kosinski.h"
+#include "../KosinskiReader.h"
 #include "../Logger.h"
 #include "../Rom.h"
 
@@ -119,7 +119,7 @@ bool Sonic2::relocateLevels(bool unsafe)
 
   // setup decompression
   auto& file = m_rom->getFile();
-  Kosinski kosinski(file);
+  KosinskiReader reader;
   vector<uint8_t> mapBuffer(0xFFFFF);
 
   uint32_t newLevelOffset = 68;
@@ -139,7 +139,7 @@ bool Sonic2::relocateLevels(bool unsafe)
 
     // figure out how many bytes to copy
     file.seekg(tilesAddr);
-    const auto result = kosinski.decompress(mapBuffer.data(), mapBuffer.size());
+    const auto result = reader.decompress(file, mapBuffer.data(), mapBuffer.size());
     if (!result.first) {
       stringstream ss;
       ss << "Unable to relocate levels; level decompression failed on level " << levelIdx;

@@ -3,7 +3,7 @@
 
 #include "../Block.h"
 #include "../Chunk.h"
-#include "../Kosinski.h"
+#include "../KosinskiReader.h"
 #include "../Logger.h"
 #include "../Map.h"
 #include "../Palette.h"
@@ -107,9 +107,9 @@ void Sonic2Level::loadPatterns(Rom& rom, uint32_t patternsAddr)
   // decompress patterns
   auto& file = rom.getFile();
   file.seekg(patternsAddr);
-  Kosinski kosinski(file);
+  KosinskiReader reader;
   std::vector<uint8_t> buffer(PATTERN_BUFFER_SIZE);
-  auto result = kosinski.decompress(buffer.data(), PATTERN_BUFFER_SIZE);
+  auto result = reader.decompress(file, buffer.data(), PATTERN_BUFFER_SIZE);
   if (!result.first) {
     throw runtime_error("Pattern decompression failed");
   }
@@ -136,9 +136,9 @@ void Sonic2Level::loadChunks(Rom& rom, uint32_t chunksAddr)
   // decompress chunks
   auto& file = rom.getFile();
   file.seekg(chunksAddr);
-  Kosinski kosinski(file);
+  KosinskiReader reader;
   vector<uint8_t> buffer(CHUNK_BUFFER_SIZE);
-  auto result = kosinski.decompress(buffer.data(), CHUNK_BUFFER_SIZE);
+  auto result = reader.decompress(file, buffer.data(), CHUNK_BUFFER_SIZE);
   if (!result.first) {
     throw runtime_error("Chunk decompression error");
   }
@@ -165,9 +165,9 @@ void Sonic2Level::loadBlocks(Rom& rom, uint32_t blocksAddr)
   // decompress blocks
   auto& file = rom.getFile();
   file.seekg(blocksAddr);
-  Kosinski kosinski(file);
+  KosinskiReader reader;
   vector<uint8_t> buffer(BLOCK_BUFFER_SIZE);
-  auto result = kosinski.decompress(buffer.data(), BLOCK_BUFFER_SIZE);
+  auto result = reader.decompress(file, buffer.data(), BLOCK_BUFFER_SIZE);
   if (!result.first) {
     throw runtime_error("Block decompression error");
   }
@@ -194,8 +194,8 @@ void Sonic2Level::loadMap(Rom& rom, uint32_t mapAddr)
   file.seekg(mapAddr);
   vector<unsigned char> buffer(MAP_BUFFER_SIZE);
 
-  Kosinski kosinski(file);
-  auto result = kosinski.decompress(buffer.data(), MAP_BUFFER_SIZE);
+  KosinskiReader reader;
+  auto result = reader.decompress(file, buffer.data(), MAP_BUFFER_SIZE);
   if (!result.first) {
     throw runtime_error("Map decompression error");
   }

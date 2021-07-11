@@ -1,18 +1,17 @@
 #include <fstream>
 
-#include "Kosinski.h"
+#include "KosinskiReader.h"
 
 using namespace std;
 
-Kosinski::Kosinski(fstream& file)
+KosinskiReader::KosinskiReader()
   : m_bitfield(0)
   , m_bitcount(0)
-  , m_file(file)
 {
 
 }
 
-uint8_t Kosinski::getBit()
+uint8_t KosinskiReader::getBit(istream& file)
 {
   const uint8_t bit = static_cast<uint8_t>(m_bitfield) & 1;
 
@@ -21,8 +20,8 @@ uint8_t Kosinski::getBit()
 
   // Ensure that there are more bits to read
   if (m_bitcount == 0) {
-    loadBitfield();
-    if (m_file.eof()) {
+    loadBitfield(file);
+    if (file.eof()) {
       throw std::runtime_error("Unexpected end of file");
     }
   }
@@ -30,25 +29,40 @@ uint8_t Kosinski::getBit()
   return bit;
 }
 
-void Kosinski::loadBitfield()
+void KosinskiReader::loadBitfield(istream& file)
 {
-  m_bitfield  = static_cast<uint16_t>(m_file.get());
-  m_bitfield |= static_cast<uint16_t>(m_file.get()) << 8;
+  m_bitfield  = static_cast<uint16_t>(readByte(file));
+  m_bitfield |= static_cast<uint16_t>(readByte(file)) << 8;
 
   m_bitcount = 16;
 }
 
-Kosinski::Result Kosinski::decompress(uint8_t buffer[], size_t bufferSize)
+uint8_t KosinskiReader::readByte(istream& file)
 {
+  const auto byte = static_cast<uint8_t>(file.get());
+
+  if (file.eof()) {
+    throw runtime_error("Unexpected end of stream");
+  }
+
+  return byte;
+}
+
+KosinskiReader::Result KosinskiReader::decompress(istream& file, uint8_t buffer[], size_t bufferSize)
+{
+  if (buffer == nullptr) {
+    return Result(false, 0);
+  }
+
   uint16_t pos = 0;
   uint16_t count = 0;
   int16_t offset = 0;
 
-  loadBitfield();
+  loadBitfield(file);
 
   while (1) {
-    if (getBit() == 1) {
-      buffer[pos++] = static_cast<uint8_t>(m_file.get());
+    if (getBit(file) == 1) {
+      buffer[pos++] = static_cast<uint8_t>(readByte(file));
 
       // Don't write any more bytes if the buffer is full
       if (pos >= bufferSize) {
@@ -58,9 +72,9 @@ Kosinski::Result Kosinski::decompress(uint8_t buffer[], size_t bufferSize)
       continue;
     }
 
-    if (getBit() == 1) {
-      const uint8_t lo = static_cast<uint8_t>(m_file.get());
-      const uint8_t hi = static_cast<uint8_t>(m_file.get());
+    if (getBit(file) == 1) {
+      const uint8_t lo = static_cast<uint8_t>(readByte(file));
+      const uint8_t hi = static_cast<uint8_t>(readByte(file));
 
       // ---hi--- ---lo---
       // OOOOOCCC OOOOOOOO [CCCCCCCC]<- optional
@@ -77,7 +91,7 @@ Kosinski::Result Kosinski::decompress(uint8_t buffer[], size_t bufferSize)
       count = hi & 0x7;
 
       if (count == 0) {
-        count = static_cast<uint16_t>(m_file.get());
+        count = static_cast<uint16_t>(readByte(file));
 
         if (count == 0) {
           break;
@@ -90,11 +104,11 @@ Kosinski::Result Kosinski::decompress(uint8_t buffer[], size_t bufferSize)
         count++;
       }
     } else {
-      count = (getBit() << 1) | getBit();
+      count = (getBit(file) << 1) | getBit(file);
       count++;
 
       // Convert 8-bit two's complement representation to 16-bit representation
-      offset = static_cast<int16_t>(m_file.get()) | 0xFF00;
+      offset = static_cast<int16_t>(readByte(file)) | 0xFF00;
     }
 
     count++;

@@ -4,12 +4,18 @@ project(Chaos VERSION 1.0)
 set(COPYRIGHT "Copyright (c) 2021 Tristan Penman")
 set(IDENTIFIER "com.tristanpenman.chaos")
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# -----------------------------------------------------------------------------
+#
+# Main executable
+#
+# -----------------------------------------------------------------------------
+
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
-
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(PROJECT_SOURCES
     src/main.cpp
@@ -22,8 +28,8 @@ set(PROJECT_SOURCES
     src/Game.h
     src/GameFactory.cpp
     src/GameFactory.h
-    src/Kosinski.cpp
-    src/Kosinski.h
+    src/KosinskiReader.cpp
+    src/KosinskiReader.h
     src/Level.h
     src/Logger.cpp
     src/Logger.h
@@ -93,13 +99,47 @@ else()
     add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
 endif()
 
-target_link_libraries(${PROJECT_NAME} PRIVATE
-    Qt${QT_VERSION_MAJOR}::Core
-    Qt${QT_VERSION_MAJOR}::Widgets
-)
-
 if(MSVC)
     target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX)
 else()
     target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -pedantic -Werror)
 endif()
+
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    Qt${QT_VERSION_MAJOR}::Core
+    Qt${QT_VERSION_MAJOR}::Widgets
+)
+
+# -----------------------------------------------------------------------------
+#
+# Test executable
+#
+# -----------------------------------------------------------------------------
+
+set(CMAKE_AUTOMOC OFF)
+set(CMAKE_AUTORCC OFF)
+set(CMAKE_AUTOUIC OFF)
+
+set(GOOGLETEST_VERSION 1.11.0)
+
+add_subdirectory(thirdparty/gtest-${GOOGLETEST_VERSION})
+
+set(TEST_SOURCES
+    src/KosinskiReader.cpp
+    test/TestKosinskiReader.cpp
+    test/TestKosinskiWriter.cpp
+)
+
+set(TEST_LIBS gtest gtest_main)
+
+set(gtest_force_shared_crt ON)
+
+include_directories(src SYSTEM
+    thirdparty/gtest-${GOOGLETEST_VERSION}/include
+)
+
+add_executable(${PROJECT_NAME}Test ${TEST_SOURCES})
+
+target_link_libraries(${PROJECT_NAME}Test PRIVATE
+    ${TEST_LIBS}
+)
