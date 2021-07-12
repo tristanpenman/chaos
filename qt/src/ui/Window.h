@@ -28,12 +28,13 @@ public:
 
   bool openRom(const QString& path);
   void openLevel(const QString& level);
+  void exportMap(const QString& fileName);
 
 public slots:
   // file
   void showOpenRomDialog();
-  void levelSelect();
-  void levelSelected(int levelIdx);
+  void showLevelSelectDialog();
+  void showExportMapDialog();
 
   // edit
   void undo();
@@ -50,6 +51,7 @@ public slots:
   void relocateLevels();
 
 private slots:
+  void levelSelected(int levelIdx);
   void currentTile(uint16_t x, uint16_t y, uint8_t value);
   void noTile();
   void undosRedosChanged(size_t undos, size_t redos);
@@ -76,6 +78,7 @@ private:
 
   // actions
   QAction* m_levelSelectAction;
+  QAction* m_exportMapAction;
   QAction* m_undoAction;
   QAction* m_redoAction;
   QAction* m_relocateLevelsAction;

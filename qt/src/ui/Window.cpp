@@ -12,7 +12,9 @@
 
 #include "../Game.h"
 #include "../GameFactory.h"
+#include "../Level.h"
 #include "../Logger.h"
+#include "../Map.h"
 #include "../Rom.h"
 
 #include "BlockInspector.h"
@@ -39,6 +41,7 @@ Window::Window()
   , m_romInfo(nullptr)
   , m_mapEditor(nullptr)
   , m_levelSelectAction(nullptr)
+  , m_exportMapAction(nullptr)
   , m_undoAction(nullptr)
   , m_redoAction(nullptr)
   , m_inspectorsMenu(nullptr)
@@ -112,6 +115,28 @@ void Window::openLevel(const QString& level)
   }
 }
 
+void Window::exportMap(const QString& fileName)
+{
+  fstream file(fileName.toStdString(), ios::out | ios::binary);
+  if (file.bad()) {
+    showError(tr("Export Map"), tr("Failed to open file"));
+    return;
+  }
+
+  auto& map = m_level->getMap();
+
+  for (auto y = 0; y < map.getHeight(); y++) {
+    for (auto x = 0; x < map.getWidth(); x++) {
+      for (auto l = 0; l < 2; l++) {
+        auto value = map.getValue(l, x, y);
+        file.put(static_cast<char>(value));
+      }
+    }
+  }
+
+  showInfo(tr("Export Map"), tr("Map exported successfully."));
+}
+
 void Window::showOpenRomDialog()
 {
   if (m_level) {
@@ -129,12 +154,12 @@ void Window::showOpenRomDialog()
     m_level.reset();
 
     if (openRom(fileName)) {
-      levelSelect();
+      showLevelSelectDialog();
     }
   }
 }
 
-void Window::levelSelect()
+void Window::showLevelSelectDialog()
 {
   if (m_level) {
     const QMessageBox::StandardButton reply = QMessageBox::question(this,
@@ -157,50 +182,18 @@ void Window::levelSelect()
   m_levelSelect->show();
 }
 
-void Window::levelSelected(int levelIdx)
+void Window::showExportMapDialog()
 {
-  if (m_level) {
-    m_inspectorsMenu->setEnabled(false);
-
-    delete m_paletteInspector;
-    m_paletteInspector = nullptr;
-
-    delete m_patternInspector;
-    m_patternInspector = nullptr;
-
-    delete m_chunkInspector;
-    m_chunkInspector = nullptr;
-
-    delete m_blockInspector;
-    m_blockInspector = nullptr;
-
-    delete m_mapEditor;
-    m_mapEditor = nullptr;
-  }
-
-  m_level.reset();
-
-  if (!m_rom) {
-    showError(tr("Level Error"), tr("Cannot load level until ROM has been loaded"));
-    return;
-  }
-
-  LOG << "Loading level: " << levelIdx << " (" << m_game->getTitleCards()[levelIdx] << ")";
-
-  m_level = m_game->loadLevel(levelIdx);
   if (!m_level) {
-    showError(tr("Level Error"), tr("Failed to load level"));
     return;
   }
 
-  m_inspectorsMenu->setEnabled(true);
-  m_romInfoAction->setEnabled(true);
+  const auto fileName = QFileDialog::getSaveFileName(this, tr("Export Map"), QString(), QString("*.bin"));
+  if (fileName.isEmpty()) {
+    return;
+  }
 
-  m_mapEditor = new MapEditor(this, m_level);
-  connect(m_mapEditor, SIGNAL(currentTile(uint16_t,uint16_t,uint8_t)), this, SLOT(currentTile(uint16_t,uint16_t,uint8_t)));
-  connect(m_mapEditor, SIGNAL(noTile()), this, SLOT(noTile()));
-  connect(m_mapEditor, SIGNAL(undosRedosChanged(size_t,size_t)), this, SLOT(undosRedosChanged(size_t,size_t)));
-  this->setCentralWidget(m_mapEditor);
+  exportMap(fileName);
 }
 
 void Window::undo()
@@ -298,6 +291,53 @@ void Window::relocateLevels()
   }
 }
 
+void Window::levelSelected(int levelIdx)
+{
+  if (m_level) {
+    m_inspectorsMenu->setEnabled(false);
+
+    delete m_paletteInspector;
+    m_paletteInspector = nullptr;
+
+    delete m_patternInspector;
+    m_patternInspector = nullptr;
+
+    delete m_chunkInspector;
+    m_chunkInspector = nullptr;
+
+    delete m_blockInspector;
+    m_blockInspector = nullptr;
+
+    delete m_mapEditor;
+    m_mapEditor = nullptr;
+  }
+
+  m_level.reset();
+
+  if (!m_rom) {
+    showError(tr("Level Error"), tr("Cannot load level until ROM has been loaded"));
+    return;
+  }
+
+  LOG << "Loading level: " << levelIdx << " (" << m_game->getTitleCards()[levelIdx] << ")";
+
+  m_level = m_game->loadLevel(levelIdx);
+  if (!m_level) {
+    showError(tr("Level Error"), tr("Failed to load level"));
+    return;
+  }
+
+  m_exportMapAction->setEnabled(true);
+  m_inspectorsMenu->setEnabled(true);
+  m_romInfoAction->setEnabled(true);
+
+  m_mapEditor = new MapEditor(this, m_level);
+  connect(m_mapEditor, SIGNAL(currentTile(uint16_t,uint16_t,uint8_t)), this, SLOT(currentTile(uint16_t,uint16_t,uint8_t)));
+  connect(m_mapEditor, SIGNAL(noTile()), this, SLOT(noTile()));
+  connect(m_mapEditor, SIGNAL(undosRedosChanged(size_t,size_t)), this, SLOT(undosRedosChanged(size_t,size_t)));
+  this->setCentralWidget(m_mapEditor);
+}
+
 void Window::currentTile(uint16_t x, uint16_t y, uint8_t value)
 {
   m_statusBar->showMessage(
@@ -325,21 +365,28 @@ void Window::undosRedosChanged(size_t undos, size_t redos)
 
 void Window::createFileMenu()
 {
-  // Open ROM
+  // open rom
   auto openRomAction = new QAction(tr("&Open ROM..."));
   openRomAction->setShortcuts(QKeySequence::Open);
   connect(openRomAction, SIGNAL(triggered()), this, SLOT(showOpenRomDialog()));
 
-  // Level Select
+  // level select
   m_levelSelectAction = new QAction(tr("&Level Select..."));
   m_levelSelectAction->setDisabled(true);
-  connect(m_levelSelectAction, SIGNAL(triggered()), this, SLOT(levelSelect()));
+  connect(m_levelSelectAction, SIGNAL(triggered()), this, SLOT(showLevelSelectDialog()));
+
+  // export map
+  m_exportMapAction = new QAction(tr("Export &Map..."));
+  m_exportMapAction->setDisabled(true);
+  connect(m_exportMapAction, SIGNAL(triggered()), this, SLOT(showExportMapDialog()));
 
   // file menu
   auto fileMenu = menuBar()->addMenu(tr("&File"));
   fileMenu->addAction(openRomAction);
   fileMenu->addSeparator();
   fileMenu->addAction(m_levelSelectAction);
+  fileMenu->addSeparator();
+  fileMenu->addAction(m_exportMapAction);
 }
 
 void Window::createEditMenu()
