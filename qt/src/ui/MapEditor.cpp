@@ -225,19 +225,31 @@ bool MapEditor::handleMouseRelease()
 
 void MapEditor::handleMove(const QPointF& pos)
 {
-  const auto highlightX = (pos.x() / 128);
-  const auto highlightY = (pos.y() / 128);
+  const int highlightX = (pos.x() / 128);
+  const int highlightY = (pos.y() / 128);
 
-  if (m_pencilCommand && highlightX != m_highlightX && highlightY != m_highlightY) {
-    const auto offset = m_highlightY * m_level->getMap().getWidth() + m_highlightX;
-    m_tiles[offset]->setPixmap(*m_blocks[m_selectedBlock]);
-    m_pencilCommand->addChange(0, m_highlightX, m_highlightY, m_selectedBlock);
+  auto& map =  m_level->getMap();
+
+  if (highlightX < 0 || highlightX >= map.getWidth() || highlightY < 0 || highlightY >= map.getHeight()) {
+    m_highlight->setVisible(false);
+    emit noTile();
+    return;
   }
 
-  m_highlightX = highlightX;
-  m_highlightY = highlightY;
-  m_highlight->setPos(m_highlightX * 128, m_highlightY * 128);
-  m_highlight->setVisible(true);
+  if (highlightX != m_highlightX || highlightY != m_highlightY) {
+    if (m_pencilCommand) {
+      const auto offset = m_highlightY * map.getWidth() + m_highlightX;
+      m_tiles[offset]->setPixmap(*m_blocks[m_selectedBlock]);
+      m_pencilCommand->addChange(0, m_highlightX, m_highlightY, m_selectedBlock);
+    }
+
+    m_highlightX = highlightX;
+    m_highlightY = highlightY;
+    m_highlight->setPos(m_highlightX * 128, m_highlightY * 128);
+    m_highlight->setVisible(true);
+
+    emit currentTile(highlightX, highlightY, m_level->getMap().getValue(0, highlightX, highlightY));
+  }
 }
 
 void MapEditor::drawPattern(QImage& image,

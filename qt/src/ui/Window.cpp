@@ -8,6 +8,7 @@
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QScreen>
+#include <QStatusBar>
 
 #include "../Game.h"
 #include "../GameFactory.h"
@@ -42,6 +43,7 @@ Window::Window()
   , m_redoAction(nullptr)
   , m_inspectorsMenu(nullptr)
   , m_vbox(nullptr)
+  , m_statusBar(nullptr)
   , m_rom(nullptr)
   , m_game(nullptr)
   , m_level(nullptr)
@@ -62,6 +64,11 @@ Window::Window()
   createEditMenu();
   createViewMenu();
   createToolsMenu();
+
+  // statusbar
+  m_statusBar = new QStatusBar(this);
+  m_statusBar->showMessage(tr("Ready"));
+  setStatusBar(m_statusBar);
 }
 
 bool Window::openRom(const QString &path)
@@ -190,6 +197,8 @@ void Window::levelSelected(int levelIdx)
   m_romInfoAction->setEnabled(true);
 
   m_mapEditor = new MapEditor(this, m_level);
+  connect(m_mapEditor, SIGNAL(currentTile(uint16_t,uint16_t,uint8_t)), this, SLOT(currentTile(uint16_t,uint16_t,uint8_t)));
+  connect(m_mapEditor, SIGNAL(noTile()), this, SLOT(noTile()));
   connect(m_mapEditor, SIGNAL(undosRedosChanged(size_t,size_t)), this, SLOT(undosRedosChanged(size_t,size_t)));
   this->setCentralWidget(m_mapEditor);
 }
@@ -289,7 +298,24 @@ void Window::relocateLevels()
   }
 }
 
-void Window::undosRedosChanged(int undos, int redos)
+void Window::currentTile(uint16_t x, uint16_t y, uint8_t value)
+{
+  m_statusBar->showMessage(
+      QString("[%1, %2]: 0x%3")
+          .arg(x)
+          .arg(y)
+          .arg(QString("%1")
+               .arg(value, 1, 16)
+               .toUpper()
+               .rightJustified(2, '0')));
+}
+
+void Window::noTile()
+{
+  m_statusBar->showMessage(QString());
+}
+
+void Window::undosRedosChanged(size_t undos, size_t redos)
 {
   LOG << "Undos: " << undos << ", redos: " << redos;
 

@@ -5,6 +5,7 @@
 
 #include <QMainWindow>
 
+class QStatusBar;
 class QVBoxLayout;
 
 class BlockInspector;
@@ -49,7 +50,9 @@ public slots:
   void relocateLevels();
 
 private slots:
-  void undosRedosChanged(int undos, int redos);
+  void currentTile(uint16_t x, uint16_t y, uint8_t value);
+  void noTile();
+  void undosRedosChanged(size_t undos, size_t redos);
 
 private:
   void createFileMenu();
@@ -78,11 +81,10 @@ private:
   QAction* m_relocateLevelsAction;
   QAction* m_romInfoAction;
 
-  // menus
-  QMenu *m_inspectorsMenu;
-
-  // layouts
-  QVBoxLayout *m_vbox;
+  // misc
+  QMenu* m_inspectorsMenu;
+  QVBoxLayout* m_vbox;
+  QStatusBar* m_statusBar;
 
   std::shared_ptr<Rom> m_rom;
   std::shared_ptr<Game> m_game;

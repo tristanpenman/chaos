@@ -65,5 +65,7 @@ private slots:
   void blockSelected(int);
 
 signals:
+  void currentTile(uint16_t x, uint16_t y, uint8_t value);
+  void noTile();
   void undosRedosChanged(size_t undos, size_t redos);
 };
