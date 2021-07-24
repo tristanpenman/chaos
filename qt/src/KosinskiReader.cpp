@@ -120,7 +120,7 @@ KosinskiReader::Result KosinskiReader::decompress(istream& file, uint8_t buffer[
       count--;
 
       // Don't write any more bytes if the buffer is full
-      if (pos >= bufferSize) {
+      if (pos > bufferSize) {
         return Result(false, pos);
       }
     }

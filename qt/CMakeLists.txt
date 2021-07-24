@@ -126,6 +126,8 @@ add_subdirectory(thirdparty/gtest-${GOOGLETEST_VERSION})
 
 set(TEST_SOURCES
     src/KosinskiReader.cpp
+    test/data/ehz1.kosinski.h
+    test/data/ehz1.raw.h
     test/TestKosinskiReader.cpp
     test/TestKosinskiWriter.cpp
 )
