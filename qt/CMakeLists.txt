@@ -30,6 +30,8 @@ set(PROJECT_SOURCES
     src/GameFactory.h
     src/KosinskiReader.cpp
     src/KosinskiReader.h
+    src/KosinskiWriter.cpp
+    src/KosinskiWriter.h
     src/Level.h
     src/Logger.cpp
     src/Logger.h
@@ -125,7 +127,10 @@ set(GOOGLETEST_VERSION 1.11.0)
 add_subdirectory(thirdparty/gtest-${GOOGLETEST_VERSION})
 
 set(TEST_SOURCES
+    src/KosinskiReader.h
     src/KosinskiReader.cpp
+    src/KosinskiWriter.h
+    src/KosinskiWriter.cpp
     test/data/ehz1.kosinski.h
     test/data/ehz1.raw.h
     test/TestKosinskiReader.cpp

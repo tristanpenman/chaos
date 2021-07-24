@@ -1,4 +1,5 @@
 #include <fstream>
+#include <sstream>
 
 #include "KosinskiReader.h"
 
@@ -22,7 +23,9 @@ uint8_t KosinskiReader::getBit(istream& file)
   if (m_bitcount == 0) {
     loadBitfield(file);
     if (file.eof()) {
-      throw std::runtime_error("Unexpected end of file");
+      std::stringstream ss("Unexpected end of file at offset ");
+      ss << file.tellg();
+      throw std::runtime_error(ss.str());
     }
   }
 
@@ -39,10 +42,14 @@ void KosinskiReader::loadBitfield(istream& file)
 
 uint8_t KosinskiReader::readByte(istream& file)
 {
+  const auto offset = file.tellg();
   const auto byte = static_cast<uint8_t>(file.get());
 
   if (file.eof()) {
-    throw runtime_error("Unexpected end of stream");
+    stringstream ss;
+    ss << "Unexpected end of file at offset ";
+    ss << int(offset);
+    throw runtime_error(ss.str());
   }
 
   return byte;

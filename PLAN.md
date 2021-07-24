@@ -22,11 +22,12 @@
   + ~~Block selector~~
   + ~~Pencil mode~~
   + ~~Relocate levels in Sonic 2 ROM~~
-  * Undo/redo (in progress)
-  + RLE compression implementation (in progress)
+  * ~~Undo/redo~~
+  + ~~RLE compression implementation~~
+  + Save level (in progress)
   + Toolbar
   + Relocate levels in Sonic 3 ROM
-  + Selection rectangle
+  + Selection rectangle, replace all tiles
   + Copy and paste
 - General improvements
   + ~~Logging interface~~
