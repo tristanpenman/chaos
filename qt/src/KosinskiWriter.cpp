@@ -1,9 +1,3 @@
-#define DEBUG
-
-#ifdef DEBUG
-#include <iostream>
-#endif
-
 #include <ostream>
 
 #include "KosinskiWriter.h"
