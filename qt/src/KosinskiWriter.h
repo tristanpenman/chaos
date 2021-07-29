@@ -31,7 +31,7 @@ public:
                   std::optional<size_t> byteLimit = std::nullopt);
 
 private:
-  void writeByte(char byte);
+  void writeByte(int byte);
 
   /// Write a control bit to the output stream
   void addBit(int bit);

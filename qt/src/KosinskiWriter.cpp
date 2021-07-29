@@ -10,9 +10,9 @@
 
 using namespace std;
 
-void KosinskiWriter::writeByte(char byte)
+void KosinskiWriter::writeByte(int byte)
 {
-  m_buffer.push_back(byte);
+  m_buffer.push_back(static_cast<char>(byte));
 }
 
 void KosinskiWriter::addBit(int bit)
