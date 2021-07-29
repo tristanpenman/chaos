@@ -24,23 +24,26 @@
   + ~~Relocate levels in Sonic 2 ROM~~
   * ~~Undo/redo~~
   + ~~RLE compression implementation~~
-  + Save level (in progress)
+  + ~~Save level~~
   + Toolbar
   + Relocate levels in Sonic 3 ROM
   + Selection rectangle, replace all tiles
   + Copy and paste
 - General improvements
   + ~~Logging interface~~
-  * Keyboard shortcuts (in progress)
-  + Zoom in/out menu items (in progress)
+  + Restructure project so that Qt port is at root level (in progress)
+  * Keyboard shortcuts
+  + Zoom in/out menu items
   + Figure out how to read level names and locations from ROM files
   + Support for loading levels from decompilations
 - Sprite preview support
   + Implement nemesis de-/compression
-- Sonic and Knuckles support
-- Sonic 3 and Knuckles support
-- Sonic 1 support
-- Sonic Mania support
-- Pattern editing
-- Live preview for pattern and chunk editing
-- Audio extraction (maybe)
+- New functinality
+  + Sonic 2 disassembly support (in progress)
+  + Sonic and Knuckles disassembly support
+  + Sonic 3 and Knuckles disassembly support
+  + Sonic 1 disassembly support
+  + Sonic Mania support
+  + Pattern editing
+  + Live preview for pattern and chunk editing
+  + Audio extraction (maybe)
