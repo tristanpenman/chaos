@@ -1,5 +1,7 @@
 #include "../KosinskiReader.h"
+#include "../KosinskiWriter.h"
 #include "../Logger.h"
+#include "../Map.h"
 #include "../Rom.h"
 
 #include "Sonic2.h"
@@ -93,6 +95,11 @@ bool Sonic2::canRelocateLevels() const
   return true;
 }
 
+bool Sonic2::canSave() const
+{
+  return true;
+}
+
 bool Sonic2::relocateLevels(bool unsafe)
 {
   LOG << "Relocating levels in " << (unsafe ? "unsafe" : "safe") << " mode";
@@ -172,6 +179,50 @@ bool Sonic2::relocateLevels(bool unsafe)
   const auto checksum = m_rom->calculateChecksum();
   LOG << "Writing new checksum: " << checksum;
   m_rom->writeChecksum(checksum);
+
+  return true;
+}
+
+bool Sonic2::save(unsigned int levelIdx, Level& level)
+{
+  auto tilesAddr = getTilesAddr(levelIdx);
+  optional<size_t> limit;
+  auto& file = m_rom->getFile();
+
+  // if levels have not been relocated, check how much space we have
+  const auto levelLayoutDirAddr = m_rom->read32BitAddr(levelLayoutDirAddrLoc);
+  if (levelLayoutDirAddr == defaultLevelLayoutDirAddr) {
+    LOG << "Levels have not been relocated; checking how much space is available...";
+
+    std::vector<uint8_t> buffer(0xFFFF);
+    KosinskiReader reader;
+    file.seekg(tilesAddr);
+    auto result = reader.decompress(file, buffer.data(), buffer.size());
+    if (!result.first) {
+      LOG << "Failed to fully extract existing level at location 0x" << hex << tilesAddr;
+      return false;
+    }
+
+    limit = size_t(file.tellg()) - tilesAddr;
+    LOG << "Total space available is " << *limit << " bytes";
+  }
+
+  auto& map = level.getMap();
+  auto data = map.getData();
+  auto dataSize = map.getHeight() * map.getWidth() * map.getLayerCount();
+
+  KosinskiWriter writer;
+  file.seekp(tilesAddr);
+  auto result = writer.compress(file, data, dataSize, limit);
+  if (!result.first) {
+    LOG << "Failed to write level data at location 0x" << hex << tilesAddr << "; not enough space";
+    return false;
+  }
+
+  LOG << "Wrote " << result.second << " bytes to location 0x" << hex << tilesAddr;
+
+  LOG << "Updating checksum...";
+  m_rom->writeChecksum(m_rom->calculateChecksum());
 
   return true;
 }

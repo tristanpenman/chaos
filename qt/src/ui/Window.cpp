@@ -53,6 +53,7 @@ Window::Window()
   , m_rom(nullptr)
   , m_game(nullptr)
   , m_level(nullptr)
+  , m_levelIdx(0)
 {
   setWindowTitle("Chaos");
   setMinimumSize(320, 240);
@@ -183,6 +184,32 @@ void Window::showLevelSelectDialog()
   connect(m_levelSelect, SIGNAL(levelSelected(int)), this, SLOT(levelSelected(int)));
 
   m_levelSelect->show();
+}
+
+void Window::saveRom()
+{
+  try {
+    if (m_game->save(m_levelIdx, *m_level)) {
+      QMessageBox msgBox;
+      msgBox.information(this,
+          tr("Save ROM"),
+          tr("Level saved successfully."),
+          QMessageBox::StandardButton::Ok);
+    } else {
+      QMessageBox msgBox;
+      msgBox.warning(this,
+          tr("Save ROM"),
+          tr("There was not enough space to save this level. You may need to relocate the levels in this ROM."),
+          QMessageBox::StandardButton::Ok);
+    }
+  } catch (const exception& e) {
+    // show other error occurred
+    QMessageBox msgBox;
+    msgBox.warning(this,
+        tr("Save ROM"),
+        tr("Something went wrong while saving this level: ") + e.what(),
+        QMessageBox::StandardButton::Ok);
+  }
 }
 
 void Window::showExportMapDialog()
@@ -357,6 +384,12 @@ void Window::levelSelected(int levelIdx)
     return;
   }
 
+  m_levelIdx = levelIdx;
+
+  if (m_game->canSave()) {
+    m_saveRomAction->setEnabled(true);
+  }
+
   m_exportMapAction->setEnabled(true);
   m_inspectorsMenu->setEnabled(true);
   m_romInfoAction->setEnabled(true);
@@ -396,14 +429,19 @@ void Window::undosRedosChanged(size_t undos, size_t redos)
 void Window::createFileMenu()
 {
   // open rom
-  auto openRomAction = new QAction(tr("&Open ROM..."));
-  openRomAction->setShortcuts(QKeySequence::Open);
-  connect(openRomAction, SIGNAL(triggered()), this, SLOT(showOpenRomDialog()));
+  m_openRomAction = new QAction(tr("&Open ROM..."));
+  m_openRomAction->setShortcuts(QKeySequence::Open);
+  connect(m_openRomAction, SIGNAL(triggered()), this, SLOT(showOpenRomDialog()));
 
   // level select
   m_levelSelectAction = new QAction(tr("&Level Select..."));
   m_levelSelectAction->setDisabled(true);
   connect(m_levelSelectAction, SIGNAL(triggered()), this, SLOT(showLevelSelectDialog()));
+
+  // save rom
+  m_saveRomAction = new QAction(tr("&Save ROM"));
+  m_saveRomAction->setDisabled(true);
+  connect(m_saveRomAction, SIGNAL(triggered()), this, SLOT(saveRom()));
 
   // export map
   m_exportMapAction = new QAction(tr("Export &Map..."));
@@ -412,10 +450,11 @@ void Window::createFileMenu()
 
   // file menu
   auto fileMenu = menuBar()->addMenu(tr("&File"));
-  fileMenu->addAction(openRomAction);
-  fileMenu->addSeparator();
+  fileMenu->addAction(m_openRomAction);
+  fileMenu->addSeparator()->setSeparator(true);
   fileMenu->addAction(m_levelSelectAction);
   fileMenu->addSeparator();
+  fileMenu->addAction(m_saveRomAction);
   fileMenu->addAction(m_exportMapAction);
 }
 

@@ -67,3 +67,8 @@ void Map::setValue(uint8_t layer, uint16_t x, uint16_t y, uint8_t value)
 
   m_data[y * m_width * m_layers + layer * m_width + x] = value;
 }
+
+uint8_t* Map::getData()
+{
+  return m_data;
+}

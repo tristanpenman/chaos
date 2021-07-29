@@ -17,6 +17,8 @@ public:
   uint8_t getValue(uint8_t layer, uint16_t x, uint16_t y) const;
   void setValue(uint8_t layer, uint16_t x, uint16_t y, uint8_t);
 
+  uint8_t* getData();
+
 protected:
   uint8_t m_layers;
   uint16_t m_height;

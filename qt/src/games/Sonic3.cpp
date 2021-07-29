@@ -91,9 +91,19 @@ bool Sonic3::canRelocateLevels() const
   return false;
 }
 
+bool Sonic3::canSave() const
+{
+  return false;
+}
+
 bool Sonic3::relocateLevels(bool)
 {
   throw std::runtime_error("Not implemented");
+}
+
+bool Sonic3::save(unsigned int, Level &)
+{
+  return false;
 }
 
 uint32_t Sonic3::getDataAddress(unsigned int levelIdx, unsigned int entryOffset)

@@ -34,6 +34,7 @@ public slots:
   // file
   void showOpenRomDialog();
   void showLevelSelectDialog();
+  void saveRom();
   void showExportMapDialog();
 
   // edit
@@ -82,7 +83,9 @@ private:
   MapEditor* m_mapEditor;
 
   // actions
+  QAction* m_openRomAction;
   QAction* m_levelSelectAction;
+  QAction* m_saveRomAction;
   QAction* m_exportMapAction;
   QAction* m_undoAction;
   QAction* m_redoAction;
@@ -100,4 +103,5 @@ private:
   std::shared_ptr<Rom> m_rom;
   std::shared_ptr<Game> m_game;
   std::shared_ptr<Level> m_level;
+  unsigned int m_levelIdx;
 };

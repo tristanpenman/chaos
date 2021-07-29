@@ -4,6 +4,7 @@
 
 #include "../Game.h"
 
+class Level;
 class Rom;
 
 class Sonic2 : public Game
@@ -16,7 +17,9 @@ public:
   std::vector<std::string> getTitleCards() override;
   std::shared_ptr<Level> loadLevel(unsigned int levelIdx) override;
   bool canRelocateLevels() const override;
+  bool canSave() const override;
   bool relocateLevels(bool unsafe) override;
+  bool save(unsigned int levelIdx, Level&) override;
 
 private:
   uint32_t getDataAddress(uint32_t levelIdx, uint32_t entryOffset);
