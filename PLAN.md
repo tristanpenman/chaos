@@ -31,7 +31,7 @@
   + Copy and paste
 - General improvements
   + ~~Logging interface~~
-  + Restructure project so that Qt port is at root level (in progress)
+  + ~~Restructure project so that Qt port is at root level~~
   * Keyboard shortcuts
   + Zoom in/out menu items
   + Figure out how to read level names and locations from ROM files
