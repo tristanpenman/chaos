@@ -5,8 +5,9 @@
 
 #include <QMainWindow>
 
+class QHBoxLayout;
+class QPushButton;
 class QStatusBar;
-class QVBoxLayout;
 
 class BlockInspector;
 class ChunkInspector;
@@ -97,8 +98,9 @@ private:
 
   // misc
   QMenu* m_inspectorsMenu;
-  QVBoxLayout* m_vbox;
   QStatusBar* m_statusBar;
+  QHBoxLayout* m_defaultLayout;
+  QPushButton* m_levelSelectButton;
 
   std::shared_ptr<Rom> m_rom;
   std::shared_ptr<Game> m_game;

@@ -4,9 +4,11 @@
 #include <QAction>
 #include <QFileDialog>
 #include <QGuiApplication>
+#include <QLayout>
 #include <QMainWindow>
 #include <QMenuBar>
 #include <QMessageBox>
+#include <QPushButton>
 #include <QScreen>
 #include <QStatusBar>
 
@@ -48,7 +50,6 @@ Window::Window()
   , m_zoomInAction(nullptr)
   , m_zoomOutAction(nullptr)
   , m_inspectorsMenu(nullptr)
-  , m_vbox(nullptr)
   , m_statusBar(nullptr)
   , m_rom(nullptr)
   , m_game(nullptr)
@@ -76,6 +77,27 @@ Window::Window()
   m_statusBar = new QStatusBar(this);
   m_statusBar->showMessage(tr("Ready"));
   setStatusBar(m_statusBar);
+
+  // open rom button
+  const auto openRomButton = new QPushButton(tr("Open ROM..."));
+  openRomButton->setMaximumWidth(250);
+  connect(openRomButton, SIGNAL(clicked()), this, SLOT(showOpenRomDialog()));
+
+  // level select button
+  m_levelSelectButton = new QPushButton(tr("Level Select..."));
+  m_levelSelectButton->setMaximumWidth(250);
+  m_levelSelectButton->setDisabled(true);
+  connect(m_levelSelectButton, SIGNAL(clicked()), this, SLOT(showLevelSelectDialog()));
+
+  const auto buttonLayout = new QVBoxLayout();
+  buttonLayout->addWidget(openRomButton);
+  buttonLayout->addWidget(m_levelSelectButton);
+
+  const auto buttonsWidget = new QWidget();
+  buttonsWidget->setLayout(buttonLayout);
+  setCentralWidget(buttonsWidget);
+
+  buttonLayout->setAlignment(Qt::AlignHCenter);
 }
 
 bool Window::openRom(const QString &path)
@@ -98,6 +120,7 @@ bool Window::openRom(const QString &path)
   LOG << "Domestic name: '" << m_rom->readDomesticName() << "'";
 
   m_levelSelectAction->setEnabled(true);
+  m_levelSelectButton->setEnabled(true);
   m_relocateLevelsAction->setEnabled(m_game->canRelocateLevels());
 
   if (m_romInfo) {
