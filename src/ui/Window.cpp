@@ -166,9 +166,15 @@ void Window::exportBinary(const QString& fileName)
   showInfo(tr("Export Binary"), tr("Map exported successfully."));
 }
 
-void Window::exportPng(const QString&)
+void Window::exportPng(const QString& fileName)
 {
-  showInfo(tr("Export PNG"), tr("Not implemented."));
+  QImage image(m_mapEditor->getWidth(), m_mapEditor->getHeight(), QImage::Format_ARGB32);
+  m_mapEditor->drawToImage(image);
+  if (image.save(fileName, "PNG")) {
+    showInfo(tr("Export PNG"), tr("Map exported successfully."));
+  } else {
+    showError(tr("Export ROM"), tr("Failed to save map to PNG."));
+  }
 }
 
 void Window::showOpenRomDialog()

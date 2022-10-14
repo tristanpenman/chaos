@@ -32,6 +32,11 @@ public:
   void zoomIn();
   void zoomOut();
 
+  void drawToImage(QImage &image);
+
+  int getWidth() const;
+  int getHeight() const;
+
 protected:
   bool eventFilter(QObject *object, QEvent *ev) override;
 

@@ -151,6 +151,22 @@ void MapEditor::zoomOut()
   // TODO
 }
 
+void MapEditor::drawToImage(QImage &image)
+{
+  QPainter painter(&image);
+  m_scene->render(&painter);
+}
+
+int MapEditor::getWidth() const
+{
+  return m_level->getMap().getWidth() * Block::BLOCK_WIDTH;
+}
+
+int MapEditor::getHeight() const
+{
+  return m_level->getMap().getHeight() * Block::BLOCK_HEIGHT;
+}
+
 bool MapEditor::eventFilter(QObject *object, QEvent *ev)
 {
   if (object != m_view->viewport()) {
