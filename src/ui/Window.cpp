@@ -43,7 +43,8 @@ Window::Window()
   , m_romInfo(nullptr)
   , m_mapEditor(nullptr)
   , m_levelSelectAction(nullptr)
-  , m_exportMapAction(nullptr)
+  , m_exportBinaryAction(nullptr)
+  , m_exportPngAction(nullptr)
   , m_undoAction(nullptr)
   , m_redoAction(nullptr)
   , m_actualSizeAction(nullptr)
@@ -72,6 +73,7 @@ Window::Window()
   createEditMenu();
   createViewMenu();
   createToolsMenu();
+  createMapMenu();
 
   // statusbar
   m_statusBar = new QStatusBar(this);
@@ -142,11 +144,11 @@ void Window::openLevel(const QString& level)
   }
 }
 
-void Window::exportMap(const QString& fileName)
+void Window::exportBinary(const QString& fileName)
 {
   fstream file(fileName.toStdString(), ios::out | ios::binary);
   if (file.bad()) {
-    showError(tr("Export Map"), tr("Failed to open file"));
+    showError(tr("Export Binary"), tr("Failed to open file"));
     return;
   }
 
@@ -161,7 +163,12 @@ void Window::exportMap(const QString& fileName)
     }
   }
 
-  showInfo(tr("Export Map"), tr("Map exported successfully."));
+  showInfo(tr("Export Binary"), tr("Map exported successfully."));
+}
+
+void Window::exportPng(const QString&)
+{
+  showInfo(tr("Export PNG"), tr("Not implemented."));
 }
 
 void Window::showOpenRomDialog()
@@ -235,18 +242,32 @@ void Window::saveRom()
   }
 }
 
-void Window::showExportMapDialog()
+void Window::showExportBinaryDialog()
 {
   if (!m_level) {
     return;
   }
 
-  const auto fileName = QFileDialog::getSaveFileName(this, tr("Export Map"), QString(), QString("*.bin"));
+  const auto fileName = QFileDialog::getSaveFileName(this, tr("Export Binary"), QString(), QString("*.bin"));
   if (fileName.isEmpty()) {
     return;
   }
 
-  exportMap(fileName);
+  exportBinary(fileName);
+}
+
+void Window::showExportPngDialog()
+{
+  if (!m_level) {
+    return;
+  }
+
+  const auto fileName = QFileDialog::getSaveFileName(this, tr("Export PNG"), QString(), QString("*.png"));
+  if (fileName.isEmpty()) {
+    return;
+  }
+
+  exportPng(fileName);
 }
 
 void Window::undo()
@@ -413,7 +434,9 @@ void Window::levelSelected(int levelIdx)
     m_saveRomAction->setEnabled(true);
   }
 
-  m_exportMapAction->setEnabled(true);
+  m_exportBinaryAction->setEnabled(true);
+  m_exportPngAction->setEnabled(true);
+
   m_inspectorsMenu->setEnabled(true);
   m_romInfoAction->setEnabled(true);
 
@@ -466,11 +489,6 @@ void Window::createFileMenu()
   m_saveRomAction->setDisabled(true);
   connect(m_saveRomAction, SIGNAL(triggered()), this, SLOT(saveRom()));
 
-  // export map
-  m_exportMapAction = new QAction(tr("Export &Map..."));
-  m_exportMapAction->setDisabled(true);
-  connect(m_exportMapAction, SIGNAL(triggered()), this, SLOT(showExportMapDialog()));
-
   // file menu
   auto fileMenu = menuBar()->addMenu(tr("&File"));
   fileMenu->addAction(m_openRomAction);
@@ -478,7 +496,6 @@ void Window::createFileMenu()
   fileMenu->addAction(m_levelSelectAction);
   fileMenu->addSeparator();
   fileMenu->addAction(m_saveRomAction);
-  fileMenu->addAction(m_exportMapAction);
 }
 
 void Window::createEditMenu()
@@ -552,6 +569,24 @@ void Window::createToolsMenu()
   toolsMenu->addAction(m_romInfoAction);
   toolsMenu->addSeparator();
   toolsMenu->addAction(m_relocateLevelsAction);
+}
+
+void Window::createMapMenu()
+{
+  auto mapMenu = menuBar()->addMenu(tr("&Map"));
+
+  // export binary
+  m_exportBinaryAction = new QAction(tr("Export &Binary..."));
+  m_exportBinaryAction->setDisabled(true);
+  connect(m_exportBinaryAction, SIGNAL(triggered()), this, SLOT(showExportBinaryDialog()));
+
+  // export png
+  m_exportPngAction = new QAction(tr("Export &PNG..."));
+  m_exportPngAction->setDisabled(true);
+  connect(m_exportPngAction, SIGNAL(triggered()), this, SLOT(showExportPngDialog()));
+
+  mapMenu->addAction(m_exportBinaryAction);
+  mapMenu->addAction(m_exportPngAction);
 }
 
 void Window::showError(const QString& title, const QString& text)

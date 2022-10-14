@@ -29,14 +29,16 @@ public:
 
   bool openRom(const QString& path);
   void openLevel(const QString& level);
-  void exportMap(const QString& fileName);
+  void exportBinary(const QString& fileName);
+  void exportPng(const QString& fileName);
 
 public slots:
   // file
   void showOpenRomDialog();
   void showLevelSelectDialog();
   void saveRom();
-  void showExportMapDialog();
+  void showExportBinaryDialog();
+  void showExportPngDialog();
 
   // edit
   void undo();
@@ -68,6 +70,7 @@ private:
   void createEditMenu();
   void createViewMenu();
   void createToolsMenu();
+  void createMapMenu();
 
   void showError(const QString& title, const QString& text);
   void showInfo(const QString& title, const QString& text);
@@ -87,7 +90,8 @@ private:
   QAction* m_openRomAction;
   QAction* m_levelSelectAction;
   QAction* m_saveRomAction;
-  QAction* m_exportMapAction;
+  QAction* m_exportBinaryAction;
+  QAction* m_exportPngAction;
   QAction* m_undoAction;
   QAction* m_redoAction;
   QAction* m_actualSizeAction;
