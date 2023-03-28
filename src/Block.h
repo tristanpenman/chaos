@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <cstdint>
 
 #include "ChunkDesc.h"
@@ -15,7 +16,7 @@ public:
   static constexpr uint8_t CHUNKS_PER_BLOCK = 64;
   static constexpr uint8_t BLOCK_SIZE_IN_ROM = CHUNKS_PER_BLOCK * BYTES_PER_CHUNK;
 
-  Block();
+  Block() = default;
 
   void fromSegaFormat(uint8_t buffer[BLOCK_SIZE_IN_ROM]);
 
@@ -25,5 +26,5 @@ private:
   Block(const Block&) = delete;
   Block& operator=(const Block&) = delete;
 
-  ChunkDesc m_chunkDescs[CHUNKS_PER_BLOCK];
+  std::array<ChunkDesc, CHUNKS_PER_BLOCK> m_chunkDescs;
 };

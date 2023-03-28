@@ -5,11 +5,6 @@
 
 #include "Chunk.h"
 
-Chunk::Chunk()
-{
-  memset(m_patternDescs, 0, sizeof(PatternDesc) * PATTERNS_PER_CHUNK);
-}
-
 void Chunk::fromSegaFormat(uint8_t *buffer)
 {
   for (unsigned int i = 0; i < PATTERNS_PER_CHUNK; i++) {

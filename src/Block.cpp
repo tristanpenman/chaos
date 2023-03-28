@@ -3,11 +3,6 @@
 
 #include "Block.h"
 
-Block::Block()
-{
-  memset(m_chunkDescs, 0, sizeof(ChunkDesc) * CHUNKS_PER_BLOCK);
-}
-
 void Block::fromSegaFormat(uint8_t buffer[BLOCK_SIZE_IN_ROM])
 {
   for (unsigned int i = 0; i < CHUNKS_PER_BLOCK; i++) {

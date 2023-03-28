@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <cstdint>
 
 #include "PatternDesc.h"
@@ -19,7 +20,7 @@ public:
   static constexpr uint8_t BYTES_PER_PATTERN = 2;
   static constexpr uint8_t CHUNK_SIZE_IN_ROM = PATTERNS_PER_CHUNK * BYTES_PER_PATTERN;
 
-  Chunk();
+  Chunk() = default;
 
   void fromSegaFormat(uint8_t buffer[CHUNK_SIZE_IN_ROM]);
 
@@ -29,5 +30,5 @@ private:
   Chunk(const Chunk&) = delete;
   Chunk& operator=(const Chunk&) = delete;
 
-  PatternDesc m_patternDescs[PATTERNS_PER_CHUNK];
+  std::array<PatternDesc, PATTERNS_PER_CHUNK> m_patternDescs;
 };
