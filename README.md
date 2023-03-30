@@ -28,11 +28,13 @@ Although efforts have been made to tidy up this code, it should be considered ob
 
 ## Qt Port
 
-The current, Qt-based version is more complete, and includes basic level editing support. The [PLAN](./PLAN.md) file outlines the general direction of on-going development.
+The current version is based on Qt, and is much more complete. It includes basic level editing support, although level re-location is only implemented for Sonic 2 ROMs. The [PLAN](./PLAN.md) file outlines the general direction of on-going development.
 
 ## Documentation
 
 Included in the [doc](./doc) directory is Brett Kosinski's original [write up](./doc/kosinski.txt) of the compression algorithm used.
+
+The [haskell](./haskell/) directory contains an attempt to implement Kosinski / RLE decompression using Haskell. This would probably be considered terrible Haskell code, as I wrote it very early on in my attempts to learn Haskell.
 
 ## Build
 
