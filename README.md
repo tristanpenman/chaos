@@ -40,7 +40,7 @@ The [haskell](./haskell/) directory contains an attempt to implement Kosinski / 
 
 This version of the code can be built using Qt versions 5 and 6. Assuming you have Qt and CMake installed, the basic build steps are as follows:
 
-    git clone https://github.com/tristanpenman/chaos.git
+    git clone --recurse-submodules https://github.com/tristanpenman/chaos.git
     cd chaos/qt
     mkdir build
     cd build
@@ -49,7 +49,7 @@ This version of the code can be built using Qt versions 5 and 6. Assuming you ha
 
 This will compile both the main application and a test suite.
 
-On Mac, this will build an application bundle called `Chaos.app`. The test suite is a single binary called `ChaosTest`.
+On macOS, this will build an application bundle called `Chaos.app`. The test suite is a single binary called `ChaosTest`.
 
 The project can also be built from within Qt Creator.
 

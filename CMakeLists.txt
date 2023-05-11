@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 project(Chaos VERSION 1.0)
 
-set(COPYRIGHT "Copyright (c) 2021 Tristan Penman")
+set(COPYRIGHT "Copyright (c) 2023 Tristan Penman")
 set(IDENTIFIER "com.tristanpenman.chaos")
 
 set(CMAKE_CXX_STANDARD 17)
@@ -122,9 +122,7 @@ set(CMAKE_AUTOMOC OFF)
 set(CMAKE_AUTORCC OFF)
 set(CMAKE_AUTOUIC OFF)
 
-set(GOOGLETEST_VERSION 1.11.0)
-
-add_subdirectory(thirdparty/gtest-${GOOGLETEST_VERSION})
+add_subdirectory(thirdparty/googletest)
 
 set(TEST_SOURCES
     src/KosinskiReader.h
@@ -142,7 +140,7 @@ set(TEST_LIBS gtest gtest_main)
 set(gtest_force_shared_crt ON)
 
 include_directories(src SYSTEM
-    thirdparty/gtest-${GOOGLETEST_VERSION}/include
+    thirdparty/googletest/include
 )
 
 add_executable(${PROJECT_NAME}Test ${TEST_SOURCES})
