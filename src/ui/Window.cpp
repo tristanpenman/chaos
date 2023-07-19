@@ -63,8 +63,8 @@ Window::Window()
 
   // choose a nice default width and height, and center the window
   const auto geometry = QGuiApplication::primaryScreen()->geometry();
-  const int width = geometry.height() * 0.75;
-  const int height = geometry.height() * 0.5;
+  const int width = int(geometry.height() * 0.75);
+  const int height = int(geometry.height() * 0.5);
   setGeometry(0, 0, width, height);
   move(geometry.center() - rect().center());
 

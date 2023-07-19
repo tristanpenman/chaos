@@ -4,6 +4,13 @@ project(Chaos VERSION 1.0)
 set(COPYRIGHT "Copyright (c) 2023 Tristan Penman")
 set(IDENTIFIER "com.tristanpenman.chaos")
 
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
+
+set(CMAKE_CXX_FLAGS_DEBUG "-g")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
