@@ -1,3 +1,4 @@
 *.user
 build
 build-qt*
+cmake-build-*
