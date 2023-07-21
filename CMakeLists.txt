@@ -8,16 +8,19 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
 
-set(CMAKE_CXX_FLAGS_DEBUG "-g")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+if(NOT MSVC)
+    set(CMAKE_CXX_FLAGS_DEBUG "-g")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+endif()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Widgets REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Widgets REQUIRED)
+
 # -----------------------------------------------------------------------------
-#
 # Main executable
-#
 # -----------------------------------------------------------------------------
 
 set(CMAKE_AUTOMOC ON)
@@ -84,26 +87,21 @@ set(PROJECT_SOURCES
     src/ui/ZoomSupport.h
 )
 
-if (APPLE)
-  list(APPEND PROJECT_SOURCES
-    src/os/macos.h
-    src/os/macos.mm
-  )
-endif()
-
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Widgets REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Widgets REQUIRED)
-
 if (WIN32)
     add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} "${CMAKE_CURRENT_SOURCE_DIR}/res/Chaos.rc")
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+        WIN32_EXECUTABLE ON
+        VS_DEBUGGER_ENVIRONMENT "PATH=%PATH%;$<TARGET_FILE_DIR:Qt${QT_VERSION_MAJOR}::Core>"
+    )
 elseif (APPLE)
     set(MACOSX_BUNDLE_ICON_FILE "Chaos.icns")
+    set(MAC_GUI_SOURCES src/os/macos.mm)
 
     set(APP_ICON_MACOS "${CMAKE_CURRENT_SOURCE_DIR}/res/Chaos.icns")
     set_source_files_properties(${APP_ICON_MACOS} PROPERTIES
         MACOSX_PACKAGE_LOCATION "Resources")
 
-    add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${PROJECT_SOURCES} ${APP_ICON_MACOS})
+    add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${PROJECT_SOURCES} ${MAC_GUI_SOURCES} ${APP_ICON_MACOS})
 else()
     add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
 endif()
@@ -120,9 +118,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 )
 
 # -----------------------------------------------------------------------------
-#
 # Test executable
-#
 # -----------------------------------------------------------------------------
 
 set(CMAKE_AUTOMOC OFF)
