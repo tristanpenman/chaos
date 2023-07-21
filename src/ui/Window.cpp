@@ -42,7 +42,9 @@ Window::Window()
   , m_blockInspector(nullptr)
   , m_romInfo(nullptr)
   , m_mapEditor(nullptr)
+  , m_openRomAction(nullptr)
   , m_levelSelectAction(nullptr)
+  , m_saveRomAction(nullptr)
   , m_exportBinaryAction(nullptr)
   , m_exportPngAction(nullptr)
   , m_undoAction(nullptr)
@@ -50,6 +52,8 @@ Window::Window()
   , m_actualSizeAction(nullptr)
   , m_zoomInAction(nullptr)
   , m_zoomOutAction(nullptr)
+  , m_relocateLevelsAction(nullptr)
+  , m_romInfoAction(nullptr)
   , m_inspectorsMenu(nullptr)
   , m_statusBar(nullptr)
   , m_rom(nullptr)
@@ -94,12 +98,11 @@ Window::Window()
   const auto buttonLayout = new QVBoxLayout();
   buttonLayout->addWidget(openRomButton);
   buttonLayout->addWidget(m_levelSelectButton);
+  buttonLayout->setAlignment(Qt::AlignHCenter);
 
   const auto buttonsWidget = new QWidget();
   buttonsWidget->setLayout(buttonLayout);
   setCentralWidget(buttonsWidget);
-
-  buttonLayout->setAlignment(Qt::AlignHCenter);
 }
 
 bool Window::openRom(const QString &path)
@@ -226,22 +229,19 @@ void Window::saveRom()
 {
   try {
     if (m_game->save(m_levelIdx, *m_level)) {
-      QMessageBox msgBox;
-      msgBox.information(this,
+        QMessageBox::information(this,
           tr("Save ROM"),
           tr("Level saved successfully."),
           QMessageBox::StandardButton::Ok);
     } else {
-      QMessageBox msgBox;
-      msgBox.warning(this,
+      QMessageBox::warning(this,
           tr("Save ROM"),
           tr("There was not enough space to save this level. You may need to relocate the levels in this ROM."),
           QMessageBox::StandardButton::Ok);
     }
   } catch (const exception& e) {
     // show other error occurred
-    QMessageBox msgBox;
-    msgBox.warning(this,
+    QMessageBox::warning(this,
         tr("Save ROM"),
         tr("Something went wrong while saving this level: ") + e.what(),
         QMessageBox::StandardButton::Ok);

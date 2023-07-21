@@ -72,8 +72,9 @@ private:
   void createToolsMenu();
   void createMapMenu();
 
-  void showError(const QString& title, const QString& text);
-  void showInfo(const QString& title, const QString& text);
+  // message box helpers
+  static void showError(const QString& title, const QString& text);
+  static void showInfo(const QString& title, const QString& text);
 
   // dialogs
   LevelSelect* m_levelSelect;
@@ -103,7 +104,6 @@ private:
   // misc
   QMenu* m_inspectorsMenu;
   QStatusBar* m_statusBar;
-  QHBoxLayout* m_defaultLayout;
   QPushButton* m_levelSelectButton;
 
   std::shared_ptr<Rom> m_rom;
