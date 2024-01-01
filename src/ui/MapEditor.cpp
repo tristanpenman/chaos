@@ -40,7 +40,7 @@ MapEditor::MapEditor(QWidget *parent, shared_ptr<Level>& level)
   setStyleSheet("background: #ccc");
 
   // layout
-  QHBoxLayout* hbox = new QHBoxLayout(this);
+  auto* hbox = new QHBoxLayout(this);
   hbox->setContentsMargins(8, 8, 8, 8);
   hbox->setSpacing(8);
   setLayout(hbox);
@@ -256,8 +256,8 @@ bool MapEditor::handleMouseRelease()
 
 void MapEditor::handleMove(const QPointF& pos)
 {
-  const int highlightX = (pos.x() / 128);
-  const int highlightY = (pos.y() / 128);
+  const int highlightX = int(pos.x() / 128);
+  const int highlightY = int(pos.y() / 128);
 
   auto& map =  m_level->getMap();
 

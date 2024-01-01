@@ -22,7 +22,7 @@
   + ~~Block selector~~
   + ~~Pencil mode~~
   + ~~Relocate levels in Sonic 2 ROM~~
-  * ~~Undo/redo~~
+  + ~~Undo/redo~~
   + ~~RLE compression implementation~~
   + ~~Save level~~
   + Toolbar
@@ -32,7 +32,8 @@
 - General improvements
   + ~~Logging interface~~
   + ~~Restructure project so that Qt port is at root level~~
-  * Keyboard shortcuts
+  + Ask to save unsaved changes when exiting
+  + Keyboard shortcuts
   + Zoom in/out menu items
   + Figure out how to read level names and locations from ROM files
   + Support for loading levels from decompilations
