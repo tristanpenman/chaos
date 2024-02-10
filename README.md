@@ -36,9 +36,21 @@ Included in the [doc](./doc) directory is Brett Kosinski's original [write up](.
 
 The [haskell](./haskell/) directory contains an attempt to implement Kosinski / RLE decompression using Haskell. This would probably be considered terrible Haskell code, as I wrote it very early on in my attempts to learn Haskell.
 
+## Dependencies
+
+Building Chaos requires Qt 5 or 6 development tools to be installed, as well as CMake.
+
+On Ubuntu:
+
+    sudo apt install qt6-base-dev cmake
+
+You may also need to install these two libraries. Without these, QtWidgets may not be found:
+
+    sudo apt install libgl1-mesa-dev libglvnd-dev
+
 ## Build
 
-This version of the code can be built using Qt versions 5 and 6. Assuming you have Qt and CMake installed, the basic build steps are as follows:
+Once you have Qt and CMake installed, the basic build steps are as follows:
 
     git clone --recurse-submodules https://github.com/tristanpenman/chaos.git
     cd chaos/qt
